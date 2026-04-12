@@ -2,8 +2,8 @@ import { login } from "./actions";
 
 export const metadata = { title: "Sign in — Settl" };
 
-export default function LoginPage({ searchParams }) {
-  const error = searchParams?.error;
+export default async function LoginPage({ searchParams }) {
+  const { error } = await searchParams;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-surface px-4">
