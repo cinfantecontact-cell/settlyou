@@ -15,5 +15,12 @@ export async function login(formData) {
     redirect("/login?error=invalid_credentials");
   }
 
+  const { createAdminClient } = await import("@/lib/supabase/admin");
+  const { data: { user } } = await supabase.auth.getUser();
+  const admin = createAdminClient();
+  const { data: profile } = await admin.from("profiles").select("role").eq("id", user.id).single();
+
+  if (profile?.role === "settl_admin") redirect("/admin");
+  if (profile?.role === "club_admin") redirect("/club");
   redirect("/dashboard");
 }
