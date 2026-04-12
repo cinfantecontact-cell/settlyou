@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { createAdminClient } from "@/lib/supabase/admin";
 
 function StatCard({ label, value, sub }) {
