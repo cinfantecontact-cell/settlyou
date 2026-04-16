@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import JoinLinkCard from "./_components/JoinLinkCard";
+import OnboardingTutorial from "./_components/OnboardingTutorial";
 
 export default async function ClubDashboard() {
   const supabase = await createClient();
@@ -43,6 +44,8 @@ export default async function ClubDashboard() {
         <p className="text-sm text-muted mt-1">Welcome to your Settlyou portal</p>
       </div>
 
+      <OnboardingTutorial />
+
       {/* Join link */}
       {club?.slug && (
         <JoinLinkCard slug={club.slug} pin={club.pin} clubName={club.name} />
@@ -64,7 +67,7 @@ export default async function ClubDashboard() {
         </div>
         <div className="bg-white border border-border rounded-xl p-5">
           <p className="text-xs text-muted uppercase tracking-widest mb-1">Seats Left</p>
-          <p className="text-3xl font-bold text-foreground">{seatsLeft ?? "∞"}</p>
+          <p className="text-3xl font-bold text-foreground">{seatsLeft ?? "Unlimited"}</p>
         </div>
       </div>
 
@@ -72,10 +75,16 @@ export default async function ClubDashboard() {
       <div className="bg-white border border-border rounded-xl overflow-hidden">
         <div className="px-6 py-4 border-b border-border flex items-center justify-between">
           <h2 className="text-sm font-semibold text-foreground">Recent Athletes</h2>
-          <a href="/club/athletes" className="text-xs text-brand-600 hover:underline font-medium">View all →</a>
+          <div className="flex items-center gap-4">
+            <a href="/report/sample-college" target="_blank" rel="noopener noreferrer" className="text-xs text-muted hover:text-brand-600 transition-colors">Preview sample guide ↗</a>
+            <a href="/club/athletes" className="text-xs text-brand-600 hover:underline font-medium">View all →</a>
+          </div>
         </div>
         {requests?.length === 0 ? (
-          <div className="px-6 py-12 text-center text-sm text-muted">No athletes yet.</div>
+          <div className="px-6 py-12 text-center">
+            <p className="text-sm text-muted mb-2">No athletes yet. Share your join link above to get started.</p>
+            <a href="/report/sample-college" target="_blank" rel="noopener noreferrer" className="text-xs text-brand-600 hover:underline font-medium">Preview what a guide looks like →</a>
+          </div>
         ) : (
           <table className="w-full text-sm">
             <thead>
@@ -105,12 +114,12 @@ export default async function ClubDashboard() {
 
 function StatusBadge({ status }) {
   const map = {
-    submitted: { label: "Submitted", class: "bg-blue-50 text-blue-700" },
-    generating: { label: "Generating", class: "bg-yellow-50 text-yellow-700" },
-    under_review: { label: "Under Review", class: "bg-orange-50 text-orange-700" },
-    approved: { label: "Approved", class: "bg-green-50 text-green-700" },
-    delivered: { label: "Delivered", class: "bg-brand-50 text-brand-700" },
+    submitted: { label: "Submitted", class: "bg-blue-50 text-blue-700", title: "Received — guide usually ready within 24 hours" },
+    generating: { label: "Generating", class: "bg-yellow-50 text-yellow-700", title: "Generating your guide — usually ready within 24 hours" },
+    under_review: { label: "Under Review", class: "bg-orange-50 text-orange-700", title: "Under review — almost ready" },
+    approved: { label: "Approved", class: "bg-green-50 text-green-700", title: "Approved — being sent to the athlete" },
+    delivered: { label: "Delivered", class: "bg-brand-50 text-brand-700", title: null },
   };
-  const s = map[status] || { label: status, class: "bg-surface text-muted" };
-  return <span className={`text-xs font-medium px-2 py-1 rounded-full ${s.class}`}>{s.label}</span>;
+  const s = map[status] || { label: status, class: "bg-surface text-muted", title: null };
+  return <span title={s.title || undefined} className={`text-xs font-medium px-2 py-1 rounded-full ${s.class}`}>{s.label}</span>;
 }

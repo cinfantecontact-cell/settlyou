@@ -199,6 +199,7 @@ function Label({ children }) {
 
 export default function JoinForm({ club }) {
   const isCollege = club.type === "college";
+  const DRAFT_KEY = `settl_draft_${club.slug}`;
 
   const [pinUnlocked, setPinUnlocked] = useState(!club.hasPin);
   const [pinInput, setPinInput] = useState("");
@@ -324,6 +325,32 @@ export default function JoinForm({ club }) {
         : [...f[field], value],
     }));
   }
+
+  // Restore draft on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(DRAFT_KEY);
+      if (!saved) return;
+      const { form: savedForm, qIndex: savedQ, timestamp } = JSON.parse(saved);
+      if (Date.now() - timestamp > 24 * 60 * 60 * 1000) {
+        localStorage.removeItem(DRAFT_KEY);
+        return;
+      }
+      setForm((f) => ({ ...f, ...savedForm }));
+      if (savedQ > 0) {
+        setQIndex(savedQ);
+        setFormStarted(true);
+      }
+    } catch {}
+  }, []);
+
+  // Save draft whenever form or step changes
+  useEffect(() => {
+    if (!formStarted && qIndex === 0) return;
+    try {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify({ form, qIndex, timestamp: Date.now() }));
+    } catch {}
+  }, [form, qIndex, formStarted]);
 
   function trackEvent(event_type, metadata = {}) {
     fetch("/api/events", {
@@ -1022,6 +1049,7 @@ export default function JoinForm({ club }) {
 
     if (res.ok) {
       trackEvent("form_submitted", { club_slug: club.slug, athlete_type: form.athlete_type });
+      try { localStorage.removeItem(DRAFT_KEY); } catch {}
       setSubmitted(true);
     } else {
       const data = await res.json();

@@ -1,100 +1,22 @@
-"use client";
+export const dynamic = 'force-dynamic';
+import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { redirect } from "next/navigation";
+import AccountForm from "./_components/AccountForm";
 
-import { useState } from "react";
-import { createBrowserClient } from "@supabase/ssr";
+export default async function AccountPage() {
+  const supabase = await createClient();
+  const admin = createAdminClient();
 
-export default function AccountPage() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
 
-  const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  );
+  const { data: profile } = await admin
+    .from("profiles").select("role, club_id").eq("id", user.id).single();
+  if (profile?.role !== "club_admin") redirect("/login");
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setError(null);
-    setSuccess(false);
+  const { data: club } = await admin
+    .from("clubs").select("name").eq("id", profile.club_id).single();
 
-    const password = e.target.password.value;
-    const confirm = e.target.confirm.value;
-
-    if (password !== confirm) {
-      setError("Passwords don't match.");
-      return;
-    }
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters.");
-      return;
-    }
-
-    setLoading(true);
-    const { error: updateError } = await supabase.auth.updateUser({ password });
-    setLoading(false);
-
-    if (updateError) {
-      setError(updateError.message);
-    } else {
-      setSuccess(true);
-      e.target.reset();
-    }
-  }
-
-  return (
-    <div className="p-8 max-w-lg">
-      <h1 className="text-2xl font-bold text-foreground mb-1">Account</h1>
-      <p className="text-sm text-muted mb-8">Manage your login credentials.</p>
-
-      <div className="bg-white rounded-xl border border-border p-6">
-        <h2 className="text-sm font-semibold text-foreground mb-4">Change password</h2>
-
-        {error && (
-          <div className="mb-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2">
-            {error}
-          </div>
-        )}
-        {success && (
-          <div className="mb-4 text-sm text-green-700 bg-green-50 border border-green-200 rounded-md px-3 py-2">
-            Password updated successfully.
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1">
-            <label htmlFor="password" className="text-sm font-medium text-foreground">New password</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required
-              minLength={8}
-              className="border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white"
-              placeholder="••••••••"
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="confirm" className="text-sm font-medium text-foreground">Confirm password</label>
-            <input
-              id="confirm"
-              name="confirm"
-              type="password"
-              required
-              minLength={8}
-              className="border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white"
-              placeholder="••••••••"
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="bg-brand-600 text-white rounded-md py-2.5 text-sm font-semibold hover:bg-brand-700 transition-colors disabled:opacity-50 w-fit px-6"
-          >
-            {loading ? "Updating..." : "Update password"}
-          </button>
-        </form>
-      </div>
-    </div>
-  );
+  return <AccountForm email={user.email} clubName={club?.name} />;
 }

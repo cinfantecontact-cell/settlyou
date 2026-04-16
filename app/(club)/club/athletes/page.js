@@ -21,7 +21,7 @@ export default async function ClubAthletes() {
 
   const { data: requests } = await admin
     .from("requests")
-    .select("id, status, athlete_name, athlete_email, destination_city, destination_country, created_at, athlete_link_token")
+    .select("id, status, athlete_name, athlete_email, destination_city, destination_country, sport, created_at, athlete_link_token")
     .eq("club_id", profile.club_id)
     .order("created_at", { ascending: false });
 
@@ -62,6 +62,7 @@ export default async function ClubAthletes() {
             <thead>
               <tr className="border-b border-border bg-surface">
                 <th className="text-left px-6 py-3 text-xs text-muted font-medium uppercase tracking-wider">Athlete</th>
+                <th className="text-left px-6 py-3 text-xs text-muted font-medium uppercase tracking-wider">Sport</th>
                 <th className="text-left px-6 py-3 text-xs text-muted font-medium uppercase tracking-wider">Destination</th>
                 <th className="text-left px-6 py-3 text-xs text-muted font-medium uppercase tracking-wider">Status</th>
                 <th className="text-left px-6 py-3 text-xs text-muted font-medium uppercase tracking-wider">Date</th>
@@ -77,6 +78,7 @@ export default async function ClubAthletes() {
                     <p className="font-medium text-foreground">{r.athlete_name || "—"}</p>
                     <p className="text-xs text-muted">{r.athlete_email || ""}</p>
                   </td>
+                  <td className="px-6 py-4 text-muted text-sm">{r.sport || "—"}</td>
                   <td className="px-6 py-4 text-muted">
                     {r.destination_city}{r.destination_country ? `, ${r.destination_country}` : ""}
                   </td>
@@ -119,12 +121,12 @@ export default async function ClubAthletes() {
 
 function StatusBadge({ status }) {
   const map = {
-    submitted: { label: "Submitted", class: "bg-blue-50 text-blue-700" },
-    generating: { label: "Generating", class: "bg-yellow-50 text-yellow-700" },
-    under_review: { label: "Under Review", class: "bg-orange-50 text-orange-700" },
-    approved: { label: "Approved", class: "bg-green-50 text-green-700" },
-    delivered: { label: "Delivered", class: "bg-brand-50 text-brand-700" },
+    submitted: { label: "Submitted", class: "bg-blue-50 text-blue-700", title: "Received — guide usually ready within 24 hours" },
+    generating: { label: "Generating", class: "bg-yellow-50 text-yellow-700", title: "Generating your guide — usually ready within 24 hours" },
+    under_review: { label: "Under Review", class: "bg-orange-50 text-orange-700", title: "Under review — almost ready" },
+    approved: { label: "Approved", class: "bg-green-50 text-green-700", title: "Approved — being sent to the athlete" },
+    delivered: { label: "Delivered", class: "bg-brand-50 text-brand-700", title: null },
   };
-  const s = map[status] || { label: status, class: "bg-surface text-muted" };
-  return <span className={`text-xs font-medium px-2 py-1 rounded-full ${s.class}`}>{s.label}</span>;
+  const s = map[status] || { label: status, class: "bg-surface text-muted", title: null };
+  return <span title={s.title || undefined} className={`text-xs font-medium px-2 py-1 rounded-full ${s.class}`}>{s.label}</span>;
 }
