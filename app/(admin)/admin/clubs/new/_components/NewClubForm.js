@@ -171,6 +171,13 @@ export default function NewClubForm() {
           </div>
         </div>
         <p className="text-xs text-muted -mt-2">Share the PIN with the university separately — if the link leaks, the form stays protected.</p>
+
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-foreground">Admin email <span className="text-muted font-normal">(optional — sends welcome email + creates login)</span></label>
+          <input name="admin_email" type="email"
+            className="border border-border rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white"
+            placeholder="coach@university.edu" />
+        </div>
       </div>
 
       {/* Branding */}
