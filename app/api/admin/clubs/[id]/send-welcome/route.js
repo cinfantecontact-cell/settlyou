@@ -103,7 +103,7 @@ export async function POST(request, { params }) {
                 ${[
                   ["1", "Share the join link and PIN with your incoming athletes."],
                   ["2", "Each athlete fills out a short relocation form — takes about 3 minutes."],
-                  ["3", "Settlyou generates a personalized relocation guide. You review and approve it before the athlete sees it."],
+                  ["3", "Settlyou reviews and delivers the guide directly to your athlete's inbox."],
                 ].map(([num, text]) => `
                 <tr>
                   <td width="32" valign="top" style="padding-bottom:12px;">
