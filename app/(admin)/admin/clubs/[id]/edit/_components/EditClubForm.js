@@ -26,6 +26,7 @@ export default function EditClubForm({ club }) {
   const [secondaryColor, setSecondaryColor] = useState(club.secondary_color || "#ffffff");
   const [logoPreview, setLogoPreview] = useState(club.logo_url || null);
   const [active, setActive] = useState(club.active);
+  const [plan, setPlan] = useState(club.plan || "essentials");
   const [submitting, setSubmitting] = useState(false);
   const [pinVisible, setPinVisible] = useState(false);
   const fileRef = useRef(null);
@@ -45,6 +46,7 @@ export default function EditClubForm({ club }) {
     const formData = new FormData(e.target);
     formData.set("primary_color", color);
     formData.set("active", active ? "true" : "false");
+    formData.set("plan", plan);
 
     const res = await fetch(`/api/admin/clubs/${club.id}`, {
       method: "PATCH",
@@ -85,6 +87,16 @@ export default function EditClubForm({ club }) {
           className="border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white">
           <option value="pro">Professional club</option>
           <option value="college">College / University</option>
+        </select>
+      </div>
+
+      {/* Plan */}
+      <div className="flex flex-col gap-1.5">
+        <label className="text-sm font-medium text-foreground">Plan</label>
+        <select value={plan} onChange={(e) => setPlan(e.target.value)}
+          className="border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white">
+          <option value="essentials">Essentials — $1,499/yr</option>
+          <option value="premium">Premium — $2,499/yr</option>
         </select>
       </div>
 
@@ -168,17 +180,29 @@ export default function EditClubForm({ club }) {
         <input type="hidden" name="secondary_color" value={secondaryColor} />
       </div>
 
-      {/* Custom notes */}
+      {/* Custom notes — Premium only */}
       <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-foreground">Club notes for every guide</label>
+        <div className="flex items-center gap-2">
+          <label className="text-sm font-medium text-foreground">Club notes for every guide</label>
+          {plan !== "premium" && (
+            <span className="text-xs font-semibold bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">Premium</span>
+          )}
+        </div>
         <textarea
           name="custom_notes"
           defaultValue={club.custom_notes || ""}
           rows={5}
-          placeholder="Add anything you want included in every guide for this club — local spots, important contacts, specific advice, anything. The AI will weave it in naturally."
-          className="border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white resize-y"
+          disabled={plan !== "premium"}
+          placeholder={plan === "premium"
+            ? "Add anything you want included in every guide for this club — local spots, important contacts, specific advice, anything. The AI will weave it in naturally."
+            : "Upgrade to Premium to add custom coach notes to every guide."}
+          className={`border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 resize-y ${plan !== "premium" ? "bg-surface text-muted cursor-not-allowed" : "bg-white"}`}
         />
-        <p className="text-xs text-muted">These notes will be included in every relocation guide generated for this club.</p>
+        {plan !== "premium" ? (
+          <p className="text-xs text-amber-600">Custom coach notes are included in every guide on the Premium plan.</p>
+        ) : (
+          <p className="text-xs text-muted">These notes will be included in every relocation guide generated for this club.</p>
+        )}
       </div>
 
       {/* Active toggle */}

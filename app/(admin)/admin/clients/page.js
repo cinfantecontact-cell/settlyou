@@ -2,6 +2,8 @@ export const dynamic = 'force-dynamic';
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
+import DeleteClubButton from "./_components/DeleteClubButton";
+import SendWelcomeEmailButton from "./_components/SendWelcomeEmailButton";
 
 export const metadata = { title: "Clients — Settl Admin" };
 
@@ -57,7 +59,7 @@ export default async function AdminClientsPage() {
             <thead className="bg-surface border-b border-border">
               <tr>
                 <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-widest">Name</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-widest">Type</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-widest">Plan</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-widest">Guides</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-widest">Status</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-widest">Join link</th>
@@ -80,12 +82,12 @@ export default async function AdminClientsPage() {
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
-                      club.type === "college"
-                        ? "bg-purple-100 text-purple-800"
-                        : "bg-blue-100 text-blue-800"
+                    <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+                      club.plan === "premium"
+                        ? "bg-violet-100 text-violet-700"
+                        : "bg-sky-100 text-sky-700"
                     }`}>
-                      {club.type === "college" ? "College" : "Pro club"}
+                      {club.plan === "premium" ? "Premium" : "Essentials"}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-muted">
@@ -114,13 +116,17 @@ export default async function AdminClientsPage() {
                     </div>
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <a
-                      href={`/admin/clubs/${club.id}/edit`}
-                      title="Edit"
-                      className="text-brand-400 hover:text-brand-600 transition-colors"
-                    >
-                      ✏️
-                    </a>
+                    <div className="flex items-center justify-end gap-3">
+                      <SendWelcomeEmailButton clubId={club.id} clubName={club.name} />
+                      <a
+                        href={`/admin/clubs/${club.id}/edit`}
+                        title="Edit"
+                        className="text-brand-400 hover:text-brand-600 transition-colors text-sm"
+                      >
+                        ✏️
+                      </a>
+                      <DeleteClubButton clubId={club.id} clubName={club.name} />
+                    </div>
                   </td>
                 </tr>
               ))}

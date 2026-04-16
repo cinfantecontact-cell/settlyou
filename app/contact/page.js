@@ -69,14 +69,14 @@ export default function ContactPage({ searchParams }) {
                       type="email"
                       required
                       className="border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition"
-                      placeholder="you@club.com"
+                      placeholder="you@university.edu"
                     />
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-1">
                   <label htmlFor="organization_name" className="text-sm font-medium text-foreground">
-                    Club or agency name
+                    University or department name
                   </label>
                   <input
                     id="organization_name"
@@ -84,7 +84,7 @@ export default function ContactPage({ searchParams }) {
                     type="text"
                     required
                     className="border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition"
-                    placeholder="Club Deportivo Universidad"
+                    placeholder="Florida Atlantic University"
                   />
                 </div>
 
@@ -100,8 +100,8 @@ export default function ContactPage({ searchParams }) {
                       className="border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition bg-white"
                     >
                       <option value="">Select...</option>
-                      <option value="club">Soccer club</option>
-                      <option value="agency">Representation agency</option>
+                      <option value="university">University / College</option>
+                      <option value="athletic_department">Athletic department</option>
                     </select>
                   </div>
 
@@ -145,7 +145,7 @@ export default function ContactPage({ searchParams }) {
                     name="message"
                     rows={3}
                     className="border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition resize-none"
-                    placeholder="We have 3–4 international signings per season..."
+                    placeholder="We recruit 10–15 international student-athletes per year..."
                   />
                 </div>
 

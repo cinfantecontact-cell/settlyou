@@ -1,8 +1,9 @@
 export const dynamic = 'force-dynamic';
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import DeleteClubButton from "../clients/_components/DeleteClubButton";
 
-export const metadata = { title: "Clubs — Settl Admin" };
+export const metadata = { title: "Clients — Settl Admin" };
 
 export default async function AdminClubsPage() {
   const supabase = await createClient();
@@ -29,95 +30,85 @@ export default async function AdminClubsPage() {
     <div className="p-8 max-w-5xl">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Clubs & Institutions</h1>
-          <p className="text-sm text-muted mt-1">{clubs?.length ?? 0} clubs · Each gets a unique join link</p>
+          <h1 className="text-2xl font-bold text-foreground">Clients</h1>
+          <p className="text-sm text-muted mt-1">{clubs?.length ?? 0} universities · Each gets a unique join link</p>
         </div>
         <a
           href="/admin/clubs/new"
           className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-brand-700 transition-colors"
         >
-          + New club
+          + New client
         </a>
       </div>
 
-      <div className="bg-white rounded-xl border border-border overflow-hidden">
-        {!clubs?.length ? (
-          <div className="px-6 py-16 text-center">
-            <p className="text-sm text-muted mb-4">No clubs yet. Create your first one to get a join link.</p>
-            <a href="/admin/clubs/new"
-              className="text-sm text-brand-600 font-semibold hover:underline">
-              Create a club →
-            </a>
-          </div>
-        ) : (
-          <table className="w-full text-sm">
-            <thead className="bg-surface border-b border-border">
-              <tr>
-                <th className="px-4 py-3 text-left font-medium text-muted">Club</th>
-                <th className="px-4 py-3 text-left font-medium text-muted">Type</th>
-                <th className="px-4 py-3 text-left font-medium text-muted">Seats</th>
-                <th className="px-4 py-3 text-left font-medium text-muted">Status</th>
-                <th className="px-4 py-3 text-left font-medium text-muted">Join link</th>
-                <th className="px-4 py-3" />
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {clubs.map((club) => (
-                <tr key={club.id} className="hover:bg-surface transition-colors">
-                  <td className="px-4 py-3">
-                    <span className="font-medium text-foreground">{club.name}</span>
-                    <span className="block text-xs text-muted">{club.slug}</span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
-                      club.type === "college"
-                        ? "bg-purple-100 text-purple-800"
-                        : "bg-blue-100 text-blue-800"
-                    }`}>
-                      {club.type === "college" ? "College" : "Pro"}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-muted">
-                    {club.seats_used} / {club.seat_limit ?? "∞"}
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
-                      club.active ? "bg-brand-100 text-brand-800" : "bg-gray-100 text-gray-500"
-                    }`}>
-                      {club.active ? "Active" : "Inactive"}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <CopyLink url={`${baseUrl}/join/${club.slug}`} />
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <a href={`/admin/clubs/${club.id}/edit`}
-                      className="text-xs text-brand-600 hover:underline font-medium">
-                      Edit
-                    </a>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
-    </div>
-  );
-}
+      {!clubs?.length ? (
+        <div className="bg-white rounded-xl border border-border px-6 py-16 text-center">
+          <p className="text-sm text-muted mb-4">No clients yet. Add your first university to get a join link.</p>
+          <a href="/admin/clubs/new" className="text-sm text-brand-600 font-semibold hover:underline">
+            Add a university →
+          </a>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-3">
+          {clubs.map((club) => (
+            <div key={club.id} className="bg-white rounded-xl border border-border p-5 flex items-center gap-4">
+              {/* Logo */}
+              <div className="w-10 h-10 rounded-lg border border-border bg-surface flex items-center justify-center shrink-0 overflow-hidden">
+                {club.logo_url
+                  ? <img src={club.logo_url} alt="" className="w-full h-full object-contain p-1" />
+                  : <span className="text-xs font-bold text-muted">{club.name?.slice(0, 2).toUpperCase()}</span>
+                }
+              </div>
 
-function CopyLink({ url }) {
-  return (
-    <div className="flex items-center gap-2">
-      <span className="text-xs text-muted font-mono truncate max-w-[180px]">{url}</span>
-      <a
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-xs text-brand-600 hover:underline shrink-0"
-      >
-        Open ↗
-      </a>
+              {/* Name + slug */}
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-foreground text-sm">{club.name}</p>
+                <p className="text-xs text-muted">{club.slug}</p>
+              </div>
+
+              {/* Plan */}
+              <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold shrink-0 ${
+                club.plan === "premium"
+                  ? "bg-brand-100 text-brand-700"
+                  : "bg-surface text-muted border border-border"
+              }`}>
+                {club.plan === "premium" ? "Premium" : "Essentials"}
+              </span>
+
+              {/* Guides */}
+              <span className="text-sm text-muted shrink-0 w-16 text-center">
+                {club.seats_used} / {club.seat_limit ?? "∞"}
+              </span>
+
+              {/* Status */}
+              <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold shrink-0 ${
+                club.active ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"
+              }`}>
+                {club.active ? "Active" : "Inactive"}
+              </span>
+
+              {/* Join link */}
+              <a
+                href={`${baseUrl}/join/${club.slug}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-brand-600 hover:underline shrink-0"
+              >
+                Open link ↗
+              </a>
+
+              {/* Actions */}
+              <div className="flex items-center gap-3 shrink-0">
+                <a href={`/admin/clubs/${club.id}/edit`}
+                  className="text-xs font-medium text-brand-600 hover:underline">
+                  Edit
+                </a>
+                <DeleteClubButton clubId={club.id} clubName={club.name} />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

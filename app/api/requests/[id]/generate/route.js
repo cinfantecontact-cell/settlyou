@@ -40,10 +40,10 @@ export async function POST(request, { params }) {
   if (relocationRequest.club_id) {
     const { data: club } = await admin
       .from("clubs")
-      .select("custom_notes, logo_url, primary_color")
+      .select("custom_notes, logo_url, primary_color, plan")
       .eq("id", relocationRequest.club_id)
       .single();
-    if (club?.custom_notes) relocationRequest.club_custom_notes = club.custom_notes;
+    if (club?.plan === "premium" && club?.custom_notes) relocationRequest.club_custom_notes = club.custom_notes;
     if (club?.logo_url) relocationRequest.club_logo_url = club.logo_url;
     if (club?.primary_color) relocationRequest.club_primary_color = club.primary_color;
   }

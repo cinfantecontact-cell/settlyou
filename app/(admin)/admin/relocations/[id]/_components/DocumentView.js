@@ -94,7 +94,7 @@ export default function DocumentView({ content }) {
         <div className="px-8 pt-8 pb-6">
           <div className="flex items-start justify-between gap-6">
             <div className="flex-1">
-              <div className="text-xs uppercase tracking-[0.2em] opacity-60 mb-3 font-medium">Settl · Relocation Guide</div>
+              <div className="text-xs uppercase tracking-[0.2em] opacity-60 mb-3 font-medium">Settlyou · Relocation Guide</div>
               <h1 className="text-4xl font-bold mb-2 leading-tight">{meta.athlete_name}</h1>
               <p className="opacity-75 text-sm font-medium">{meta.destination}{meta.club ? ` · ${meta.club}` : ""}</p>
             </div>
@@ -117,7 +117,7 @@ export default function DocumentView({ content }) {
           </div>
           <div className="p-6">
             <p className="text-sm text-foreground leading-relaxed italic">{meta.welcome_letter}</p>
-            <p className="text-xs text-muted mt-4 font-medium">— The Settl Team</p>
+            <p className="text-xs text-muted mt-4 font-medium">— The Settlyou Team</p>
           </div>
         </div>
       )}
@@ -151,6 +151,16 @@ export default function DocumentView({ content }) {
       {sections.housing && (
         <Section title={sections.housing.title}>
           <p className="text-sm text-muted mb-4">{sections.housing.intro}</p>
+          {sections.housing.tips?.length > 0 && (
+            <div className="flex flex-col gap-1.5 mb-5">
+              {sections.housing.tips.map((tip, i) => (
+                <div key={i} className="flex items-start gap-2 text-sm text-muted">
+                  <span className="text-brand-500 shrink-0 mt-0.5">·</span>
+                  <span>{tip}</span>
+                </div>
+              ))}
+            </div>
+          )}
           {sections.housing.search_platforms?.length > 0 && (
             <div className="flex gap-2 flex-wrap mb-5">
               {sections.housing.search_platforms.map((p, i) => (
@@ -442,6 +452,9 @@ export default function DocumentView({ content }) {
       {sections.integration && (
         <Section title={sections.integration.title}>
           <p className="text-sm text-muted mb-4">{sections.integration.intro}</p>
+          {sections.integration.language_tip && (
+            <Callout variant="yellow">{sections.integration.language_tip}</Callout>
+          )}
           {sections.integration.expat_community && (
             <Callout variant="gray">{sections.integration.expat_community}</Callout>
           )}

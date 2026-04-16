@@ -80,8 +80,35 @@ const FORM_STRINGS = {
   "Semester start (optional)": "Semester start (optional)",
   "Monthly budget in USD (optional)": "Monthly budget in USD (optional)",
   "I have an athletic scholarship": "I have an athletic scholarship",
+  "I'm part of a team": "I'm part of a team",
   "I'll be living on campus (dorms)": "I'll be living on campus (dorms)",
   "I'm coming from outside the US": "I'm coming from outside the US",
+  "Studio": "Studio",
+  "1-bedroom apartment": "1-bedroom apartment",
+  "Shared apartment": "Shared apartment",
+  "No preference": "No preference",
+  "In-unit laundry": "In-unit laundry",
+  "Furnished": "Furnished",
+  "High-speed WiFi": "High-speed WiFi",
+  "Parking": "Parking",
+  "Pet-friendly": "Pet-friendly",
+  "Near campus shuttle": "Near campus shuttle",
+  "Gym access": "Gym access",
+  "Study room": "Study room",
+  "No restrictions": "No restrictions",
+  "Halal": "Halal",
+  "Kosher": "Kosher",
+  "Vegetarian": "Vegetarian",
+  "Vegan": "Vegan",
+  "Gluten-free": "Gluten-free",
+  "Dairy-free": "Dairy-free",
+  "CrossFit": "CrossFit",
+  "Traditional gym": "Traditional gym",
+  "Swimming": "Swimming",
+  "Yoga / Pilates": "Yoga / Pilates",
+  "Cycling": "Cycling",
+  "Martial arts": "Martial arts",
+  "Running": "Running",
   "Property type": "Property type",
   "Must-haves (optional)": "Must-haves (optional)",
   "Max commute to campus in minutes (optional)": "Max commute to campus in minutes (optional)",
@@ -122,7 +149,7 @@ const FORM_STRINGS = {
   "Get my guide →": "Get my guide →",
   "← Back": "← Back",
   "Press Enter ↵": "Press Enter ↵",
-  "Powered by Settl": "Powered by Settl",
+  "Powered by Settlyou": "Powered by Settlyou",
   "Enter your PIN": "Enter your PIN",
   "Your club sent you a 4-digit PIN with this link.": "Your club sent you a 4-digit PIN with this link.",
   "Checking...": "Checking...",
@@ -227,6 +254,7 @@ export default function JoinForm({ club }) {
     university: isCollege ? club.name : "",
     major: "",
     has_scholarship: false,
+    is_part_of_team: false,
     on_campus_housing: false,
     semester_start: "",
     is_international: true,
@@ -483,6 +511,7 @@ export default function JoinForm({ club }) {
         <div className="flex flex-col gap-5">
           {[
             { field: "has_scholarship", label: t("I have an athletic scholarship") },
+            { field: "is_part_of_team", label: t("I'm part of a team") },
             { field: "on_campus_housing", label: t("I'll be living on campus (dorms)") },
             { field: "is_international", label: t("I'm coming from outside the US") },
           ].map(({ field, label }) => (
@@ -514,7 +543,7 @@ export default function JoinForm({ club }) {
               <Label>{t("Property type")}</Label>
               <div className="flex flex-wrap gap-2">
                 {COLLEGE_HOUSING.map((h) => (
-                  <Chip key={h} label={h} selected={form.housing_type === h} onClick={() => set("housing_type", h)} />
+                  <Chip key={h} label={t(h)} selected={form.housing_type === h} onClick={() => set("housing_type", h)} />
                 ))}
               </div>
             </div>
@@ -522,7 +551,7 @@ export default function JoinForm({ club }) {
               <Label>{t("Must-haves (optional)")}</Label>
               <div className="flex flex-wrap gap-2">
                 {COLLEGE_MUST_HAVES.map((h) => (
-                  <Chip key={h} label={h} selected={form.housing_must_haves.includes(h)}
+                  <Chip key={h} label={t(h)} selected={form.housing_must_haves.includes(h)}
                     onClick={() => toggle("housing_must_haves", h)} />
                 ))}
               </div>
@@ -546,7 +575,7 @@ export default function JoinForm({ club }) {
             <Label>{t("Dietary needs")}</Label>
             <div className="flex flex-wrap gap-2">
               {DIET.map((d) => (
-                <Chip key={d} label={d} selected={form.diet.includes(d)} onClick={() => toggle("diet", d)} />
+                <Chip key={d} label={t(d)} selected={form.diet.includes(d)} onClick={() => toggle("diet", d)} />
               ))}
             </div>
           </div>
@@ -554,7 +583,7 @@ export default function JoinForm({ club }) {
             <Label>{t("Fitness preferences")}</Label>
             <div className="flex flex-wrap gap-2">
               {FITNESS.map((f) => (
-                <Chip key={f} label={f} selected={form.fitness.includes(f)} onClick={() => toggle("fitness", f)} />
+                <Chip key={f} label={t(f)} selected={form.fitness.includes(f)} onClick={() => toggle("fitness", f)} />
               ))}
             </div>
           </div>
@@ -853,7 +882,7 @@ export default function JoinForm({ club }) {
             <Label>{t("Diet")}</Label>
             <div className="flex flex-wrap gap-2">
               {DIET.map((d) => (
-                <Chip key={d} label={d} selected={form.diet.includes(d)} onClick={() => toggle("diet", d)} />
+                <Chip key={d} label={t(d)} selected={form.diet.includes(d)} onClick={() => toggle("diet", d)} />
               ))}
             </div>
           </div>
@@ -861,7 +890,7 @@ export default function JoinForm({ club }) {
             <Label>{t("Fitness")}</Label>
             <div className="flex flex-wrap gap-2">
               {FITNESS.map((f) => (
-                <Chip key={f} label={f} selected={form.fitness.includes(f)} onClick={() => toggle("fitness", f)} />
+                <Chip key={f} label={t(f)} selected={form.fitness.includes(f)} onClick={() => toggle("fitness", f)} />
               ))}
             </div>
           </div>
@@ -1223,7 +1252,7 @@ export default function JoinForm({ club }) {
 
       {/* Powered by */}
       <div className="text-center pb-4">
-        <span className="text-white/15 text-xs">{t("Powered by Settl")}</span>
+        <span className="text-white/15 text-xs">{t("Powered by Settlyou")}</span>
       </div>
     </div>
   );

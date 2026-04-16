@@ -1,7 +1,15 @@
+import { redirect } from "next/navigation";
+
+export default function SampleReportPage() {
+  redirect("/report/sample-college");
+}
+
+// Original pro sample preserved below — do not delete
+/*
 import DocumentView from "@/app/(admin)/admin/relocations/[id]/_components/DocumentView";
 import { demoDocument } from "./demoData";
 
-export default function SampleReportPage() {
+export default function SampleReportPagePro() {
   return (
     <div className="min-h-screen bg-surface">
       {/* Demo banner */}
@@ -16,7 +24,7 @@ export default function SampleReportPage() {
 
       <nav className="bg-white border-b border-border px-6 py-4 flex items-center justify-between no-print">
         <img src="/settlyou-logo.png" alt="Settl" className="h-8 rounded-md" />
-        <span className="text-sm text-muted">Sample Report · Gabriel Santos</span>
+        <span className="text-sm text-muted">Sample Report · Carlos Mendoza · Inter Miami CF</span>
       </nav>
 
       <div className="max-w-4xl mx-auto px-4 py-10">
@@ -29,3 +37,4 @@ export default function SampleReportPage() {
     </div>
   );
 }
+*/

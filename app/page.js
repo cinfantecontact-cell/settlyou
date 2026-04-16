@@ -25,7 +25,7 @@ const STEPS = [
   {
     number: "02",
     title: "AI builds a performance-first guide",
-    desc: "Settl generates a complete relocation guide filtered through an athletic lens — recovery centers, sports medicine, performance nutrition, training facilities, and more.",
+    desc: "Settlyou generates a complete relocation guide filtered through an athletic lens — recovery centers, sports medicine, performance nutrition, training facilities, and more.",
   },
   {
     number: "03",
@@ -35,13 +35,6 @@ const STEPS = [
 ];
 
 const FOR_WHO = [
-  {
-    emoji: "⚽",
-    label: "Professional clubs",
-    desc: "Signing a new player? Give them a guide built for elite performance — recovery centers, sports nutrition, sports medicine, housing near the training ground, and everything in between.",
-    sample: "/report/sample",
-    sampleLabel: "See pro athlete sample →",
-  },
   {
     emoji: "🎓",
     label: "University athletic departments",
@@ -57,10 +50,10 @@ export default function LandingPage() {
 
       {/* Nav */}
       <nav className="flex items-center justify-between px-8 py-5 border-b border-border">
-        <img src="/settlyou-logo.png" alt="Settl" className="h-9 rounded-md" />
-        <div className="flex items-center gap-6">
-          <a href="/pricing" className="text-sm text-muted hover:text-foreground transition-colors">Pricing</a>
-          <a href="/login" className="text-sm text-muted hover:text-foreground transition-colors">Sign in</a>
+        <a href="/"><img src="/settlyou-logo.png" alt="Settl" className="h-9 rounded-md" /></a>
+        <div className="flex items-center gap-3">
+          <a href="/pricing" className="text-sm font-medium text-foreground px-4 py-2 rounded-lg border border-border hover:border-brand-400 hover:text-brand-600 transition-colors">Pricing</a>
+          <a href="/login" className="text-sm font-medium bg-brand-600 text-white px-4 py-2 rounded-lg hover:bg-brand-700 transition-colors">Sign in</a>
         </div>
       </nav>
 
@@ -74,20 +67,20 @@ export default function LandingPage() {
           <span className="text-brand-600">not just to settle.</span>
         </h1>
         <p className="text-xl text-muted max-w-2xl mb-10 leading-relaxed">
-          Settl gives clubs and universities a relocation guide built for elite athletes — covering recovery, sports medicine, performance nutrition, and every detail of life in their new city.
+          Settlyou gives university athletic departments a relocation guide built for student-athletes — covering campus life, sports medicine, performance nutrition, F-1 visa guidance, and every detail of life in their new city.
         </p>
         <div className="flex items-center gap-4 flex-wrap justify-center">
           <a
-            href="/report/sample"
+            href="/report/sample-college"
             className="bg-brand-600 text-white px-8 py-4 rounded-lg text-base font-semibold hover:bg-brand-700 transition-colors"
           >
-            Pro athlete sample →
+            See a sample guide →
           </a>
           <a
-            href="/report/sample-college"
+            href="/contact"
             className="bg-white text-brand-600 border border-brand-200 px-8 py-4 rounded-lg text-base font-semibold hover:bg-brand-50 transition-colors"
           >
-            College athlete sample →
+            Request access →
           </a>
         </div>
       </section>
@@ -97,19 +90,37 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-3 block">Who it's for</span>
-            <h2 className="text-3xl font-bold text-foreground">Built for every level of the game</h2>
+            <h2 className="text-3xl font-bold text-foreground">Built for university athletic departments</h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {FOR_WHO.map((item) => (
-              <div key={item.label} className="bg-surface border border-border rounded-2xl p-8 flex flex-col gap-4">
-                <span className="text-3xl">{item.emoji}</span>
-                <h3 className="text-lg font-bold text-foreground">{item.label}</h3>
-                <p className="text-sm text-muted leading-relaxed flex-1">{item.desc}</p>
-                <a href={item.sample} className="text-sm font-semibold text-brand-600 hover:underline">
-                  {item.sampleLabel}
-                </a>
-              </div>
-            ))}
+          <div className="bg-surface border border-border rounded-2xl p-10 flex flex-col sm:flex-row items-start gap-10">
+            <div className="flex-1 flex flex-col gap-4">
+              <h3 className="text-xl font-bold text-foreground">Help your recruits arrive ready</h3>
+              <p className="text-sm text-muted leading-relaxed">
+                Recruiting a student-athlete from abroad? Give them a personalized guide covering campus athletics, sports medicine, performance nutrition, F-1 visa steps, and everything they need to settle into a new city with confidence.
+              </p>
+              <a href="/report/sample-college" className="text-sm font-semibold text-brand-600 hover:underline">
+                See a college athlete sample →
+              </a>
+            </div>
+            <div className="flex flex-col gap-3 sm:w-56 shrink-0">
+              {[
+                "F-1 visa & campus life",
+                "Sports medicine & recovery",
+                "Performance nutrition",
+                "Housing near campus",
+                "Safety & integration",
+                "8 languages supported",
+              ].map((item) => (
+                <div key={item} className="flex items-center gap-2.5 text-sm text-foreground">
+                  <div className="w-4 h-4 rounded-full bg-brand-500 flex items-center justify-center shrink-0">
+                    <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  {item}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -169,16 +180,16 @@ export default function LandingPage() {
           </p>
           <div className="flex items-center gap-4 flex-wrap justify-center">
             <a
-              href="/report/sample"
+              href="/report/sample-college"
               className="bg-white text-brand-600 px-8 py-4 rounded-lg text-base font-bold hover:bg-brand-50 transition-colors inline-block"
             >
-              Pro athlete sample →
+              See a sample guide →
             </a>
             <a
-              href="/report/sample-college"
+              href="/contact"
               className="bg-brand-700 text-white border border-brand-400 px-8 py-4 rounded-lg text-base font-bold hover:bg-brand-800 transition-colors inline-block"
             >
-              College athlete sample →
+              Request access →
             </a>
           </div>
         </div>
@@ -203,7 +214,7 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="border-t border-border px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted">
-        <span>© {new Date().getFullYear()} Settl. All rights reserved.</span>
+        <span>© {new Date().getFullYear()} Settlyou. All rights reserved.</span>
         <div className="flex items-center gap-4">
           <a href="mailto:hello@settlyou.com" className="hover:text-foreground transition-colors">hello@settlyou.com</a>
           <a href="/privacy" className="hover:text-foreground transition-colors">Privacy policy</a>

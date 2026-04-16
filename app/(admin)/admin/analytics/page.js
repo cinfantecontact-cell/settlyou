@@ -25,7 +25,7 @@ export default async function AnalyticsPage() {
   }
 
   // Fetch clubs for name lookup
-  const { data: clubs } = await admin.from("clubs").select("id, name, slug");
+  const { data: clubs } = await admin.from("clubs").select("id, name, slug, plan");
   const clubMap = Object.fromEntries((clubs ?? []).map((c) => [c.id, c]));
 
   // Aggregate counts
@@ -51,6 +51,7 @@ export default async function AnalyticsPage() {
       clubStats[id] = {
         name: clubMap[id]?.name ?? "Unknown",
         slug: clubMap[id]?.slug ?? "",
+        plan: clubMap[id]?.plan ?? "essentials",
         link_visits: 0,
         forms_started: 0,
         forms_submitted: 0,
@@ -128,12 +129,23 @@ export default async function AnalyticsPage() {
               <tbody className="divide-y divide-border">
                 {clubRows.map((c) => (
                   <tr key={c.slug} className="hover:bg-surface transition-colors">
-                    <td className="px-4 py-3 font-medium text-foreground">{c.name}</td>
+                    <td className="px-4 py-3 font-medium text-foreground">
+                      <span className="mr-2">{c.name}</span>
+                      {c.plan === "premium" ? (
+                        <span className="text-xs font-semibold bg-brand-50 text-brand-700 px-1.5 py-0.5 rounded-full">Premium</span>
+                      ) : (
+                        <span className="text-xs font-semibold bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded-full">Essentials</span>
+                      )}
+                    </td>
                     <td className="px-4 py-3 text-right text-muted">{c.link_visits}</td>
                     <td className="px-4 py-3 text-right text-muted">{c.forms_started}</td>
                     <td className="px-4 py-3 text-right font-medium text-foreground">{c.forms_submitted}</td>
-                    <td className="px-4 py-3 text-right text-muted">{c.guide_opens}</td>
-                    <td className="px-4 py-3 text-right text-muted">{c.pdf_prints}</td>
+                    <td className="px-4 py-3 text-right text-muted">
+                      {c.plan === "premium" ? c.guide_opens : <span className="text-xs text-muted">—</span>}
+                    </td>
+                    <td className="px-4 py-3 text-right text-muted">
+                      {c.plan === "premium" ? c.pdf_prints : <span className="text-xs text-muted">—</span>}
+                    </td>
                     <td className="px-4 py-3 text-right text-muted">
                       <span className="text-green-600">{c.pin_success}</span>
                       {" / "}

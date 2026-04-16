@@ -2,20 +2,23 @@
 
 import { useEffect, useRef } from "react";
 
-export default function ReportTracker({ requestId }) {
+export default function ReportTracker({ requestId, clubId, isPremium }) {
   const tracked = useRef(false);
 
   useEffect(() => {
     if (tracked.current) return;
     tracked.current = true;
 
-    // Log guide_opened
+    if (!isPremium) return;
+
+    // Log guide_opened (premium only)
     fetch("/api/events", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         event_type: "guide_opened",
         request_id: requestId,
+        club_id: clubId,
         metadata: {
           referrer: document.referrer || null,
           user_agent: navigator.userAgent,
@@ -23,7 +26,7 @@ export default function ReportTracker({ requestId }) {
       }),
     });
 
-    // Log pdf_printed when user triggers print
+    // Log pdf_printed when user triggers print (premium only)
     function handlePrint() {
       fetch("/api/events", {
         method: "POST",
@@ -37,7 +40,7 @@ export default function ReportTracker({ requestId }) {
 
     window.addEventListener("beforeprint", handlePrint);
     return () => window.removeEventListener("beforeprint", handlePrint);
-  }, [requestId]);
+  }, [requestId, isPremium]);
 
   return null;
 }

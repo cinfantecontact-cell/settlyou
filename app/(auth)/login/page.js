@@ -8,8 +8,8 @@ export default async function LoginPage({ searchParams }) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-surface px-4">
       <div className="w-full max-w-sm bg-white rounded-xl border border-border p-8 shadow-sm">
-        <a href="/" className="block text-2xl font-bold text-brand-600 tracking-tight mb-8">
-          Settl
+        <a href="/" className="block mb-8">
+          <img src="/settlyou-logo.png" alt="Settl" className="h-8 rounded-md" />
         </a>
 
         <h1 className="text-xl font-semibold text-foreground mb-1">Welcome back</h1>

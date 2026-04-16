@@ -26,6 +26,7 @@ export async function POST(request) {
   const address = formData.get("address") || null;
   const city = formData.get("city") || null;
   const country = formData.get("country") || null;
+  const plan = formData.get("plan") || "essentials";
 
   // Upload logo if provided
   let logo_url = null;
@@ -63,6 +64,7 @@ export async function POST(request) {
     address,
     city,
     country,
+    plan,
     active: true,
     seats_used: 0,
   });

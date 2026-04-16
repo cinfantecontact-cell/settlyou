@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic';
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
+import JoinLinkCard from "./_components/JoinLinkCard";
 
 export default async function ClubDashboard() {
   const supabase = await createClient();
@@ -39,8 +40,13 @@ export default async function ClubDashboard() {
     <div className="p-8 max-w-5xl mx-auto">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-foreground">{club?.name}</h1>
-        <p className="text-sm text-muted mt-1">Welcome to your Settl portal</p>
+        <p className="text-sm text-muted mt-1">Welcome to your Settlyou portal</p>
       </div>
+
+      {/* Join link */}
+      {club?.slug && (
+        <JoinLinkCard slug={club.slug} pin={club.pin} clubName={club.name} />
+      )}
 
       {/* Stat cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">

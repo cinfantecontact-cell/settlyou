@@ -14,11 +14,38 @@ export default async function ClubAthletes() {
     .from("profiles").select("role, club_id").eq("id", user.id).single();
   if (profile?.role !== "club_admin") redirect("/login");
 
+  const { data: club } = await admin
+    .from("clubs").select("plan").eq("id", profile.club_id).single();
+
+  const isPremium = club?.plan === "premium";
+
   const { data: requests } = await admin
     .from("requests")
     .select("id, status, athlete_name, athlete_email, destination_city, destination_country, created_at, athlete_link_token")
     .eq("club_id", profile.club_id)
     .order("created_at", { ascending: false });
+
+  // Fetch guide open events for premium clubs
+  let openMap = {};
+  if (isPremium && requests?.length) {
+    const requestIds = requests.map((r) => r.id);
+    const { data: events } = await admin
+      .from("events")
+      .select("request_id, created_at")
+      .eq("event_type", "guide_opened")
+      .in("request_id", requestIds);
+
+    for (const e of events ?? []) {
+      if (!openMap[e.request_id]) {
+        openMap[e.request_id] = { count: 0, last_opened: null };
+      }
+      openMap[e.request_id].count++;
+      const t = new Date(e.created_at);
+      if (!openMap[e.request_id].last_opened || t > new Date(openMap[e.request_id].last_opened)) {
+        openMap[e.request_id].last_opened = e.created_at;
+      }
+    }
+  }
 
   return (
     <div className="p-8 max-w-5xl mx-auto">
@@ -38,6 +65,8 @@ export default async function ClubAthletes() {
                 <th className="text-left px-6 py-3 text-xs text-muted font-medium uppercase tracking-wider">Destination</th>
                 <th className="text-left px-6 py-3 text-xs text-muted font-medium uppercase tracking-wider">Status</th>
                 <th className="text-left px-6 py-3 text-xs text-muted font-medium uppercase tracking-wider">Date</th>
+                {isPremium && <th className="text-left px-6 py-3 text-xs text-muted font-medium uppercase tracking-wider">Guide opens</th>}
+                {isPremium && <th className="text-left px-6 py-3 text-xs text-muted font-medium uppercase tracking-wider">Last opened</th>}
                 <th className="text-left px-6 py-3 text-xs text-muted font-medium uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
@@ -55,6 +84,24 @@ export default async function ClubAthletes() {
                     <StatusBadge status={r.status} />
                   </td>
                   <td className="px-6 py-4 text-muted">{new Date(r.created_at).toLocaleDateString()}</td>
+                  {isPremium && (
+                    <td className="px-6 py-4">
+                      {openMap[r.id]?.count > 0 ? (
+                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-brand-700 bg-brand-50 border border-brand-100 px-2 py-0.5 rounded-full">
+                          {openMap[r.id].count}×
+                        </span>
+                      ) : (
+                        <span className="text-xs text-muted">Not opened</span>
+                      )}
+                    </td>
+                  )}
+                  {isPremium && (
+                    <td className="px-6 py-4 text-xs text-muted">
+                      {openMap[r.id]?.last_opened
+                        ? new Date(openMap[r.id].last_opened).toLocaleString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })
+                        : "—"}
+                    </td>
+                  )}
                   <td className="px-6 py-4">
                     <a href={`/club/athletes/${r.id}`} className="text-xs text-brand-600 hover:underline font-medium">
                       View →

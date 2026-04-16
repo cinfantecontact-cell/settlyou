@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendAdminNewSubmission } from "@/lib/email/send";
+import { generateRelocationDocument } from "@/lib/ai/generate-document";
 
 export async function POST(request, { params }) {
   const admin = createAdminClient();
@@ -29,7 +30,7 @@ export async function POST(request, { params }) {
 
   const token = crypto.randomUUID();
 
-  const { error: insertError } = await admin.from("requests").insert({
+  const { data: inserted, error: insertError } = await admin.from("requests").insert({
     club_id: club.id,
     athlete_link_token: token,
     submitted_by_athlete: true,
@@ -104,7 +105,7 @@ export async function POST(request, { params }) {
     service_tier: body.service_tier || "basic",
     athlete_email: body.athlete_email || null,
     additional_notes: body.additional_notes || null,
-  });
+  }).select("id").single();
 
   if (insertError) {
     return NextResponse.json({ error: insertError.message }, { status: 500 });
@@ -126,6 +127,44 @@ export async function POST(request, { params }) {
     });
   } catch (e) {
     console.error("Failed to send admin notification:", e.message);
+  }
+
+  // Auto-generate guide in background
+  const requestId = inserted?.id;
+  if (requestId) {
+    after(async () => {
+      console.log("[auto-generate] starting for request", requestId);
+      try {
+        // Fetch full request + club branding
+        const { data: relocationRequest } = await admin
+          .from("requests").select("*").eq("id", requestId).single();
+
+        const { data: clubData } = await admin
+          .from("clubs").select("custom_notes, logo_url, primary_color").eq("id", club.id).single();
+
+        if (clubData?.custom_notes) relocationRequest.club_custom_notes = clubData.custom_notes;
+        if (clubData?.logo_url) relocationRequest.club_logo_url = clubData.logo_url;
+        if (clubData?.primary_color) relocationRequest.club_primary_color = clubData.primary_color;
+
+        await admin.from("requests").update({ status: "generating" }).eq("id", requestId);
+
+        const document = await generateRelocationDocument(relocationRequest);
+
+        if (clubData?.logo_url) document.meta.club_logo_url = clubData.logo_url;
+        if (clubData?.primary_color) document.meta.club_primary_color = clubData.primary_color;
+
+        const { error: docError } = await admin
+          .from("documents").insert({ request_id: requestId, content: document, language: "en" });
+
+        if (docError) throw new Error(docError.message);
+
+        await admin.from("requests").update({ status: "under_review" }).eq("id", requestId);
+        console.log("[auto-generate] done, status set to under_review");
+      } catch (err) {
+        await admin.from("requests").update({ status: "submitted" }).eq("id", requestId);
+        console.error("[auto-generate] error:", err);
+      }
+    });
   }
 
   return NextResponse.json({ ok: true });

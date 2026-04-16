@@ -12,8 +12,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Settl — Athlete Relocation Platform",
-  description: "Settl helps sports clubs and agencies relocate athletes seamlessly to any city in the world.",
+  title: "Settlyou — Athlete Relocation Platform",
+  description: "Settlyou helps sports clubs and agencies relocate athletes seamlessly to any city in the world.",
 };
 
 export default function RootLayout({ children }) {

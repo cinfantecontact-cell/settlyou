@@ -48,21 +48,8 @@ export default function InviteClientPage({ searchParams }) {
               />
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
-              <div className="flex flex-col gap-1">
-                <label htmlFor="org_type" className="text-sm font-medium text-foreground">Type</label>
-                <select
-                  id="org_type"
-                  name="org_type"
-                  required
-                  className="border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition bg-white"
-                >
-                  <option value="">Select...</option>
-                  <option value="club">Soccer club</option>
-                  <option value="agency">Agency</option>
-                </select>
-              </div>
-
+            <input type="hidden" name="org_type" value="college" />
+            <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-1">
                 <label htmlFor="org_country" className="text-sm font-medium text-foreground">Country</label>
                 <select
@@ -86,8 +73,8 @@ export default function InviteClientPage({ searchParams }) {
                   required
                   className="border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition bg-white"
                 >
-                  <option value="basic">Basic</option>
-                  <option value="premium">Premium</option>
+                  <option value="essentials">Essentials — $1,499/yr</option>
+                  <option value="premium">Premium — $2,499/yr</option>
                 </select>
               </div>
             </div>

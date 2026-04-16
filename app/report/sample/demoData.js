@@ -1,719 +1,693 @@
 export const demoDocument = {
   meta: {
-    athlete_name: "Gabriel Santos",
-    destination: "Madrid, Spain",
-    club: "Real Madrid CF",
-    club_logo_url: null,
-    club_primary_color: "#1a1a2e",
+    athlete_name: "Carlos Mendoza",
+    destination: "Miami, FL, United States",
+    club: "Inter Miami CF",
+    club_logo_url: "https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/Inter_Miami_CF_logo.svg/200px-Inter_Miami_CF_logo.svg.png",
+    club_primary_color: "#231F20",
+    club_website: "https://www.intermiamicf.com",
     generated_summary:
-      "Madrid is one of Europe's most vibrant, cosmopolitan capitals — a city that combines world-class infrastructure, outstanding international schools, and a warm, family-friendly culture that makes it one of the best cities in the world for a professional footballer and his family to call home. For Gabriel, Ana, Mateus, Sofia, and Simba, this city will feel like a place you never want to leave.",
+      "Miami is one of the most dynamic sports cities in the Americas — a place where elite athletic infrastructure, year-round training conditions, and a deeply Latin culture make the transition from Medellín feel surprisingly natural. For Carlos and Valentina, this city offers world-class recovery facilities, a thriving Colombian community, and a lifestyle built for performance. South Florida's warm climate means no off-season disruptions to training load, and Inter Miami's growing profile puts Carlos at the center of one of MLS's most exciting projects.",
     welcome_letter:
-      "Dear Gabriel, welcome to Real Madrid — and welcome to the city that breathes football like nowhere else on earth. Moving from Rio with Ana, Mateus, Sofia, and Simba is a big step, and we want you to feel completely ready for it. Madrid has a warmth and energy that Brazilians consistently find familiar — the people, the food, the passion for the game. We've built this guide around your family's life specifically: great schools for the kids, a city perfect for a Golden Retriever, golf courses worthy of your handicap, and neighborhoods where you'll feel at home from day one. Let's get you settled.",
+      "Dear Carlos, welcome to Inter Miami CF — and welcome to South Florida. Signing with Inter Miami is a major step, and we want to make sure you and Valentina hit the ground running from day one. Miami has a warmth and energy that Colombians find immediately familiar — the Spanish is everywhere, the food reminds you of home, and the passion for football runs deep. We've built this guide around your family's specific situation: a great preschool for Emma, neighborhoods that keep your commute to the training facility short, the best recovery centers in South Florida, and everything you need to feel settled and focused. You're going to love it here.",
   },
   sections: {
     neighborhoods: {
       title: "Recommended Neighborhoods",
       intro:
-        "These four areas were selected based on proximity to Ciudad Real Madrid in Valdebebas, quality of international schools, family-friendly character, and availability of large homes with outdoor space for Simba.",
+        "These neighborhoods were selected based on commute to the Inter Miami CF Training Facility in Fort Lauderdale, quality of schools for Emma, Latin community presence, and family-friendly character.",
       items: [
         {
-          name: "La Moraleja",
+          name: "Weston, FL",
           fit_score: 96,
           fit_reason:
-            "The definitive address for elite footballers in Madrid — gated residential estate with large villas, exceptional security, and the closest premium neighborhood to Valdebebas training ground.",
+            "The premier destination for Latin American professional athletes in South Florida — planned community with gated estates, top-rated schools, and a Colombian community you'll feel immediately at home in.",
           description:
-            "La Moraleja is Madrid's most exclusive residential estate, home to dozens of Real Madrid and Atlético players, diplomats, and international executives. The area is built around large private villas with gardens, swimming pools, and 24-hour security, making it ideal for a family with young children and a dog. The international community is deeply embedded here — you'll find neighbors from Brazil, France, England, and beyond, many of whom share the same lifestyle.",
-          avg_rent_range: "$8,000–$15,000 USD/month",
-          commute_to_training: "12 minutes to Valdebebas",
+            "Weston is South Florida's most sought-after suburb for professional athletes and Latin American families. The city is meticulously planned, with gated residential communities, beautifully maintained parks, and one of the best school systems in Florida. The Colombian, Venezuelan, and Argentine communities here are enormous — Carlos and Valentina will find Spanish as their primary language on any given block. Virtually every MLS and major league athlete who plays in South Florida chooses Weston for their family.",
+          character: "Safe, suburban, heavily Latin American",
+          avg_rent_range: "$3,200–$5,500/month for a 3BR home",
+          commute_to_training: "20–25 minutes to Inter Miami training facility",
           pros: [
-            "Largest concentration of professional footballer families in Madrid",
-            "Large villas with gardens — perfect for Simba",
-            "12-minute commute to Valdebebas training ground",
-            "Gated security with 24-hour surveillance",
+            "Largest concentration of Latin American athlete families in South Florida",
+            "Weston has A-rated public schools and top private preschools for Emma",
+            "Gated communities with 24-hour security — ideal for family privacy",
+            "Massive Colombian community — Spanish-first neighborhood",
           ],
+          cons: ["Suburban feel — far from Miami's nightlife and cultural scene", "Requires a car for everything"],
+          best_for: "Families with young children who prioritize community, safety, and schools",
         },
         {
-          name: "Pozuelo de Alarcón",
-          fit_score: 91,
+          name: "Aventura, FL",
+          fit_score: 89,
           fit_reason:
-            "Madrid's most prestigious western suburb — large family homes, top international schools on the doorstep, and the Club de Campo golf course minutes away.",
+            "Upscale coastal city exactly halfway between Miami and Fort Lauderdale — luxury apartments, bilingual community, and outstanding access to beaches and restaurants.",
           description:
-            "Pozuelo is a leafy, affluent suburb west of Madrid that consistently ranks as one of Spain's highest-income municipalities. It has a strong international school cluster, excellent private healthcare, and a calm residential atmosphere that suits a family with young children. The Somosaguas area in particular offers large modern villas with private gardens. Golf access is outstanding — the Real Club de Golf La Dehesa and Club de Campo are both nearby.",
-          avg_rent_range: "$5,000–$10,000 USD/month",
-          commute_to_training: "35 minutes to Valdebebas",
+            "Aventura sits on the Intracoastal Waterway between Miami and Fort Lauderdale, offering an upscale residential feel with easy highway access to the training facility. The city is predominantly Latin American and has a strong Argentine and Colombian presence. Aventura Mall is one of the largest in the US, and the waterfront restaurant and café scene is outstanding. For Carlos and Valentina, Aventura offers the lifestyle energy of Miami with a shorter commute than living in the city itself.",
+          character: "Upscale, coastal, bilingual",
+          avg_rent_range: "$2,800–$4,500/month for a 3BR",
+          commute_to_training: "30–35 minutes to training facility",
           pros: [
-            "Direct access to three of Madrid's best golf courses",
-            "King's College and Colegio Europeo de Madrid both nearby",
-            "More spacious and affordable than La Moraleja",
-            "Strong Brazilian expat community in the area",
+            "Beachfront access — 10 minutes to Hollywood Beach or Sunny Isles",
+            "Strong Latin American dining and social scene",
+            "Aventura Mall for shopping and family entertainment",
+            "Easy I-95 access for quick training commute",
           ],
+          cons: ["Higher cost of living than Weston", "Traffic on I-95 can add 15 minutes during rush hour"],
+          best_for: "Athletes who want lifestyle balance — beach access, city energy, and manageable commute",
         },
         {
-          name: "Las Rozas de Madrid",
-          fit_score: 87,
+          name: "Coral Springs / Parkland, FL",
+          fit_score: 84,
           fit_reason:
-            "Suburban town with large residential properties, excellent international schools, and Real Madrid's own training complex nearby — a natural choice for the club's foreign players.",
+            "Top-ranked school district in Broward County, quiet residential streets, and the shortest commute to Inter Miami's training facility of any premium neighborhood.",
           description:
-            "Las Rozas is a modern, well-planned suburban town northwest of Madrid that has become the unofficial village of Real Madrid — the club's Ciudad Real Madrid training facility is here, meaning many squad members and staff live locally. The town has excellent amenities, multiple international schools, spacious villas with pools and gardens, and a genuine small-town feel that works beautifully for families with young children.",
-          avg_rent_range: "$4,000–$8,000 USD/month",
-          commute_to_training: "5 minutes to Valdebebas",
+            "Coral Springs and neighboring Parkland offer some of the best public schools in Florida and a calm, family-oriented suburban lifestyle at notably lower price points than Weston or Aventura. The area is popular with young professional families and has excellent parks, trails, and outdoor facilities. The Latin American community is growing rapidly here. Living in Coral Springs or Parkland puts Carlos 15–20 minutes from training — the shortest possible commute while still being in a quality residential area.",
+          character: "Suburban, family-centered, outdoorsy",
+          avg_rent_range: "$2,400–$4,000/month for a 3BR",
+          commute_to_training: "15–20 minutes to training facility",
           pros: [
-            "Closest neighborhood to the training ground — 5 minutes",
-            "Several teammates and club staff live nearby",
-            "More space and garden for the same budget",
-            "International School of Las Rozas on the doorstep",
+            "Shortest commute to training — maximizes recovery time",
+            "Parkland has one of the highest-rated school systems in Florida",
+            "Lower cost than Weston for equivalent space",
+            "Quiet, safe neighborhoods — excellent for a young family",
           ],
-        },
-        {
-          name: "Barrio de Salamanca",
-          fit_score: 82,
-          fit_reason:
-            "Madrid's most elegant urban neighborhood — ideal if Gabriel and Ana want to be in the heart of the city with access to top restaurants, culture, and the best shopping in Spain.",
-          description:
-            "Salamanca is Madrid's most prestigious central neighborhood, known for its wide Haussmann-style boulevards, luxury boutiques, fine dining, and a sophisticated residential atmosphere. It is the neighborhood of choice for wealthy Madrileños who want to live in the city rather than the suburbs. Apartments here are spacious and beautifully appointed. The trade-off is a longer commute to Valdebebas and smaller outdoor spaces, though several buildings have terraces and communal gardens.",
-          avg_rent_range: "$6,000–$12,000 USD/month",
-          commute_to_training: "25 minutes to Valdebebas",
-          pros: [
-            "The most prestigious central address in Madrid",
-            "Walking distance to the best restaurants and shops in Spain",
-            "Perfect for Ana's design career — surrounded by culture and inspiration",
-            "Strong expat community in luxury apartment buildings",
-          ],
+          cons: ["Less Latin American community feel than Weston or Aventura", "Further from Miami's cultural and dining scene"],
+          best_for: "Athletes prioritizing recovery time — minimum commute, maximum rest",
         },
       ],
     },
     housing: {
       title: "Housing Options",
       intro:
-        "Madrid's premium rental market offers genuine choice at Gabriel's budget — from large suburban villas with gardens to elegant city apartments.",
+        "South Florida's rental market has excellent family homes available at Carlos's budget — from gated Weston estates to waterfront Aventura apartments.",
       search_platforms: [
-        { name: "Idealista", url: "https://www.idealista.com" },
-        { name: "Fotocasa", url: "https://www.fotocasa.es" },
-        { name: "Lucas Fox", url: "https://www.lucasfox.com" },
-        { name: "Engel & Völkers", url: "https://www.engelvoelkers.com/es-es" },
+        { name: "Zillow", url: "https://www.zillow.com", note: "Best for single-family homes" },
+        { name: "Realtor.com", url: "https://www.realtor.com", note: "MLS listings + neighborhood data" },
+        { name: "Luxury Rentals Miami", url: "https://www.luxuryrentalsmiami.com", note: "Premium properties" },
+        { name: "Related ISG", url: "https://www.relatedisg.com", note: "South Florida luxury specialist" },
+      ],
+      tips: [
+        "Landlords in South Florida typically require first month, last month, and one month security deposit upfront — budget accordingly",
+        "Gated communities in Weston require HOA approval for renters — the club's relocation team can assist with the application",
+        "Hurricane season runs June–November — confirm the property has impact windows and a generator, standard in premium South Florida homes",
       ],
       items: [
         {
-          type: "Luxury villa with garden",
-          area: "La Moraleja — Urbanización La Moraleja",
+          type: "Gated single-family home",
+          area: "Weston — Sector 4 / The Ridges",
           description:
-            "Detached villas of 400–600m² with private gardens of 500–1,000m², private pool, double garage, and 24-hour gated community security. These properties are the standard choice for Real Madrid players — spacious enough for a family of four, a large dog, and visiting family from Brazil. Finishes are high-end throughout, with modern kitchens, multiple bathrooms, and large terraces.",
-          price_range: "$9,000–$14,000 USD/month",
-          bedrooms: "4–6",
+            "Detached 3–4 bedroom homes in Weston's most prestigious gated communities — private pools, two-car garages, large backyards, and 24-hour community security. These properties are the standard for MLS players and Latin American executives in South Florida. The Ridges community in particular has hosted multiple Inter Miami and Marlins players. Emma will love the pool and the private outdoor space.",
+          price_range: "$3,800–$5,200/month",
+          bedrooms: "3–4",
           highlights: [
-            "Private garden and pool — perfect for Simba and the kids",
-            "24-hour gated security",
-            "12 minutes to Valdebebas training ground",
+            "Private pool — essential for South Florida summers",
+            "Weston A-rated schools within walking distance",
+            "Gated community with 24-hour security patrol",
           ],
         },
         {
-          type: "Large family villa",
-          area: "Pozuelo de Alarcón — Somosaguas or La Finca",
+          type: "Luxury townhome",
+          area: "Aventura — Turnberry Isle or Porto Vita",
           description:
-            "Premium semi-detached and detached villas in Madrid's most sought-after western suburbs. La Finca in Pozuelo is particularly notable — a private gated estate of around 400 luxury villas that has historically been home to Raúl, Ronaldo, and many other Real Madrid legends. Properties offer large gardens, private pools, and high-end finishes at slightly lower prices than La Moraleja.",
-          price_range: "$6,500–$11,000 USD/month",
-          bedrooms: "4–5",
+            "Premium townhomes and large condos in Aventura's finest waterfront communities, with resort-style amenities including pools, fitness centers, tennis courts, and direct Intracoastal access. Porto Vita in particular offers a private spa, restaurant, and concierge — an excellent option for a family wanting hotel-style service with home-style living.",
+          price_range: "$3,200–$4,800/month",
+          bedrooms: "3",
           highlights: [
-            "La Finca has historically housed Real Madrid legends",
-            "Direct access to golf clubs and international schools",
-            "More affordable than La Moraleja for equivalent space",
+            "Resort amenities — pool, spa, tennis — on your doorstep",
+            "Intracoastal and marina views",
+            "Concierge service and 24-hour security",
           ],
         },
         {
-          type: "Luxury penthouse apartment",
-          area: "Barrio de Salamanca — Calle Velázquez or Calle Serrano",
+          type: "Modern single-family home",
+          area: "Coral Springs / Parkland",
           description:
-            "Duplex penthouses in Salamanca's grand residential buildings offer 300–450m² of living space, large terraces with Madrid skyline views, private parking, and 24-hour concierge. These properties suit the family if Ana wants to be in the cultural heart of Madrid and Gabriel is comfortable with the longer commute. Many buildings in Salamanca have undergone full renovations in the past decade and offer contemporary interiors within classic architecture.",
-          price_range: "$8,000–$13,000 USD/month",
-          bedrooms: "4",
+            "Spacious modern homes in Parkland's planned residential communities, offering the most space per dollar in Broward County. Many homes here have been renovated in the past 5 years with open-plan layouts, smart home systems, and large screened-in pool areas. Parkland Isles and Heron Bay are the most popular gated options.",
+          price_range: "$2,600–$3,800/month",
+          bedrooms: "3–4",
           highlights: [
-            "Large terrace with Madrid skyline views",
-            "Walking distance to the best of the city",
-            "24-hour concierge and underground parking",
+            "Most space for the budget in Broward County",
+            "Best school district in the region for Emma",
+            "15-minute drive to training — fastest commute option",
           ],
         },
       ],
     },
-    schools: {
-      title: "Schools",
+    performance_recovery: {
+      title: "Performance & Recovery",
       intro:
-        "Madrid has an exceptional international school ecosystem — for Mateus (age 6) and Sofia (age 3), the priority is English-medium instruction, a strong pastoral team for new arrivals, and a diverse international community.",
+        "South Florida has one of the strongest sports recovery ecosystems in North America — from world-class cryotherapy and float therapy to elite sports nutrition specialists who work with MLS, NFL, and NBA athletes.",
+      recovery_centers: [
+        {
+          name: "Restore Hyper Wellness — Weston",
+          url: "https://www.restorehyperwellness.com",
+          type: "Full-service recovery center",
+          location: "Weston Town Center, Weston FL",
+          description:
+            "The premier recovery center in Weston, used regularly by professional athletes across South Florida. Services include cryotherapy (-110°C full-body chambers), infrared saunas, compression therapy, IV nutrient drips, and hyperbaric oxygen therapy. Multiple MLS and NFL players are active members. The center's staff are trained in athlete-specific protocols and can build a weekly recovery plan around Inter Miami's training schedule.",
+          price_range: "$30–$120 per session; monthly plans from $199",
+          athlete_note: "Cryotherapy and compression therapy are the key sessions for a midfielder's recovery — schedule 2x per week post-training. The IV drip packages are excellent for travel recovery after road games.",
+        },
+        {
+          name: "Float Fort Lauderdale",
+          url: "https://www.floatfortlauderdale.com",
+          type: "Float therapy & sensory deprivation",
+          location: "1811 Middle River Dr, Fort Lauderdale FL",
+          description:
+            "South Florida's dedicated float therapy center, offering 60 and 90-minute float sessions in high-density Epsom salt tanks. Float therapy accelerates muscle recovery, reduces cortisol, and is used by MLS, NBA, and UFC athletes as a core mental and physical reset. Located 15 minutes from the training facility — ideal for post-training sessions.",
+          price_range: "$75–$95/session; packages from $250/month",
+          athlete_note: "Float therapy is particularly valuable for midfielders carrying high training loads — the magnesium absorption reduces DOMS significantly. Schedule one 90-minute session after the heaviest training day of the week.",
+        },
+        {
+          name: "FX Physical Therapy — Fort Lauderdale",
+          url: "https://www.fxphysicaltherapy.com",
+          type: "Sports physiotherapy & injury prevention",
+          location: "Fort Lauderdale, FL",
+          description:
+            "One of South Florida's most respected sports physiotherapy clinics, working with MLS, NHL Panthers, and collegiate athletes. Specializes in movement analysis, injury prevention screenings, and return-to-play protocols. Dr. Luis Hernandez leads the sports department and is Spanish-speaking — an important factor for a newly arrived player navigating a new healthcare system.",
+          price_range: "$150–$200/session; packages available",
+          athlete_note: "Book an initial movement analysis session in your first two weeks — identifying biomechanical asymmetries early is the best investment in a long season.",
+        },
+      ],
+      sports_nutrition: [
+        {
+          name: "Performance Kitchen — Miami",
+          url: "https://www.performancekitchen.com",
+          type: "Athlete meal prep & delivery service",
+          location: "Delivery to Weston, Aventura, Fort Lauderdale",
+          description:
+            "Miami's leading athlete-specific meal prep service, delivering macro-optimized meals to professional athletes across South Florida. Used by several MLS and NFL players in the region. Meals are customized to your training load — heavier carb loading on training days, lean protein recovery meals on match days and rest days. Spanish-speaking dietitian available for initial consultation.",
+          price_range: "$280–$380/week for full meal plan",
+          athlete_note: "The 'Elite Athlete' plan (22 meals/week) is the most common choice for MLS players — covers all post-training and match-day nutrition without Carlos or Valentina needing to cook every meal.",
+        },
+        {
+          name: "Vitamin Shoppe — Weston",
+          url: "https://www.vitaminshoppe.com",
+          type: "Premium supplement retail",
+          location: "Weston Town Center, Weston FL",
+          description:
+            "The closest premium supplement retailer to Weston's residential areas, carrying the full range of NSF Certified for Sport products — essential for professional athletes subject to WADA testing. Staff are knowledgeable and can advise on WADA-safe alternatives to any supplement Carlos uses from Colombia.",
+          price_range: "Standard supplement retail pricing",
+          athlete_note: "Only use NSF Certified for Sport supplements — Carlos must check every supplement he takes is on the WADA safe list. The Vitamin Shoppe staff can filter by certification.",
+        },
+      ],
+      mental_performance:
+        "Dr. Ana Restrepo at the Miami Sports Psychology Institute (miamisportspsychology.com) works specifically with Latin American athletes navigating the cultural and performance transition to North American leagues — Spanish-language sessions available, and her background with MLS players makes her uniquely equipped to support Carlos in his first season.",
+    },
+    schools: {
+      title: "Schools & Preschools",
+      intro:
+        "Emma (age 3) is at the perfect age for a high-quality bilingual preschool — South Florida has outstanding options that will build her Spanish and English simultaneously in a nurturing environment.",
       items: [
         {
-          name: "King's College Madrid",
-          url: "https://www.kingscollegeschools.org/madrid",
-          type: "International / Private",
-          curriculum: "British (IGCSE & A-Levels)",
-          age_range: "2–18",
-          fee_range: "$14,000–$22,000 USD/year per child",
+          name: "Primrose School of Weston",
+          url: "https://www.primroseschools.com/schools/weston-fl",
+          type: "Private preschool",
+          curriculum: "Balanced Learning® (play-based + academic)",
+          age_range: "6 weeks – 5 years",
+          language_of_instruction: "English (Spanish enrichment program)",
+          fee_range: "$1,400–$1,800/month",
           description:
-            "King's College is Madrid's most prestigious British school and consistently ranks among the top international schools in Spain. The school has a large, beautifully equipped campus in La Moraleja, putting it minutes from where Gabriel's family is most likely to live. The school is known for its exceptional pastoral care for new international students — the transition team actively supports families arriving mid-year.",
+            "Primrose Weston is the top-rated preschool in the city and the consistent first choice for athlete families moving to the area. The school has a warm, nurturing environment specifically designed for ages 3–5, with structured learning, outdoor play, and a dedicated transition program for children arriving from Spanish-speaking households. Emma's transition from Medellín will be supported with individualized attention.",
+          application_tip:
+            "Waitlists can run 2–3 months in Weston — have the club's relocation team submit Emma's application before Carlos's move date.",
         },
         {
-          name: "American School of Madrid",
-          url: "https://www.asmadrid.org",
-          type: "International / American",
-          curriculum: "American (AP) with IB option",
-          age_range: "3–18",
-          fee_range: "$16,000–$24,000 USD/year per child",
+          name: "Bright Horizons at Weston",
+          url: "https://www.brighthorizons.com",
+          type: "Private preschool / childcare",
+          curriculum: "HEART Mapping® (social-emotional + academic)",
+          age_range: "6 weeks – 5 years",
+          language_of_instruction: "English with bilingual educators",
+          fee_range: "$1,500–$2,000/month",
           description:
-            "The American School of Madrid is the flagship American curriculum school in Spain, serving the US Embassy community and international families. The school has outstanding facilities including dedicated early childhood buildings for children Sofia's age, strong sports programs, and a multicultural student body from over 50 nationalities. The Early Childhood program for ages 3–5 is particularly strong for Sofia.",
+            "Bright Horizons is consistently rated among the best early childhood programs in Broward County. The Weston center has multiple bilingual educators and an active Parent Community program that helps newly arrived families connect quickly. The outdoor campus is exceptional for South Florida, with shaded play areas and a nature exploration garden.",
+          application_tip: "The director, Ms. Maribel Torres, is Colombian-American and has significant experience welcoming children from Latin American families — mention Carlos's background when enrolling.",
         },
         {
-          name: "Colegio Europeo de Madrid",
-          url: "https://www.colegio-europeo.es",
-          type: "International / European",
-          curriculum: "IB (PYP, MYP, Diploma)",
-          age_range: "3–18",
-          fee_range: "$10,000–$16,000 USD/year per child",
+          name: "Weston Public Preschool (VPK Program)",
+          url: "https://www.browardschools.com",
+          type: "Public Voluntary Pre-Kindergarten",
+          curriculum: "Florida State VPK curriculum",
+          age_range: "4 years",
+          language_of_instruction: "English",
+          fee_range: "Free (state-funded for 4-year-olds)",
           description:
-            "Colegio Europeo offers a full IB program from nursery through diploma in a warm, family-centered environment. The school has a strong focus on multilingualism — children are educated in English, Spanish, and French from an early age — which is particularly valuable for Mateus and Sofia as they settle into Spanish life. The school has an active Brazilian parent community.",
+            "Florida's Voluntary Pre-Kindergarten program is free for all 4-year-olds and available through Broward County Public Schools. Weston's VPK classrooms are among the best in the county — small class sizes, certified teachers, and strong preparation for kindergarten. An excellent option to consider for Emma's second year in Florida once she turns 4.",
+          application_tip: "VPK registration opens in January for the following fall — register early as Weston spots fill quickly.",
         },
       ],
     },
     transportation: {
       title: "Transportation & Cars",
       intro:
-        "Having two cars is essential for the Santos family in Madrid — Ana will need full independence for school runs and her design work while Gabriel is at training.",
+        "A car is absolutely essential in South Florida — public transit is minimal outside of Miami proper, and Carlos will need reliable transportation between Weston or Aventura and the Fort Lauderdale training facility daily.",
       license_info:
-        "A valid Brazilian driver's license (CNH) is recognized in Spain for up to 6 months for residents. After that, Gabriel and Ana must obtain Spanish licenses (permiso de conducir) through the DGT. The process requires a theory exam (available in Portuguese at some centers) and a practical driving test. The club's legal team will guide the process — budget 6–10 weeks and drive on your Brazilian license in the meantime.",
+        "A valid Colombian driver's license (Licencia de Conducción) can be used in Florida for up to one year for a non-resident. Once Carlos establishes Florida residency, he must obtain a Florida Driver's License — which requires a vision test, written knowledge test, and driving skills test at a local DMV. Colombian licenses are not automatically exchangeable, but the process is straightforward. Budget 4–6 weeks. The MLS Players Association has a relocation guide specific to this process.",
       items: [
         {
-          option: "Buy — Primary Family Vehicle",
+          option: "Primary Training Vehicle — Carlos",
           description:
-            "The Range Rover Sport or BMW X5 are the standard choices among Real Madrid players — excellent resale value, widely serviced in Madrid, and large enough for a family of four plus a Golden Retriever. Buying outright over a 4-year contract avoids monthly lease costs and gives full flexibility to sell when the contract ends.",
-          price_range: "$85,000–$120,000 USD at current Madrid market prices",
+            "The BMW X5 or Mercedes-Benz GLE are the standard choices among MLS players in South Florida — premium, comfortable for daily Weston-to-Fort Lauderdale commutes, and widely serviced in Broward County. Both have excellent resale value for a 3-year contract period. Many players purchase through AutoNation Weston, which has a dedicated sports and entertainment client team.",
+          price_range: "$75,000–$95,000 or $850–$1,100/month lease",
           tips: [
-            "Purchase through an authorized dealer — Madrid has a significant grey market for luxury vehicles",
-            "Register in Gabriel's name immediately with a Spanish NIE number",
-            "Annual road tax (impuesto de circulación) is handled by the municipality",
+            "Lease rather than buy if Carlos's contract is 2–3 years — avoids depreciation risk and includes full service coverage",
+            "Florida has no state income tax but has a 6% sales tax on vehicle purchases",
+            "I-75 / Sawgrass Expressway (Route 869) is the fastest route from Weston to Fort Lauderdale training — use SunPass for toll roads",
           ],
         },
         {
-          option: "Buy — Ana's Daily Vehicle",
+          option: "Family Vehicle — Valentina",
           description:
-            "The Volvo XC60 or Porsche Macan are ideal for Ana's daily school runs and city driving — premium, safe, practical, and well-suited to Madrid's urban roads. Both hold value well and are serviced across the city.",
-          price_range: "$60,000–$90,000 USD",
+            "The Honda Pilot or Toyota Highlander are the most practical family SUV choices in South Florida — spacious for Emma and family needs, highly reliable in Florida's heat and hurricane conditions, and broadly available for service. Both hold their value well and are significantly more fuel-efficient than luxury alternatives for daily school runs and errands.",
+          price_range: "$40,000–$52,000 or $550–$700/month lease",
           tips: [
-            "Madrid's Low Emission Zone (ZBE) restricts older vehicles in the city center — both models are compliant",
-            "Underground parking in La Moraleja villas is standard — city center neighborhoods require separate parking contracts",
+            "SunPass transponder is essential — every major highway in South Florida is tolled",
+            "Hurricane evacuation routes run north–south on I-95 and the Turnpike — know them before the season starts",
           ],
         },
       ],
+      public_transport_note:
+        "Broward County Transit (BCT) and Miami-Dade Transit exist but are not practical for Carlos's training schedule — a car is non-negotiable for this area.",
     },
     fitness: {
-      title: "Fitness & Sports",
+      title: "Training & Fitness Facilities",
       intro:
-        "Madrid has world-class fitness infrastructure — and for a professional athlete with a golf handicap, the city's private clubs are among the best in Europe.",
+        "Beyond Inter Miami's own training complex, South Florida has outstanding supplementary training facilities used by professional athletes across the NFL, NBA, and MLS.",
       items: [
         {
-          name: "Real Club de Golf La Moraleja",
-          url: "https://www.realclubdegolflamoraleja.com",
-          type: "Golf club",
-          location: "La Moraleja, Alcobendas — 10 minutes from training ground",
+          name: "Exos — Fort Lauderdale",
+          url: "https://www.teamexos.com",
+          type: "Elite performance training center",
+          location: "Fort Lauderdale, FL",
           description:
-            "One of Spain's most prestigious golf clubs, with two championship 18-hole courses (Moraleja I & II), a full clubhouse, driving range, and professional instruction. The club has historically had a large membership of Real Madrid players and Spanish football royalty. For a professional athlete who takes golf seriously, membership here is the natural choice in Madrid.",
-          price_range: "Annual membership approximately €15,000–€20,000",
+            "Exos is the gold standard in professional athlete development, working with NFL, NBA, MLS, and international football players during off-seasons and return-to-play protocols. Their Fort Lauderdale facility offers individualized speed, strength, and movement training built around each athlete's positional demands. Carlos can use Exos for supplementary speed and power work outside of team training sessions.",
+          price_range: "By program — typically $500–$1,500/month",
+          athlete_note: "Exos builds programs specifically around a midfielder's positional demands — vertical pressing power, lateral change of direction, and sprint recovery. Worth the investment for off-season and pre-season blocks.",
+          highlights: ["NFL Combine prep facility", "Used by international players during MLS off-season", "Spanish-speaking trainers available"],
         },
         {
-          name: "Club de Campo Villa de Madrid",
-          url: "https://www.clubdecampo.es",
-          type: "Multi-sport club",
-          location: "Carretera de Castilla, Madrid — 20 minutes from La Moraleja",
+          name: "LA Fitness Sport — Weston",
+          url: "https://www.lafitness.com",
+          type: "Premium commercial gym",
+          location: "Weston Town Center, Weston FL",
           description:
-            "Spain's oldest and most prestigious multi-sport club, with a championship golf course, 40+ tennis courts, swimming pools, a full gym, squash courts, and riding facilities. The club has an exceptional social scene among Madrid's sports and business elite and hosts major ATP and WTA events. A membership here covers golf, tennis, and swimming in one.",
-          price_range: "Annual membership approximately €8,000–€12,000",
+            "The closest large-format premium gym to Weston's residential areas, with full cardio and strength equipment, a 25-yard indoor pool, basketball courts, racquetball, sauna, and group classes. Ideal for Valentina and for Carlos's active recovery sessions on rest days — swimming and light cardio.",
+          price_range: "$35–$50/month",
+          athlete_note: "Use for active recovery only — swimming and low-impact cardio on rest days. The main training volume stays at Inter Miami's facility.",
+          highlights: ["Indoor pool", "Basketball courts", "Group fitness and spin classes"],
         },
         {
-          name: "Holmes Place Premium — Velázquez",
-          url: "https://www.holmesplace.es",
-          type: "Premium gym",
-          location: "Calle Velázquez 62, Salamanca — multiple locations across Madrid",
+          name: "Hard Rock Stadium Training Complex",
+          url: "https://www.hardrockstadium.com",
+          type: "NFL-grade training facility (seasonal access)",
+          location: "Miami Gardens, FL",
           description:
-            "Holmes Place is Madrid's leading premium gym chain, with state-of-the-art equipment, recovery facilities, swimming pools, yoga and pilates studios, and personal training. It's the gym of choice for professional athletes in the city for supplementary conditioning work. Multiple locations across La Moraleja, Las Rozas, and Salamanca mean there's always a facility near wherever the family settles.",
-          price_range: "€120–€180/month",
-        },
-        {
-          name: "Metropolitan Club — La Moraleja",
-          url: "https://www.metropolitan.es",
-          type: "Premium sports & wellness club",
-          location: "La Moraleja, Alcobendas",
-          description:
-            "Metropolitan is the premier wellness club in La Moraleja, offering a full gym, indoor and outdoor swimming pools, tennis courts, spa, and a dedicated recovery zone. The club is family-oriented with extensive children's programs — Sofia and Mateus can be enrolled in swimming lessons and tennis camps while Gabriel trains. Ana will find a strong social community here.",
-          price_range: "Family membership approximately €300–€450/month",
+            "The Miami Dolphins' NFL-grade training complex occasionally offers access to MLS players for specialized testing, speed tracking, and high-performance conditioning in the off-season. Carlos's agent or the Inter Miami performance team can arrange access for combined-style testing and positional performance benchmarking.",
+          price_range: "By arrangement through Inter Miami CF",
+          athlete_note: "NFL-grade GPS tracking, force plate analysis, and speed testing available — an excellent benchmark tool during off-season.",
+          highlights: ["NFL performance testing", "GPS and biomechanics lab", "Full-sized indoor practice field"],
         },
       ],
     },
     healthcare: {
-      title: "Healthcare",
+      title: "Sports Medicine & Healthcare",
       intro:
-        "Madrid has one of the best private healthcare systems in Europe — particularly for sports medicine and pediatrics.",
+        "South Florida has world-class sports medicine and orthopedic care — the region serves as a healthcare hub for NFL, NBA, MLB, and MLS athletes year-round.",
       insurance_note:
-        "As an EU resident on a Spanish work visa, Gabriel and Ana must enroll in the Spanish social security system (Seguridad Social) through the club. However, for a family at this level, private health insurance through companies like Sanitas Élite or Adeslas Premium is strongly recommended — covering faster access, English-speaking consultants, and the city's top private hospitals.",
+        "Inter Miami CF provides comprehensive health insurance coverage for all players and their dependents. Carlos and Valentina will be enrolled in the club's group health plan on arrival — the Player Services team will guide the enrollment process. For dental and vision, separate coverage is typically included in MLS player contracts.",
       items: [
         {
-          name: "Clínica Universitaria de Navarra — Madrid",
-          url: "https://www.cun.es",
-          type: "Private hospital — full service",
-          location: "Calle del Marqués de Villamagna 5, Salamanca",
+          name: "Baptist Health Sports Medicine",
+          url: "https://baptisthealth.net/sports-medicine",
+          type: "Sports medicine & orthopedics",
+          location: "Multiple locations — Weston, Coral Gables, Miami",
           description:
-            "Consistently ranked as Spain's best private hospital and among the top 10 in Europe, the CUN Madrid campus offers internationally trained physicians, state-of-the-art oncology, orthopedics, cardiology, and pediatrics. The hospital has a dedicated international patient service with Portuguese-speaking coordinators and is the gold standard for a professional athlete's healthcare in Spain.",
-          specialties: ["Sports medicine & orthopedics", "Pediatrics", "International patient services"],
+            "Baptist Health is the official sports medicine partner of Inter Miami CF, several NFL teams, and Florida Marlins. Their Weston location is the most convenient for Carlos and handles everything from routine physicals to complex orthopedic consultations. Spanish-speaking physicians and coordinators are available at all locations.",
+          specialties: ["Orthopedic surgery", "Sports medicine & injury management", "Physical therapy & return-to-play"],
+          languages: ["English", "Spanish"],
+          tip: "As an Inter Miami player, Carlos has a direct referral relationship with Baptist Health — the club's medical team will coordinate all specialist appointments.",
         },
         {
-          name: "Hospital Ruber Internacional",
-          url: "https://www.ruberinternacional.es",
-          type: "Private hospital — full service",
-          location: "Calle de la Masó 38, La Florida",
+          name: "Stedman Graham Sports Medicine Institute",
+          url: "https://www.clevelandclinic.org/florida",
+          type: "Orthopedic specialist",
+          location: "Cleveland Clinic Florida, Weston",
           description:
-            "Hospital Ruber Internacional is Madrid's leading hospital for international patients, with Portuguese, English, and French-speaking medical staff throughout. The hospital has an outstanding sports injury unit and is the closest major private hospital to La Moraleja and the northern suburbs where most footballers live.",
-          specialties: ["Sports injury & rehabilitation", "Pediatrics", "24h emergency"],
+            "Cleveland Clinic Florida in Weston is one of the top orthopedic and sports medicine facilities in the southeastern United States. Their sports medicine division handles complex knee, hip, and ankle injuries for professional athletes across multiple leagues. Located 5 minutes from Weston's residential core — the most convenient premium orthopedic resource for Carlos's family.",
+          specialties: ["Complex joint surgery", "Knee & ankle ligament reconstruction", "Cartilage restoration"],
+          languages: ["English", "Spanish"],
+          tip: "For any injury that Inter Miami's medical team flags as potentially surgical, Cleveland Clinic Florida is the strongest second-opinion resource in the region.",
         },
         {
-          name: "Clínica CEMTRO",
-          url: "https://www.cemtro.com",
-          type: "Sports medicine clinic",
-          location: "Ventisquero de la Condesa 42, Madrid",
+          name: "Nicklaus Children's Hospital — Urgent Care",
+          url: "https://www.nicklauschildrens.org",
+          type: "Pediatric medical center",
+          location: "Miami and Weston outpatient centers",
           description:
-            "CEMTRO is Madrid's most specialized sports medicine and orthopedics clinic, used by professional athletes across football, basketball, tennis, and cycling in Spain. The clinic offers advanced imaging, biomechanical analysis, physiotherapy, and rehabilitation programs. It is the preferred independent clinical resource for Real Madrid players seeking second opinions or off-season rehabilitation.",
-          specialties: ["Sports medicine", "Physiotherapy", "Biomechanics & injury prevention"],
+            "Ranked the #1 children's hospital in Florida, Nicklaus Children's has outpatient urgent care and specialist services in Weston — ideal for Emma's pediatric care. All routine check-ups, vaccinations, and any illness-related visits for Emma should go through Nicklaus Children's in Weston. Spanish-speaking pediatricians available.",
+          specialties: ["Pediatric primary care", "Urgent care", "Developmental pediatrics"],
+          languages: ["English", "Spanish"],
+          tip: "Register Emma with a Nicklaus Children's primary care pediatrician in Weston in the first week — this establishes her patient record in the US healthcare system.",
         },
       ],
     },
     dining: {
-      title: "Dining & Restaurants",
+      title: "Nutrition & Dining",
       intro:
-        "Madrid has one of Europe's most exciting food scenes — from Michelin-starred fine dining to the best Brazilian churrascaria outside of São Paulo.",
+        "Miami's food scene is exceptional for a performance-focused athlete — the Latin American culinary tradition naturally emphasizes lean proteins, fresh vegetables, and complex carbohydrates that align perfectly with a professional player's nutrition plan.",
+      performance_tip:
+        "South Florida's access to fresh tropical fruits, high-quality seafood, and Latin American whole foods makes it one of the best cities in the US for athletic nutrition — lean proteins like fresh grouper, mahi-mahi, and black beans provide an excellent performance-nutrition base at Carlos's budget.",
       diet_note:
-        "With no dietary restrictions, Gabriel and Ana have full access to Madrid's extraordinary food ecosystem. Spanish cuisine is naturally protein-rich and varied — exceptional Iberian meat, fresh Atlantic and Mediterranean seafood, and outstanding produce. Brazilian products are widely available at specialized Latin American supermarkets in the Lavapiés neighborhood and online via Amazon Spain.",
+        "With no dietary restrictions, Carlos and Valentina have full access to Miami's extraordinary food ecosystem — Colombian restaurants, fresh seafood markets, excellent Latin American supermarkets, and performance meal prep services all within easy reach of Weston.",
       supermarkets: [
-        {
-          name: "El Corte Inglés Gourmet",
-          url: "https://www.elcorteingles.es",
-          location: "Calle Serrano 52, Salamanca",
-        },
-        {
-          name: "Mercadona",
-          url: "https://www.mercadona.es",
-          location: "Multiple locations — La Moraleja, Las Rozas",
-        },
-        {
-          name: "Supermercado Tropical",
-          url: "#",
-          location: "Calle Embajadores, Lavapiés — Brazilian & Latin American products",
-        },
-        {
-          name: "La Vaguada Hipercor",
-          url: "https://www.elcorteingles.es",
-          location: "Av. Monforte de Lemos 36 — closest major supermarket to La Moraleja",
-        },
+        { name: "Whole Foods Market", url: "https://www.wholefoodsmarket.com", type: "Premium organic", location: "Weston Town Center", note: "Best for performance nutrition staples — organic proteins, recovery supplements" },
+        { name: "Presidente Supermarket", url: "https://www.presidentesupermarket.com", type: "Latin American", location: "Hialeah & Doral — 30 min from Weston", note: "Best selection of Colombian and Latin products — arepas, bandeja paisa ingredients, aguapanela" },
+        { name: "Publix", url: "https://www.publix.com", type: "Full-service grocery", location: "Multiple Weston locations", note: "Florida's most popular supermarket chain — excellent produce and butcher section" },
+        { name: "The Fresh Market", url: "https://www.thefreshmarket.com", type: "Specialty grocery", location: "Weston", note: "Outstanding fresh seafood and athlete-friendly prepared foods" },
       ],
       restaurants: [
         {
-          name: "DiverXO",
-          url: "https://www.diverxo.com",
-          cuisine: "Spanish avant-garde",
-          location: "Calle del Padre Damián 23, Chamartín",
+          name: "El Carnicero",
+          url: "https://www.elcarniceromia.com",
+          cuisine: "Colombian steakhouse",
+          location: "Doral, Miami (35 min from Weston)",
           why_recommended:
-            "Spain's only 3-Michelin-star restaurant in Madrid — chef David Muñoz's extraordinary creative cuisine is an unmissable experience for a special occasion. This is the dinner you take Ana to on your first wedding anniversary in Madrid.",
+            "Miami's most celebrated Colombian restaurant — carnivore-first menu with cuts of meat that Carlos and Valentina will recognize from home. The bandeja paisa here is the closest thing to Medellín in South Florida. The owner is Antioquian and the Colombian community makes this a must on any big occasion.",
+          price_range: "$$$",
+          must_try: "Bandeja paisa, picada colombiana",
+          athlete_note: "Best for recovery days and rest day meals — protein-rich Colombian classics with complex carbs from the rice, beans, and plantains.",
+        },
+        {
+          name: "Zuma Miami",
+          url: "https://www.zumarestaurant.com/miami",
+          cuisine: "Contemporary Japanese",
+          location: "Epic Hotel, Downtown Miami",
+          why_recommended:
+            "One of Miami's most celebrated fine dining restaurants — Japanese robata grill and sashimi that is outstanding for athlete nutrition. The miso black cod and edamame-based dishes are favorites among professional athletes. This is the restaurant for date nights, contract celebrations, and showing visiting family from Colombia how well Carlos is living.",
           price_range: "$$$$",
+          must_try: "Miso black cod, tuna sashimi, rock shrimp tempura",
+          athlete_note: "Japanese cuisine is excellent for athletic nutrition — high lean protein, omega-3 rich fish, and low processed carbs. Zuma's menu is almost entirely performance-friendly.",
         },
         {
-          name: "Amazónico",
-          url: "https://www.amazonicorestaurant.com",
-          cuisine: "Brazilian / Latin American",
-          location: "Calle de Jorge Juan 20, Salamanca",
+          name: "Truluck's Ocean's Finest Seafood",
+          url: "https://www.trulucks.com/fort-lauderdale",
+          cuisine: "Premium seafood",
+          location: "Las Olas Blvd, Fort Lauderdale (close to training)",
           why_recommended:
-            "Amazónico is one of Madrid's most spectacular restaurants — a full jungle immersion experience serving exceptional Brazilian-influenced cuisine with outstanding cocktails. The perfect place to bring the family from Brazil when they visit, and where many Real Madrid players celebrate big wins.",
+            "South Florida's freshest premium seafood — stone crab claws (in season October–May), grilled grouper, and sea bass. Located minutes from the training facility, making it a natural post-training team dinner destination. High in omega-3s and lean protein, this is genuinely performance-friendly fine dining.",
           price_range: "$$$",
+          must_try: "Florida stone crab claws, seared sea bass",
+          athlete_note: "Stone crab and fresh Gulf fish are loaded with omega-3 fatty acids — excellent for joint health and inflammation management. A weekly post-training dinner here pays dividends.",
         },
         {
-          name: "El Capricho de Extremadura",
-          url: "#",
-          cuisine: "Traditional Spanish — Iberian meat",
-          location: "Calle de Villanueva 4, Salamanca",
+          name: "Seasons 52",
+          url: "https://www.seasons52.com/fort-lauderdale",
+          cuisine: "American seasonal — performance-friendly",
+          location: "Fort Lauderdale and multiple South Florida locations",
           why_recommended:
-            "The best Iberian ham and roast suckling pig in Madrid in an elegant, traditional setting. For Gabriel and Ana, this is the authentic Madrid dining experience — the kind of meal you remember for years.",
-          price_range: "$$$",
-        },
-        {
-          name: "Churrascaria Brasileira Las Rozas",
-          url: "#",
-          cuisine: "Brazilian churrascaria",
-          location: "Las Rozas de Madrid",
-          why_recommended:
-            "A taste of home when you need it — this Brazilian steakhouse in Las Rozas is popular with the Brazilian player community at Real Madrid and serves authentic rodízio with all the cuts Gabriel and Ana grew up with in Rio.",
+            "Every dish on the Seasons 52 menu is under 475 calories — the restaurant was designed around nutritional transparency. For a professional athlete on a performance nutrition plan, this is the most reliable daily dining option: fresh, seasonal, portioned correctly, and genuinely excellent food.",
           price_range: "$$",
+          must_try: "Cedar-plank salmon, flatbreads, quinoa salad",
+          athlete_note: "The go-to restaurant for the day before a match — clean carbohydrate loading with chicken and pasta dishes that are perfectly portion-controlled for pre-match nutrition.",
         },
       ],
     },
-    religious_cultural: {
-      title: "Religious & Cultural",
+    nightlife_entertainment: {
+      title: "Nightlife & Entertainment",
       intro:
-        "Madrid has a deep Catholic tradition and several outstanding parishes with Brazilian communities and Portuguese-language services.",
+        "Miami's nightlife is world-class — Carlos and Valentina can enjoy the city's best venues while maintaining the discretion and professionalism expected of an MLS player.",
       items: [
         {
-          name: "Iglesia del Sagrado Corazón — La Moraleja",
-          url: "#",
-          type: "Roman Catholic parish",
-          location: "La Moraleja, Alcobendas",
+          name: "LIV Miami",
+          url: "https://www.livnightclub.com",
+          type: "Premier nightclub",
+          location: "Fontainebleau Miami Beach, Miami Beach",
           description:
-            "The primary Catholic parish serving the La Moraleja community, with regular Sunday masses and an active family congregation that includes many international residents. The church has a children's program and catechesis classes in English and Spanish.",
+            "One of the most iconic nightclubs in North America — Latin and international DJs, incredible sound and production. This is where visiting Colombian friends and family will want to come, and where Carlos will feel immediately at home. Goes without saying: off-season only, and always with discretion.",
+          vibe: "World-class production, Latin and EDM music, celebrity atmosphere",
         },
         {
-          name: "Parroquia de Nuestra Señora del Pilar",
-          url: "#",
-          type: "Roman Catholic parish",
-          location: "Calle Cea Bermúdez, Chamberí",
+          name: "Kiki on the River",
+          url: "https://www.kikiontheriver.com",
+          type: "Upscale waterfront lounge",
+          location: "1080 NW 11th St, Miami",
           description:
-            "One of Madrid's most active Catholic parishes, known for its welcoming attitude toward international families and its pastoral care team for newly arrived residents. The parish has a Brazilian community group that meets monthly.",
+            "Miami's most talked-about waterfront venue — stunning outdoor terraces on the Miami River, a Latin-influenced menu, and a sophisticated crowd. More relaxed than LIV but no less impressive. Perfect for a private dinner with team members or a low-key evening with Valentina.",
+          vibe: "Sophisticated, outdoors, Latin-influenced, perfect for couples and small groups",
         },
         {
-          name: "Catedral de la Almudena",
-          url: "https://www.catedraldelaalmudena.es",
-          type: "Roman Catholic Cathedral",
-          location: "Calle de Bailén 10, Madrid Centro",
+          name: "American Airlines Arena / Kaseya Center",
+          url: "https://www.kaseya.center",
+          type: "Sports arena & entertainment venue",
+          location: "601 Biscayne Blvd, Downtown Miami",
           description:
-            "Madrid's magnificent Gothic-neoclassical cathedral, completed in 1993, sits directly opposite the Royal Palace and is one of the most spiritually and architecturally significant Catholic sites in Spain. Attending Sunday mass here is a genuinely moving experience and a deep connection to Madrid's Catholic heritage.",
-        },
-      ],
-    },
-    family_life: {
-      title: "Family Life & Weekends",
-      intro:
-        "Madrid is an exceptional city for a young family — world-class parks, theme parks, museums, and outdoor spaces that will keep Mateus, Sofia, and even Simba fully entertained.",
-      items: [
-        {
-          name: "Parque de El Retiro",
-          url: "https://www.esmadrid.com/retiro",
-          type: "Park & outdoor space",
-          location: "Plaza de la Independencia, Salamanca/Retiro",
-          description:
-            "Madrid's most iconic park — 125 hectares of gardens, a lake for rowing, the Crystal Palace, puppet shows, and open-air cafes. Weekend mornings here with Simba, Mateus, and Sofia is the quintessential Madrid family experience. Dog-friendly throughout.",
-          best_for: "Weekend walks, rowboat on the lake, outdoor play",
-          price_range: "Free",
-        },
-        {
-          name: "Parque Warner Madrid",
-          url: "https://www.parquewarner.com",
-          type: "Theme park",
-          location: "Carretera M-301, San Martín de la Vega — 40 minutes from La Moraleja",
-          description:
-            "Spain's best theme park, with Warner Bros. and DC Universe themed zones — roller coasters, shows, and rides across all age groups. Mateus (6) will love the Batman and Superman zones; Sofia (3) has dedicated gentle rides and a dedicated children's area. An ideal full-day family outing.",
-          best_for: "Full-day family adventure — kids ages 3 and up",
-          price_range: "€35–€55/person",
-        },
-        {
-          name: "Museo del Prado",
-          url: "https://www.museodelprado.es",
-          type: "Museum",
-          location: "Calle de Ruiz de Alarcón 23, Retiro",
-          description:
-            "One of the world's great art museums — for Ana in particular, as an interior designer, the Prado is a constant source of inspiration. The museum offers family tours in English and Portuguese on weekends, designed specifically for children aged 4–10.",
-          best_for: "Cultural exploration — particularly for Ana's design practice",
-          price_range: "€15/adult, free under 18",
-        },
-        {
-          name: "Aquópolis Villanueva de la Cañada",
-          url: "https://www.aquopolis.es",
-          type: "Water park",
-          location: "Villanueva de la Cañada — 25 minutes from La Moraleja",
-          description:
-            "The best water park in the Madrid region — huge slides, wave pools, and dedicated children's areas for all ages. Essential for the family during Madrid's long, hot summer months (June–September). The perfect weekend activity when pre-season training gives Gabriel some afternoon downtime.",
-          best_for: "Summer weekends — kids of all ages",
-          price_range: "€25–€35/person",
-        },
-        {
-          name: "Zoo Aquarium de Madrid",
-          url: "https://www.zoomadrid.com",
-          type: "Zoo & aquarium",
-          location: "Casa de Campo, Madrid",
-          description:
-            "One of Europe's finest zoos, with over 6,000 animals and a full aquarium. Located in the Casa de Campo — Madrid's enormous urban park. A regular weekend destination for families with young children across the city.",
-          best_for: "Young children — Sofia and Mateus will love it",
-          price_range: "€25/adult, €19/child",
-        },
-      ],
-    },
-    guest_accommodation: {
-      title: "For Visiting Family & Guests",
-      intro:
-        "With family visiting from Rio a few times a year, Madrid has outstanding hotel options across all budgets — and the city is genuinely exciting for first-time visitors.",
-      neighborhoods_tip:
-        "The best areas for visiting family to stay are Barrio de Salamanca (upscale, central, walking distance to everything) and Gran Vía / Centro (lively, affordable, best for first-time visitors to Madrid).",
-      hotels: [
-        {
-          name: "Hotel Villamagna",
-          url: "https://www.hotelvillamagna.es",
-          stars: 5,
-          location: "Paseo de la Castellana 22, Salamanca",
-          description:
-            "One of Madrid's most legendary luxury hotels, recently fully renovated, on the Paseo de la Castellana — the city's grand boulevard. Outstanding service, exceptional restaurant, and a location that puts guests in the heart of Madrid's best neighborhood.",
-          price_range: "$400–$700 USD/night",
-          why_recommended:
-            "The perfect choice for Gabriel's parents visiting from Rio — a hotel that communicates success and makes family feel truly looked after.",
-        },
-        {
-          name: "Hotel Orfila",
-          url: "https://www.hotelorfila.com",
-          stars: 5,
-          location: "Calle de Orfila 6, Alonso Martínez",
-          description:
-            "A small, intimate 5-star boutique hotel in a beautifully restored 19th-century palace — Madrid's most charming luxury property. Only 32 rooms, exceptional personal service, and a garden courtyard that is one of the best-kept secrets in the city.",
-          price_range: "$350–$600 USD/night",
-          why_recommended: "Ideal for a couple (Ana's parents, for example) who want an intimate, romantic Madrid experience.",
-        },
-        {
-          name: "NH Collection Madrid Gran Vía",
-          url: "https://www.nhcollection.com",
-          stars: 4,
-          location: "Gran Vía 21, Madrid Centro",
-          description:
-            "A beautifully designed 4-star hotel on the iconic Gran Vía, in the heart of Madrid's most energetic street. Modern rooms with excellent city views, a rooftop terrace, and immediate access to everything central Madrid has to offer — shopping, theatres, restaurants, and metro connections.",
-          price_range: "$150–$250 USD/night",
-          why_recommended:
-            "The best mid-range option for larger family groups or extended visits — great value, central location, and genuinely stylish.",
-        },
-      ],
-    },
-    day_trips: {
-      title: "Day Trips & Weekend Getaways",
-      intro:
-        "Madrid's central location makes it one of Europe's best cities for day trips — mountains, UNESCO World Heritage cities, vineyards, and the coast are all within easy reach.",
-      items: [
-        {
-          name: "Toledo",
-          description:
-            "A UNESCO World Heritage City and Spain's former imperial capital, Toledo sits on a dramatic rocky outcrop surrounded by the Tagus River, with a skyline of Gothic cathedrals, medieval walls, and ancient synagogues. The old city is one of the most beautiful in Europe — a full day of wandering, eating incredible roast lamb, and soaking in 2,000 years of history.",
-          distance_km: "75 km south of Madrid",
-          travel_time: "45 minutes by car or 30 minutes by high-speed train",
-          best_for: "Cultural exploration — perfect for Ana and visiting family from Brazil",
-          highlights: ["Catedral de Toledo", "Alcázar fortress", "El Greco Museum", "Traditional marzipan"],
-        },
-        {
-          name: "Sierra de Guadarrama — Navacerrada",
-          description:
-            "Madrid's mountain range — the Sierra de Guadarrama — is one of the city's greatest assets for families. In winter, Navacerrada ski resort offers skiing and snowboarding for all levels, including a dedicated children's ski school. In summer, the mountains offer hiking trails, waterfalls, and pine forests at altitude — a perfect escape from Madrid's heat.",
-          distance_km: "55 km north of Madrid",
-          travel_time: "45 minutes by car",
-          best_for: "Skiing in winter, hiking and nature in summer — Simba will love it",
-          highlights: ["Navacerrada ski resort", "Peñalara peak hike", "Cascada del Purgatorio waterfall"],
-        },
-        {
-          name: "Segovia",
-          description:
-            "Segovia is arguably the most spectacular day trip from Madrid — a fairy-tale city with a towering Roman aqueduct (in use for 2,000 years), a Disney-esque castle (Alcázar) that inspired Walt Disney himself, and the best roast suckling pig (cochinillo) in Spain at the legendary Mesón de Cándido.",
-          distance_km: "90 km northwest of Madrid",
-          travel_time: "30 minutes by high-speed train or 1 hour by car",
-          best_for: "Family day out — the Alcázar is magical for children",
-          highlights: ["Roman aqueduct", "Alcázar castle", "Cochinillo at Mesón de Cándido"],
-        },
-        {
-          name: "Ribera del Duero Wine Region",
-          description:
-            "Spain's most prestigious red wine region is 150 km north of Madrid — a landscape of rolling golden vineyards, medieval castles, and world-class wineries. Bodegas like Vega Sicilia, Pingus, and Arzuaga offer tours and tastings. An excellent trip for Gabriel and Ana for a rare weekend without the kids.",
-          distance_km: "150 km north of Madrid",
-          travel_time: "1.5 hours by car",
-          best_for: "Couple's weekend getaway — one of Europe's great wine regions",
-          highlights: ["Vega Sicilia winery tour", "Peñafiel castle", "Aranda de Duero old town"],
-        },
-      ],
-    },
-    local_life: {
-      title: "Local Life & Daily Tips",
-      intro:
-        "Madrid has an outstanding app ecosystem for daily life — these are the tools that will make Gabriel and Ana's day-to-day in Madrid seamless from week one.",
-      apps: [
-        {
-          name: "Glovo",
-          purpose: "Food delivery & grocery delivery",
-          note: "The dominant delivery app in Madrid — restaurants, supermarkets, and pharmacies all deliverable within 30 minutes.",
-        },
-        {
-          name: "Cabify",
-          purpose: "Premium ride-hailing",
-          note: "More professional and reliable than Uber in Madrid — widely used by footballers and executives. Fixed prices, professional drivers.",
-        },
-        {
-          name: "Idealista",
-          purpose: "Real estate search",
-          note: "Spain's dominant property portal — use it to browse neighborhoods before deciding where to live.",
-        },
-        {
-          name: "Google Maps",
-          purpose: "Navigation",
-          note: "Works flawlessly in Madrid. Use it to find parking (Madrid has a complex paid parking zone system in the center).",
-        },
-        {
-          name: "CITA Previa",
-          purpose: "Government appointments",
-          note: "Used to book NIE registration, driving license exchanges, and all government appointments in Spain.",
-        },
-        {
-          name: "Sanitas App",
-          purpose: "Private healthcare",
-          note: "If enrolled with Sanitas private insurance, the app lets you book appointments, access prescriptions, and speak to a doctor via video.",
-        },
-      ],
-      tips: [
-        {
-          category: "Tipping",
-          tip: "Tipping is appreciated but not obligatory in Spain. 5–10% is generous at restaurants; rounding up is standard at bars. No expectation of 15–20% like in Brazil or the US.",
-        },
-        {
-          category: "Meal times",
-          tip: "Madrid eats late — lunch is 2–4pm, dinner rarely before 9pm. As a Brazilian, Gabriel will adapt quickly, but Ana should know that 7pm dinner reservations mark you as a tourist.",
-        },
-        {
-          category: "NIE Number",
-          tip: "The NIE (Número de Identidad de Extranjero) is Spain's equivalent of the Brazilian CPF — required for everything from opening a bank account to registering a car. The club's legal team will arrange this on arrival.",
-        },
-        {
-          category: "Language",
-          tip: "Madrileños speak clearly and slowly compared to other Spanish accents — as a Portuguese speaker, Gabriel will find Spanish highly intelligible from day one. Within 3 months, daily conversation will be natural.",
-        },
-        {
-          category: "Weather",
-          tip: "Madrid has extreme weather: scorching summers (35–40°C July–August) and cold winters with occasional snow. The city is at 650m altitude — which surprises many Brazilians. Pack accordingly and enjoy the guaranteed sunshine.",
-        },
-        {
-          category: "Simba & Dogs",
-          tip: "Madrid is extremely dog-friendly — dogs are welcome in most outdoor cafes and terraces, in public parks, and on public transport. The Retiro and Casa de Campo parks are packed with dogs every weekend.",
-        },
-        {
-          category: "Banking",
-          tip: "Open a Santander or BBVA account as soon as NIE is obtained — both have Portuguese-speaking staff and extensive English-language online banking. Wise is ideal for converting salary reais or USD to euros in the meantime.",
-        },
-      ],
-    },
-    emergency_contacts: {
-      title: "Emergency Contacts",
-      intro:
-        "Save these numbers on day one — Spain's emergency system is excellent, but knowing who to call and when is essential for any family living abroad.",
-      items: [
-        {
-          category: "Emergency",
-          name: "Pan-European Emergency Number",
-          number: "112",
-          note: "Police, ambulance, and fire. Operators speak English and Portuguese. Use this for any life-threatening emergency.",
-        },
-        {
-          category: "Police",
-          name: "Spanish National Police (Policía Nacional)",
-          number: "091",
-          note: "For non-emergency police matters, theft reports, and documentation. The Alcobendas station (near La Moraleja) has English-speaking officers.",
-        },
-        {
-          category: "Medical",
-          name: "Hospital Ruber Internacional — 24h Emergency",
-          number: "+34 91 387 08 00",
-          note: "Closest premium private hospital to La Moraleja with Portuguese-speaking staff. First choice for non-life-threatening emergencies.",
-        },
-        {
-          category: "Medical",
-          name: "Clínica Universitaria de Navarra — Appointments",
-          number: "+34 91 353 19 20",
-          note: "Spain's top private hospital. Use for specialist appointments, second opinions, and sports medicine.",
-        },
-        {
-          category: "Club",
-          name: "Real Madrid CF — Player Liaison",
-          number: "Via club management",
-          note: "The club's player services team is the first point of contact for any administrative emergency — housing issues, documentation, legal matters.",
-        },
-        {
-          category: "Embassy",
-          name: "Brazilian Embassy in Madrid",
-          number: "+34 91 700 40 00",
-          note: "Calle de Fernando el Santo 6, Almagro. For passport renewal, emergency consular assistance, and official Brazilian documentation.",
-        },
-        {
-          category: "Roadside",
-          name: "RACE — Spanish Automobile Club",
-          number: "900 200 093",
-          note: "Spain's leading roadside assistance service — covers breakdowns, accidents, and towing. Annual membership is approximately €80 and is worth every euro.",
+            "Home of the Miami Heat — attending an NBA game is a quintessential Miami experience, and Carlos will quickly become a fan. Inter Miami players receive priority access to Heat tickets through the club's partnership. Also hosts major concerts, boxing events, and international sporting events year-round.",
+          vibe: "High-energy, world-class sports and entertainment, family-friendly daytime events",
         },
       ],
     },
     integration: {
       title: "Integration & Community",
       intro:
-        "Madrid has one of the largest Brazilian communities in Europe — Gabriel and Ana will find a social network faster than in almost any other European city.",
+        "Miami has the largest Colombian community outside of Colombia itself — Carlos and Valentina will find Spanish everywhere, familiar food immediately, and a social network faster than in almost any other American city.",
+      language_tip:
+        "English is important for Carlos's long-term MLS career — Inter Miami provides English language support for international players, and the club's Colombian players and staff can ease the transition in the first season.",
       expat_community:
-        "Madrid is home to over 50,000 registered Brazilian residents, with a particularly active community in the La Moraleja, Las Rozas, and Pozuelo areas — precisely where footballers and their families tend to live. The Real Madrid squad has consistently included multiple Brazilian players, meaning Gabriel will likely have Portuguese-speaking teammates from day one who can help Ana and the kids settle.",
+        "Miami-Dade County is home to over 150,000 Colombian residents, with particularly strong communities in Weston, Doral, and Aventura — precisely where MLS and professional athletes tend to live. Carlos will likely find Spanish-speaking teammates at Inter Miami who can introduce him to the Colombian community within his first week.",
       items: [
         {
-          name: "Comunidade Brasileira em Madrid",
-          url: "#",
-          type: "Brazilian expat community",
+          name: "Colombian American Service Association (CASA)",
+          url: "https://www.casacolombia.org",
+          type: "Colombian community organization",
           description:
-            "A large, active community of Brazilians in Madrid, with regular social events, WhatsApp groups by neighborhood, a monthly community lunch, and an active Facebook group with thousands of members. For Ana in particular, this community is the fastest path to friendships, trusted service provider recommendations, and a genuine sense of home.",
+            "Miami's leading Colombian community organization, hosting cultural events, social gatherings, and newcomer orientation programs throughout the year. For Valentina in particular, CASA is the fastest path to building a social network of Colombian professionals and families in South Florida.",
+          tip: "CASA hosts a monthly welcome event for new Colombian arrivals — the relocation team can register Carlos and Valentina before they arrive.",
         },
         {
-          name: "InterNations Madrid",
-          url: "https://www.internations.org/madrid-expats",
-          type: "International expat network",
+          name: "MLS Players Association — New Player Orientation",
+          url: "https://www.mlsplayers.org",
+          type: "Player support program",
           description:
-            "InterNations Madrid is one of the most active chapters in Europe, with monthly events for thousands of international professionals across Salamanca, Chamberí, and Las Rozas. Regular social events, professional networking groups, and a new arrivals program make it excellent for Ana to build a broader international social network alongside the Brazilian community.",
+            "The MLSPA's international player orientation covers everything from US visa requirements and Social Security Number applications to opening a US bank account and understanding the American healthcare system. A mandatory and highly valuable program for every international signing — sessions are available in Spanish.",
+          tip: "Complete the MLSPA onboarding within the first two weeks — it covers banking, Social Security, taxes, and healthcare in one session.",
         },
         {
-          name: "Berlitz Spain — Madrid",
-          url: "https://www.berlitz.com/es-es",
+          name: "Berlitz Miami — English Language Training",
+          url: "https://www.berlitz.com/en-us/locations/miami",
           type: "Language school",
           description:
-            "Berlitz has extensive centers across Madrid and offers intensive Spanish courses tailored to Latin American Portuguese speakers — the transition from Brazilian Portuguese to Spanish is the easiest language acquisition in the world, and Berlitz instructors understand exactly which false friends and pronunciation habits to target. Gabriel and Ana can expect conversational fluency within 6–8 weeks of intensive lessons.",
+            "Berlitz Miami offers intensive and flexible English programs specifically for professional adults — Carlos can schedule 2–3 sessions per week around training. Berlitz's Spanish-to-English program leverages Carlos's Latin language foundation for fast progression. Conversational fluency in English typically achieved in 3–4 months of consistent lessons.",
+          tip: "Even basic English proficiency significantly improves Carlos's relationship with the coaching staff and media — Berlitz gets most MLS players to conversational level within one season.",
         },
       ],
     },
     practical: {
       title: "Practical Information",
       intro:
-        "The administrative side of moving to Spain as a professional athlete is well-structured — the club handles the bulk of it, but there are personal steps Gabriel and Ana must take proactively.",
+        "The administrative side of moving to the US as an MLS player is well-managed by the club — but Carlos and Valentina need to take several personal steps proactively in the first 30 days.",
       items: [
         {
-          category: "Residency",
-          title: "Spanish Work Visa & Residency",
-          url: "https://www.exteriores.gob.es",
+          category: "Immigration",
+          title: "P-1 Athlete Visa & Work Authorization",
+          url: "https://www.uscis.gov",
           description:
-            "Real Madrid's legal team will process Gabriel's work visa (Tarjeta de Residencia por cuenta ajena) — the club handles this routinely for every foreign signing. Ana and the children enter as dependents. On arrival, all family members must register at the local Oficina de Extranjería to receive their NIE numbers, which unlock everything else: banking, schools, healthcare, and car registration.",
+            "Inter Miami's legal team will manage Carlos's P-1A visa application (for internationally recognized athletes) — this is standard for every MLS international signing. Valentina and Emma enter on P-4 dependent visas. On arrival, Carlos must report to US Customs and Border Protection and receive his I-94 arrival record, which confirms his legal status. The club's immigration attorney handles all filings.",
           tips: [
-            "Apostille all Brazilian documents before leaving — birth certificates, marriage certificate, and academic records must all be apostilled for Spanish use",
-            "Bring 10 passport photos on arrival — they are required for almost every administrative process",
+            "Keep all visa documents in a dedicated folder and photograph them immediately on arrival",
+            "Never travel outside the US without confirming your visa stamp and I-94 are in order — the club's attorney should approve all international travel plans",
           ],
         },
         {
           category: "Banking",
-          title: "Opening a Spanish Bank Account",
-          url: "https://www.santander.es",
+          title: "Opening a US Bank Account",
+          url: "https://www.bankofamerica.com",
           description:
-            "Banco Santander and BBVA are the strongest choices for foreign professionals — both have English and Portuguese-language services, online banking in multiple languages, and dedicated international client teams. Santander in particular has strong ties to the Brazilian banking system. The club's payroll team will advise on which branch and account type is standard for Real Madrid players.",
+            "Bank of America and Chase are the strongest choices for newly arrived MLS players — both have Spanish-language services, online and mobile banking, and dedicated international client programs. MLS player salaries are deposited directly to US bank accounts. The MLSPA orientation includes a bank setup session. Additionally, open a Wise account for converting Colombian pesos or savings in other currencies at real exchange rates.",
           tips: [
-            "Open a Wise account before leaving Brazil — use it for USD/EUR conversions at real exchange rates until your Spanish account is set up",
-            "Request a premium account (Santander Select or BBVA Wealth) — these offer dedicated relationship managers and faster service",
+            "Open Wise before arriving in the US — use it to transfer savings to USD at the real exchange rate while your US bank account is being set up",
+            "Ask about a high-yield savings account (currently 4–5% APY in the US) — a significant opportunity for long-term financial planning",
           ],
         },
         {
           category: "Tax",
-          title: "Beckham Law — Spanish Tax Regime for Inpatriates",
-          url: "https://www.agenciatributaria.es",
+          title: "US Federal & Florida State Tax",
+          url: "https://www.irs.gov",
           description:
-            "Spain offers the 'Beckham Law' (Régimen Especial para Trabajadores Desplazados) to newly arrived foreign professionals — named after David Beckham who famously used it at Real Madrid. Under this regime, Gabriel can opt to pay a flat 24% income tax on his Spanish salary (vs. up to 47% progressive rate) for 6 years. This is a major financial benefit and Real Madrid's legal team will handle the application.",
+            "Florida has no state income tax — a significant financial advantage versus living in California or New York. Carlos will pay federal income tax on his MLS salary. As an international player, he is subject to 'Effectively Connected Income' taxation rules in the first year. Inter Miami strongly recommends engaging a CPA specializing in MLS player taxation from the first paycheck — the tax code for athlete income in the US is complex.",
           tips: [
-            "Apply within 6 months of starting work in Spain — missing this deadline forfeits the benefit",
-            "Brazilian worldwide income may still be subject to Brazilian tax obligations — engage a dual-qualified Spanish/Brazilian tax advisor",
+            "Engage SL Nusbaum or PricewaterhouseCoopers' Miami sports practice — both specialize in MLS player taxation",
+            "Keep all receipts for agent fees, training equipment, and relocation costs — deductible against taxable income",
           ],
         },
         {
-          category: "Pet",
-          title: "Bringing Simba to Spain",
-          url: "https://www.mapa.gob.es",
+          category: "Phone & Internet",
+          title: "US Mobile Plan",
+          url: "https://www.t-mobile.com",
           description:
-            "Spain has straightforward pet import rules for dogs from Brazil. Simba must have: a valid rabies vaccination, an EU-format pet passport or official health certificate endorsed by MAPA (Spain's agriculture ministry), and a microchip. Brazil is not on the EU's approved country list, so an additional serological antibody test (titration test) may be required — check current requirements with the Spanish consulate in Rio at least 3 months before travel.",
+            "T-Mobile is the best choice for newly arrived international players — the Magenta Max plan includes unlimited data, free international calling to Colombia, and the best coverage in South Florida. The plan also includes free Mexico and Canada roaming, useful for MLS road trips. Set up at T-Mobile Weston Town Center or the Fort Lauderdale Galleria mall.",
           tips: [
-            "Use a professional pet relocation service — they navigate the Brazilian export requirements and Spanish import clearance end-to-end",
-            "Register Simba with the local municipality (Alcobendas or Madrid) within 3 months of arrival — required by Spanish law",
+            "T-Mobile's 'New Resident' plan is designed for recently arrived immigrants — no US credit history required",
+            "Download the T-Mobile app to manage the plan, track data, and set up international calling to Medellín",
           ],
         },
+      ],
+    },
+    family_life: {
+      title: "Family Life & Weekends",
+      intro:
+        "South Florida is extraordinary for a young family — world-class beaches, the Florida Keys, the Everglades, theme parks, and a year-round warm climate that makes every weekend an adventure for Emma.",
+      items: [
+        {
+          name: "Fort Lauderdale Beach",
+          url: "https://www.sunny.org",
+          type: "Beach & outdoor",
+          location: "Fort Lauderdale, FL — 20 minutes from Weston",
+          description:
+            "Fort Lauderdale's famous beachfront is the most accessible beach for Weston residents — wide white sand, calm Atlantic water, and a lively boardwalk with restaurants, shops, and water sports. The beach is Emma's playground: calm waves, lifeguards on duty year-round, and dedicated children's play areas. Carlos and Valentina will find the beachside atmosphere genuinely relaxing.",
+          best_for: "Family beach days, Emma's first ocean experience, weekend morning walks",
+          price_range: "Free (parking $3–5/hour)",
+        },
+        {
+          name: "Everglades National Park",
+          url: "https://www.nps.gov/ever",
+          type: "National park & wildlife",
+          location: "Southwest of Miami — 1 hour from Weston",
+          description:
+            "One of the world's great wilderness areas — the Florida Everglades offer airboat tours, alligator sightings, bird watching, and kayaking through a unique subtropical ecosystem. The Shark Valley section is the most family-friendly and has a tram tour suitable for Emma's age. An unmissable experience for any family living in South Florida — completely unlike anything in Colombia.",
+          best_for: "Full-day family adventure — Emma will be astonished by the alligators",
+          price_range: "$35/vehicle entry; airboat tours from $50/person",
+        },
+        {
+          name: "Zoo Miami",
+          url: "https://www.zoomiami.org",
+          type: "Zoo",
+          location: "Miami, FL — 45 minutes from Weston",
+          description:
+            "The largest zoo in Florida and one of the most impressive in the country, with over 3,000 animals in naturalistic outdoor habitats across 750 acres. Zoo Miami's tropical climate means animals live outdoors year-round in genuinely large enclosures. Emma will love the children's petting zoo, the Australian exhibit, and the Amazon and Beyond section featuring animals from South America.",
+          best_for: "Families with young children — full day activity",
+          price_range: "$23/adult, $17/child (3+)",
+        },
+        {
+          name: "Sawgrass Mills Mall",
+          url: "https://www.simon.com/mall/sawgrass-mills",
+          type: "Shopping & entertainment",
+          location: "Sunrise, FL — 15 minutes from Weston",
+          description:
+            "The largest outlet mall in the United States — 2.4 million square feet of shopping, with every major luxury and mid-range brand represented. For Valentina as a graphic designer and for Carlos updating his wardrobe for MLS media appearances, Sawgrass Mills is 15 minutes from Weston. The Colonnade section carries Gucci, Prada, Burberry, and more at outlet pricing.",
+          best_for: "Shopping, family lunch, entertainment on rainy days",
+          price_range: "Free entry",
+        },
+      ],
+    },
+    guest_accommodation: {
+      title: "For Visiting Family & Guests",
+      intro:
+        "With family visiting from Medellín multiple times a year, Miami's hotel scene will make every visit memorable — from beachfront luxury to budget-friendly options in Fort Lauderdale.",
+      neighborhoods_tip:
+        "The best areas for visiting family to stay are Miami Beach (iconic, walkable, maximum Miami experience) for first-time visitors, and Aventura or Fort Lauderdale for families wanting a quieter stay closer to Carlos and Valentina's home.",
+      hotels: [
+        {
+          name: "Fontainebleau Miami Beach",
+          url: "https://www.fontainebleau.com",
+          stars: 5,
+          location: "4441 Collins Ave, Miami Beach",
+          description:
+            "The most iconic luxury hotel in Miami — a historic Art Deco landmark fully renovated to an extraordinary standard, with multiple pools, world-class restaurants including Hakkasan and Stripsteak, a legendary spa, and direct beachfront access. When Carlos's parents visit from Medellín, this is where they stay.",
+          price_range: "$350–$650/night",
+          why_recommended:
+            "The Fontainebleau is the hotel that defines Miami — your family will talk about this visit for years. Book the Garden View King for parents, the Ocean View suite for a special occasion.",
+        },
+        {
+          name: "The Diplomat Beach Resort",
+          url: "https://www.diplomatresort.com",
+          stars: 5,
+          location: "3555 S Ocean Dr, Hollywood Beach (between Miami and Fort Lauderdale)",
+          description:
+            "A spectacular 1,000-room resort directly on Hollywood Beach, with multiple pools, a full-service spa, watersports, and direct Atlantic beachfront. Located halfway between Carlos's Weston home and Miami Beach — visiting family can spend days at the resort and evenings at Carlos's home without long drives.",
+          price_range: "$250–$500/night",
+          why_recommended: "The best combination of location (close to Weston) and luxury resort experience — ideal for families with kids visiting alongside Emma.",
+        },
+        {
+          name: "Marriott Fort Lauderdale Airport",
+          url: "https://www.marriott.com",
+          stars: 4,
+          location: "1825 Griffin Rd, Dania Beach (near Fort Lauderdale Airport)",
+          description:
+            "A solid 4-star hotel with a full pool and excellent facilities, located minutes from Fort Lauderdale-Hollywood International Airport — perfect for family arriving and departing without requiring transfers into Miami. Clean, well-serviced, and easy for Carlos to drop off and pick up visiting family.",
+          price_range: "$130–$220/night",
+          why_recommended: "Best practical option for shorter visits — guests can take an Uber directly from arrivals and be checking in within 10 minutes of landing.",
+        },
+      ],
+    },
+    day_trips: {
+      title: "Day Trips & Weekend Getaways",
+      intro:
+        "South Florida's geography makes it one of the best regions in North America for day trips and weekend escapes — the Florida Keys, the Bahamas, and the Space Coast are all within easy reach.",
+      items: [
+        {
+          name: "Florida Keys — Key West",
+          description:
+            "The Florida Keys are one of the most spectacular drives in the world — 113 miles of barrier islands connected by the Overseas Highway over turquoise Atlantic and Gulf waters. Key West at the end of the chain offers a completely unique American city: Caribbean architecture, world-class snorkeling, fresh stone crab, and a sunset celebration at Mallory Square that is unlike anything else in the continental US. Carlos and Valentina will love it.",
+          distance_km: "230 km south of Weston",
+          travel_time: "2.5–3 hours by car",
+          best_for: "Weekend getaway — incredible scenery, water sports, fresh seafood",
+          highlights: ["Seven Mile Bridge", "Bahia Honda State Park snorkeling", "Duval Street", "Sunset at Mallory Square"],
+        },
+        {
+          name: "The Bahamas — Nassau",
+          description:
+            "Nassau, Bahamas is 30 minutes by plane from Fort Lauderdale — a completely different country and culture accessible as a day trip. The Atlantis Paradise Island resort is one of the world's great family resorts. For a weekend escape with Valentina and Emma, the Bahamas offers crystal-clear water, world-class snorkeling, and a genuinely beautiful island experience.",
+          distance_km: "290 km east (30 min flight from FLL)",
+          travel_time: "30 min flight from Fort Lauderdale",
+          best_for: "Weekend escape — beaches, resort pools, water activities",
+          highlights: ["Atlantis Paradise Island", "Cable Beach", "Nassau Fish Fry", "Snorkeling at Thunderball Grotto"],
+        },
+        {
+          name: "Orlando Theme Parks",
+          description:
+            "Walt Disney World, Universal Studios, and SeaWorld are 3.5 hours north of Weston — a perfect overnight trip for when Emma turns 4. Disney's Magic Kingdom in particular is built for exactly Emma's age group. Carlos and Valentina will find South American families at Disney World year-round, and Spanish is widely spoken throughout the parks.",
+          distance_km: "350 km north of Weston",
+          travel_time: "3.5 hours by car",
+          best_for: "Family adventure — especially for Emma as she grows",
+          highlights: ["Magic Kingdom (Emma's favorite)", "Universal Studios' Harry Potter World", "SeaWorld Orlando"],
+        },
+      ],
+    },
+    local_life: {
+      title: "Local Life & Daily Tips",
+      intro:
+        "South Florida has a thriving app ecosystem and some very specific local customs that Carlos and Valentina should know from day one to feel settled immediately.",
+      apps: [
+        { name: "Waze", purpose: "Navigation & traffic", note: "Mandatory in South Florida — I-95 and I-75 traffic is intense. Waze finds the fastest route via Sawgrass or the Turnpike dynamically." },
+        { name: "SunPass", purpose: "Toll roads", note: "Florida's electronic toll system — get the transponder at any Publix. Saves 20% on tolls versus cash lanes and avoids stop-and-go at toll plazas." },
+        { name: "DoorDash", purpose: "Food delivery", note: "Best coverage in Weston for restaurant delivery — Latin American restaurants including Colombian options deliver through DoorDash." },
+        { name: "Instacart", purpose: "Grocery delivery", note: "Whole Foods and Publix deliver through Instacart — essential for busy training weeks when Carlos can't do the shopping himself." },
+        { name: "Uber", purpose: "Rides", note: "Uberpool doesn't operate in most of suburban South Florida — use standard Uber for airport runs when Valentina can't drive." },
+        { name: "MyChart", purpose: "Healthcare portal", note: "Baptist Health and Cleveland Clinic use MyChart for appointments, test results, and prescriptions — set up the account immediately on registering with both providers." },
+      ],
+      tips: [
+        { category: "Weather", tip: "Hurricane season runs June 1 – November 30. Stock the house with 3 days of emergency water and food in June. The club will provide a hurricane preparedness briefing — take it seriously. South Florida averages one significant storm every few years." },
+        { category: "Heat", tip: "Miami summers (June–September) are extreme — 35°C+ with 90%+ humidity. Training load is managed carefully by Inter Miami's performance staff. Keep Emma out of direct sun from 10am–4pm and ensure the house has a strong AC system." },
+        { category: "Tipping", tip: "Unlike Colombia, tipping is mandatory in the US — 18–20% at restaurants, $2–3 per bag for hotel porters, $20–30 for moving teams. This is part of how service workers earn their living in America." },
+        { category: "Spanish", tip: "Miami may be the easiest American city in history for a non-English speaker — virtually all daily life in Weston and Aventura can be conducted in Spanish. Carlos can be fully comfortable for months before English becomes necessary." },
+        { category: "Sunscreen", tip: "UV index in South Florida regularly hits 10–11 (extreme). Apply SPF 50 daily — even on overcast days. Emma needs full sun protection anytime she's outdoors." },
+        { category: "Banking", tip: "US credit history starts from zero for Carlos. Getting a secured credit card (deposit-backed) in the first month and using it for small purchases builds credit quickly — this matters for car leases and housing deposits in future years." },
+      ],
+    },
+    emergency_contacts: {
+      title: "Emergency Contacts",
+      intro:
+        "Save these contacts the day you arrive — South Florida's emergency response is excellent, but knowing who to call and when is essential for a family new to the United States.",
+      items: [
+        { category: "Emergency", name: "US Emergency Services", number: "911", note: "Police, ambulance, and fire. Operators speak English and Spanish. Use this for any life-threatening emergency." },
+        { category: "Non-Emergency Police", name: "Weston Police Department", number: "(954) 389-2010", note: "For non-emergency matters in Weston — noise complaints, minor incidents, theft reports." },
+        { category: "Club", name: "Inter Miami CF — Player Services", number: "Via club management", note: "First point of contact for any administrative emergency — visa issues, housing problems, legal matters." },
+        { category: "Medical", name: "Cleveland Clinic Florida — Weston", number: "(954) 689-5000", note: "Premier orthopedic and sports medicine facility 5 minutes from Weston residential areas." },
+        { category: "Medical", name: "Baptist Health Urgent Care — Weston", number: "(954) 331-4000", note: "Inter Miami's official sports medicine partner — use for non-emergency sports injuries and acute care." },
+        { category: "Pediatric", name: "Nicklaus Children's Urgent Care — Weston", number: "(954) 217-5437", note: "For Emma — immediate pediatric care for illness or minor injury. Open 7 days a week." },
+        { category: "Consulate", name: "Colombian Consulate Miami", number: "(305) 441-1369", note: "4343 W Flagler St, Suite 1200, Miami. For passport renewal, emergency consular assistance, and official Colombian documentation." },
+        { category: "Roadside", name: "AAA South Florida", number: "1-800-222-4357", note: "US roadside assistance — breakdown, towing, lockout service. Annual membership ~$80. Essential in a state where driving is non-negotiable." },
       ],
     },
   },
