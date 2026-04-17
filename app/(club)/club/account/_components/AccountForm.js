@@ -43,10 +43,7 @@ export default function AccountForm({ email, clubName }) {
   }
 
   return (
-    <div className="p-8 max-w-lg">
-      <h1 className="text-2xl font-bold text-foreground mb-1">Account</h1>
-      <p className="text-sm text-muted mb-8">Manage your login credentials.</p>
-
+    <div className="flex flex-col gap-6">
       {/* Account info */}
       <div className="bg-white rounded-xl border border-border p-6 mb-6">
         <h2 className="text-sm font-semibold text-foreground mb-4">Account info</h2>
