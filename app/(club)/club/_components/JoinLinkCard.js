@@ -35,9 +35,9 @@ export default function JoinLinkCard({ slug, pin, clubName }) {
   function shareByEmail() {
     const subject = encodeURIComponent(`Your Settlyou relocation guide — ${clubName}`);
     const body = encodeURIComponent(
-      `Hi,\n\nPlease use the link below to fill in your relocation details and receive your personalized Settlyou guide.\n\nLink: ${joinUrl}\nPIN: ${pin}\n\nThe whole process takes under 5 minutes.\n\nWelcome!\n${clubName}`
+      `Hi!\n\nWelcome to ${clubName}. We're excited to have you here and want to make sure your move goes as smoothly as possible.\n\nWe've partnered with Settlyou to create a personalized relocation guide just for you. Here's what you'll get:\n\n✅ Neighborhood recommendations based on your lifestyle\n✅ Housing options near campus / training ground\n✅ Best local gyms, restaurants, and grocery stores\n✅ Schools for your kids (if applicable)\n✅ Healthcare, transportation & car options\n✅ Everything you need to feel at home from day one\n\nIt takes less than 5 minutes to fill out, and your guide will be ready within 24 hours.\n\n👉 Fill out your profile here: ${joinUrl}${pin ? `\n🔑 Your PIN: ${pin}` : ""}\n\nDon't hesitate to reach out if you have any questions.\n\nWelcome aboard!\n${clubName}`
     );
-    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    window.open(`https://mail.google.com/mail/?view=cm&su=${subject}&body=${body}`, "_blank");
   }
 
   return (

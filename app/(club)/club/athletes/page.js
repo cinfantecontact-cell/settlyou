@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic';
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
+import ResendButton from "./_components/ResendButton";
 
 export default async function ClubAthletes() {
   const supabase = await createClient();
@@ -105,19 +106,22 @@ export default async function ClubAthletes() {
                     </td>
                   )}
                   <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <a href={`/club/athletes/${r.id}`} className="text-xs text-muted hover:text-foreground transition-colors font-medium">
-                        View →
+                    <div className="flex items-center gap-2">
+                      <a href={`/club/athletes/${r.id}`} className="text-xs font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-foreground/30 transition-colors">
+                        Info
                       </a>
                       {r.status === "delivered" && r.athlete_link_token && (
-                        <a
-                          href={`/report/${r.athlete_link_token}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs text-brand-600 hover:underline font-semibold"
-                        >
-                          View guide →
-                        </a>
+                        <>
+                          <a
+                            href={`/report/${r.athlete_link_token}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs font-medium px-3 py-1.5 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors whitespace-nowrap"
+                          >
+                            View guide
+                          </a>
+                          {r.athlete_email && <ResendButton requestId={r.id} />}
+                        </>
                       )}
                     </div>
                   </td>
