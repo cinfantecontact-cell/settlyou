@@ -7,12 +7,12 @@ const ESSENTIALS_FEATURES = [
   "AI-generated relocation guides",
   "Delivered within 24 hours",
   "Available in 8 languages",
-  "Custom branding (logo & colors)",
   "Athlete dashboard access",
   "Email guide delivery",
 ];
 
 const PREMIUM_FEATURES = [
+  "Custom branding (logo & colors)",
   "Custom coach notes in every guide",
   "Guide open tracking",
   "PDF download tracking",
@@ -160,7 +160,9 @@ export default async function ClubBilling() {
             <span className="text-sm font-bold text-brand-600 shrink-0 mt-0.5">+$1,000/yr</span>
           </div>
           <a
-            href={`mailto:hello@settlyou.com?subject=Upgrade to Premium — ${club?.name || "our program"}`}
+            href={`https://mail.google.com/mail/?view=cm&to=hello@settlyou.com&su=${encodeURIComponent(`Upgrade to Premium — ${club?.name || "our program"}`)}&body=${encodeURIComponent(`Hi Settlyou team,\n\nWe'd like to upgrade our account to Premium.\n\nProgram: ${club?.name || ""}\n\nPlease get in touch to discuss next steps.\n\nThanks!`)}`}
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 mt-4 bg-brand-600 text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-brand-700 transition-colors"
           >
             Contact us to upgrade
