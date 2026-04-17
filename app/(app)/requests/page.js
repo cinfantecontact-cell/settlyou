@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { formatCountry } from "@/lib/format-country";
 
 export const metadata = { title: "Requests — Settl" };
 
@@ -84,7 +85,7 @@ export default async function RequestsPage({ searchParams }) {
               {requests.map((req) => (
                 <tr key={req.id} className="hover:bg-surface transition-colors">
                   <td className="px-4 py-3 font-medium text-foreground">{req.athlete_name}</td>
-                  <td className="px-4 py-3 text-muted">{req.destination_city}, {req.destination_country}</td>
+                  <td className="px-4 py-3 text-muted">{req.destination_city}, {formatCountry(req.destination_country)}</td>
                   <td className="px-4 py-3">
                     <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium capitalize ${
                       req.service_tier === "premium" ? "bg-brand-100 text-brand-800" : "bg-gray-100 text-gray-600"

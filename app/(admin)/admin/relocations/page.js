@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import GenerateButton from "./_components/GenerateButton";
+import { formatCountry } from "@/lib/format-country";
 import GeneratingBadge from "./_components/GeneratingBadge";
 import DeleteRelocationButton from "./_components/DeleteRelocationButton";
 
@@ -79,7 +80,7 @@ export default async function AdminRelocationsPage() {
                       <span className="ml-1.5 text-xs bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded-full">self-submitted</span>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-muted">{req.destination_city}, {req.destination_country}</td>
+                  <td className="px-4 py-3 text-muted">{req.destination_city}, {formatCountry(req.destination_country)}</td>
                   <td className="px-4 py-3">
                     <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium capitalize ${
                       req.service_tier === "premium" ? "bg-brand-100 text-brand-800" : "bg-gray-100 text-gray-600"

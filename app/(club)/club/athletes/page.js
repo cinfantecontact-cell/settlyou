@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import ResendButton from "./_components/ResendButton";
+import { formatCountry } from "@/lib/format-country";
 
 export default async function ClubAthletes() {
   const supabase = await createClient();
@@ -55,7 +56,7 @@ export default async function ClubAthletes() {
         <p className="text-sm text-muted mt-1">{requests?.length || 0} total submissions</p>
       </div>
 
-      <div className="bg-white border border-border rounded-xl overflow-hidden">
+      <div className="bg-white border border-border rounded-xl overflow-x-auto">
         {requests?.length === 0 ? (
           <div className="px-6 py-16 text-center text-sm text-muted">No athletes yet. Share your join link to get started.</div>
         ) : (
@@ -79,11 +80,11 @@ export default async function ClubAthletes() {
                     <p className="font-medium text-foreground">{r.athlete_name || "—"}</p>
                     <p className="text-xs text-muted">{r.athlete_email || ""}</p>
                   </td>
-                  <td className="px-6 py-4 text-muted text-sm">{r.sport || "—"}</td>
-                  <td className="px-6 py-4 text-muted">
-                    {r.destination_city}{r.destination_country ? `, ${r.destination_country}` : ""}
+                  <td className="px-6 py-4 text-muted text-sm whitespace-nowrap">{r.sport || "—"}</td>
+                  <td className="px-6 py-4 text-muted whitespace-nowrap">
+                    {r.destination_city}{r.destination_country ? `, ${formatCountry(r.destination_country)}` : ""}
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <StatusBadge status={r.status} />
                   </td>
                   <td className="px-6 py-4 text-muted">{new Date(r.created_at).toLocaleDateString()}</td>
@@ -106,7 +107,7 @@ export default async function ClubAthletes() {
                     </td>
                   )}
                   <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 whitespace-nowrap">
                       <a href={`/club/athletes/${r.id}`} className="text-xs font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-foreground/30 transition-colors">
                         Info
                       </a>

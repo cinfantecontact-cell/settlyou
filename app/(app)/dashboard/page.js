@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
+import { formatCountry } from "@/lib/format-country";
 
 export const metadata = { title: "Dashboard — Settl" };
 
@@ -145,7 +146,7 @@ export default async function DashboardPage() {
                       {req.athlete_type === "college" ? "College" : "Pro"}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-muted">{req.destination_city}, {req.destination_country}</td>
+                  <td className="px-4 py-3 text-muted">{req.destination_city}, {formatCountry(req.destination_country)}</td>
                   <td className="px-4 py-3">
                     <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_COLORS[req.status] ?? "bg-gray-100 text-gray-600"}`}>
                       {STATUS_LABELS[req.status] ?? req.status}
