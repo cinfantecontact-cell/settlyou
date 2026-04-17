@@ -1112,9 +1112,10 @@ export default function JoinForm({ club }) {
       <div className="settl-form min-h-screen flex flex-col items-center justify-center px-6" style={{ background: bg }}>
         <style>{formCSS}</style>
         <div className="fade-up text-center max-w-sm w-full">
-          {club.logo_url && (
-            <img src={club.logo_url} alt={club.name} className="w-14 h-14 object-contain mx-auto mb-6 opacity-90" />
-          )}
+          {club.logo_url
+            ? <img src={club.logo_url} alt={club.name} className="w-14 h-14 object-contain mx-auto mb-6 opacity-90" />
+            : <img src="/settlyou-logo.png" alt="Settl" className="h-8 object-contain mx-auto mb-6 opacity-80" />
+          }
           <h2 className="text-2xl font-bold text-white mb-2">{t("Enter your PIN")}</h2>
           <p className="text-white/40 text-sm mb-8">{t("Your club sent you a 4-digit PIN with this link.")}</p>
           <input
@@ -1185,7 +1186,7 @@ export default function JoinForm({ club }) {
         <div className="flex items-center gap-2">
           {club.logo_url
             ? <img src={club.logo_url} alt={club.name} className="w-6 h-6 object-contain opacity-80" />
-            : <div className="w-6 h-6 rounded flex items-center justify-center text-xs font-bold" style={{ backgroundColor: `${primary}40`, color: primary }}>{club.name[0]}</div>
+            : <img src="/settlyou-logo.png" alt="Settl" className="h-5 object-contain opacity-70" />
           }
           <span className="text-sm text-white/40 font-medium">{club.name}</span>
         </div>

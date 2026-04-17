@@ -9,7 +9,7 @@ export default async function JoinPage({ params }) {
 
   const { data: club } = await admin
     .from("clubs")
-    .select("id, name, slug, type, logo_url, primary_color, secondary_color, active, seat_limit, seats_used, pin")
+    .select("id, name, slug, type, logo_url, primary_color, secondary_color, active, seat_limit, seats_used, pin, plan")
     .eq("slug", slug)
     .single();
 
@@ -35,5 +35,14 @@ export default async function JoinPage({ params }) {
     );
   }
 
-  return <JoinForm club={{ ...club, pin: undefined, hasPin: !!club.pin }} />;
+  const isPremium = club.plan === "premium";
+
+  return <JoinForm club={{
+    ...club,
+    pin: undefined,
+    hasPin: !!club.pin,
+    logo_url: isPremium ? club.logo_url : null,
+    primary_color: isPremium ? club.primary_color : "#16a34a",
+    secondary_color: isPremium ? club.secondary_color : "#ffffff",
+  }} />;
 }

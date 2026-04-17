@@ -8,8 +8,8 @@ const COUNTRIES = [
   "Other",
 ];
 
-export default function ContactPage({ searchParams }) {
-  const success = searchParams?.success;
+export default async function ContactPage({ searchParams }) {
+  const { success, error } = await searchParams;
 
   return (
     <div className="min-h-screen bg-surface flex flex-col">
@@ -23,19 +23,10 @@ export default function ContactPage({ searchParams }) {
         <div className="w-full max-w-lg">
 
           {success ? (
-            <div className="bg-white rounded-2xl border border-border p-10 shadow-sm text-center">
-              <div className="w-14 h-14 bg-brand-50 rounded-full flex items-center justify-center mx-auto mb-5">
-                <svg className="w-7 h-7 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <h2 className="text-xl font-bold text-foreground mb-2">We'll be in touch</h2>
-              <p className="text-sm text-muted leading-relaxed">
-                Thanks for reaching out. We'll contact you within 24 hours to schedule a quick call and get your program set up.
-              </p>
-              <a href="/" className="inline-block mt-6 text-sm text-brand-600 font-medium hover:underline">
-                ← Back to home
-              </a>
+            <div className="text-center">
+              <meta httpEquiv="refresh" content="2;url=/" />
+              <h2 className="text-2xl font-bold text-foreground mb-3">Thank you!</h2>
+              <p className="text-muted">We will be in touch.</p>
             </div>
           ) : (
             <div className="bg-white rounded-2xl border border-border p-8 shadow-sm">
@@ -61,28 +52,55 @@ export default function ContactPage({ searchParams }) {
                     />
                   </div>
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="email" className="text-sm font-medium text-foreground">Work email</label>
+                    <label htmlFor="role" className="text-sm font-medium text-foreground">Role / position</label>
                     <input
-                      id="email"
-                      name="email"
-                      type="email"
+                      id="role"
+                      name="role"
+                      type="text"
                       required
                       className="border border-border rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition"
-                      placeholder="you@university.edu"
+                      placeholder="Head Coach, Athletic Director..."
                     />
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="organization_name" className="text-sm font-medium text-foreground">University name</label>
+                  <label htmlFor="email" className="text-sm font-medium text-foreground">Work email</label>
                   <input
-                    id="organization_name"
-                    name="organization_name"
-                    type="text"
+                    id="email"
+                    name="email"
+                    type="email"
                     required
                     className="border border-border rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition"
-                    placeholder="Florida Atlantic University"
+                    placeholder="you@university.edu"
                   />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="organization_type" className="text-sm font-medium text-foreground">Organization type</label>
+                    <select
+                      id="organization_type"
+                      name="organization_type"
+                      required
+                      className="border border-border rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition bg-white"
+                    >
+                      <option value="">Select...</option>
+                      <option value="club">Sports Club / University</option>
+                      <option value="agency">Agency</option>
+                    </select>
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="organization_name" className="text-sm font-medium text-foreground">Organization name</label>
+                    <input
+                      id="organization_name"
+                      name="organization_name"
+                      type="text"
+                      required
+                      className="border border-border rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition"
+                      placeholder="Florida Atlantic University"
+                    />
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
