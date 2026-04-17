@@ -25,16 +25,24 @@ export async function PATCH(request, { params }) {
   const custom_notes = formData.get("custom_notes") || null;
   const plan = formData.get("plan") || "essentials";
 
-  // Build update object
-  const updates = { name, type, seat_limit, primary_color, secondary_color, active, custom_notes, plan };
+  // Build update object — branding only for premium
+  const updates = { name, type, seat_limit, active, plan };
+  if (plan === "premium") {
+    updates.primary_color = primary_color;
+    updates.secondary_color = secondary_color;
+    updates.custom_notes = custom_notes;
+  } else {
+    // Clear branding if downgraded to essentials
+    updates.custom_notes = null;
+  }
 
   // Only update PIN if a new one was provided
   if (newPin && newPin.length === 4) {
     updates.pin = newPin;
   }
 
-  // Upload new logo if provided
-  if (logoFile && logoFile.size > 0) {
+  // Upload new logo if provided — premium only
+  if (plan === "premium" && logoFile && logoFile.size > 0) {
     const { data: existing } = await admin.from("clubs").select("slug").eq("id", id).single();
     const ext = logoFile.name.split(".").pop();
     const path = `${existing.slug}.${ext}`;

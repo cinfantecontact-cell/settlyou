@@ -105,9 +105,21 @@ export default async function ClubAthletes() {
                     </td>
                   )}
                   <td className="px-6 py-4">
-                    <a href={`/club/athletes/${r.id}`} className="text-xs text-brand-600 hover:underline font-medium">
-                      View →
-                    </a>
+                    <div className="flex items-center gap-3">
+                      <a href={`/club/athletes/${r.id}`} className="text-xs text-muted hover:text-foreground transition-colors font-medium">
+                        View →
+                      </a>
+                      {r.status === "delivered" && r.athlete_link_token && (
+                        <a
+                          href={`/report/${r.athlete_link_token}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-brand-600 hover:underline font-semibold"
+                        >
+                          View guide →
+                        </a>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}

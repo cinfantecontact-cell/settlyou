@@ -43,6 +43,7 @@ export async function POST(request, { params }) {
       .select("custom_notes, logo_url, primary_color, plan")
       .eq("id", relocationRequest.club_id)
       .single();
+    relocationRequest.club_plan = club?.plan || "essentials";
     if (club?.plan === "premium" && club?.custom_notes) relocationRequest.club_custom_notes = club.custom_notes;
     if (club?.logo_url) relocationRequest.club_logo_url = club.logo_url;
     if (club?.primary_color) relocationRequest.club_primary_color = club.primary_color;

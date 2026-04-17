@@ -5,15 +5,15 @@ const COLLEGE_PLANS = [
     price: "$1,499",
     description: "Everything your athletic department needs to onboard international athletes across all sports.",
     highlight: false,
+    demo: "/report/sample-college-essentials",
     features: [
       "Unlimited guides — all sports, all athletes",
       "College athlete flow",
       "F-1 visa & campus life guidance",
       "12-section personalized guide",
-      "University logo & colors on guides",
       "Custom join link with PIN protection",
       "8 language options",
-      "Web guide only",
+      "Web guide + downloadable PDF",
       "1 admin login",
       "Standard generation speed",
       "Email support",
@@ -22,21 +22,17 @@ const COLLEGE_PLANS = [
   {
     name: "Premium",
     price: "$2,499",
-    description: "Everything in Essentials, plus the tools to track, personalize, and go deeper.",
+    description: "Everything in Essentials, plus branding, tracking, and deeper personalization.",
     highlight: true,
+    demo: "/report/sample-college",
     features: [
-      "Unlimited guides — all sports, all athletes",
-      "College athlete flow",
-      "F-1 visa & campus life guidance",
+      "Everything in Essentials",
       "15-section personalized guide",
-      "University logo & colors on guides",
-      "Custom join link with PIN protection",
-      "8 language options",
-      "Web guide + downloadable PDF",
-      "Unlimited staff logins",
-      "Priority generation",
+      "University logo & colors on every guide",
       "Athlete tracking — see who opened their guide",
       "Custom coach notes inside guides",
+      "Unlimited staff logins",
+      "Priority generation",
       "Analytics dashboard",
       "Onboarding call + priority support",
     ],
@@ -91,6 +87,14 @@ function PlanGrid({ plans }) {
             >
               Get in touch →
             </a>
+            <a
+              href={plan.demo}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 block text-center text-sm text-muted hover:text-brand-600 transition-colors"
+            >
+              See sample guide →
+            </a>
           </div>
         </div>
       ))}
@@ -143,7 +147,7 @@ export default function PricingPage() {
             {[
               {
                 q: "What exactly does Settlyou produce?",
-                a: "A fully personalized relocation guide — a structured document covering neighborhoods, housing, schools, dining, fitness, healthcare, local tips, emergency contacts, and more. Delivered as a private web link and printable PDF. We provide the information — not the physical relocation service.",
+                a: "A fully personalized relocation guide covering neighborhoods, housing, schools, dining, fitness, healthcare, emergency contacts, and more. Essentials includes 12 sections. Premium extends to 15 — adding local life tips, day trips, and a guest accommodation guide for visiting family. Delivered as a private web link and downloadable PDF.",
               },
               {
                 q: "How long does it take to generate a guide?",
@@ -163,7 +167,7 @@ export default function PricingPage() {
               },
               {
                 q: "What's included in Premium that isn't in Essentials?",
-                a: "Premium adds athlete tracking (see who opened their guide and when) and custom sections — so coaches can add personal notes, team-specific resources, or welcome messages directly inside the guide.",
+                a: "Premium adds 3 extra guide sections (local life tips, day trips & weekend getaways, and guest accommodation for visiting family), university logo & colors on every guide, athlete tracking (see who opened their guide and when), and custom coach notes — so coaches can add personal messages or team-specific resources directly inside the guide.",
               },
             ].map(({ q, a }) => (
               <div key={q} className="border-b border-border pb-8 last:border-0 last:pb-0">
@@ -183,12 +187,16 @@ export default function PricingPage() {
             Browse a real sample guide — every section, every recommendation, exactly what your athlete receives.
           </p>
           <div className="flex items-center gap-4 flex-wrap justify-center">
-            <a href="/report/sample-college"
-              className="bg-white text-brand-600 px-8 py-4 rounded-lg text-base font-bold hover:bg-brand-50 transition-colors">
-              See a sample guide →
+            <a href="/report/sample-college-essentials" target="_blank" rel="noopener noreferrer"
+              className="bg-brand-700 text-white border border-brand-400 px-7 py-4 rounded-lg text-base font-bold hover:bg-brand-800 transition-colors">
+              Essentials sample →
+            </a>
+            <a href="/report/sample-college" target="_blank" rel="noopener noreferrer"
+              className="bg-white text-brand-600 px-7 py-4 rounded-lg text-base font-bold hover:bg-brand-50 transition-colors">
+              Premium sample →
             </a>
             <a href="/contact"
-              className="bg-brand-700 text-white border border-brand-400 px-8 py-4 rounded-lg text-base font-bold hover:bg-brand-800 transition-colors">
+              className="bg-brand-700 text-white border border-brand-400 px-7 py-4 rounded-lg text-base font-bold hover:bg-brand-800 transition-colors">
               Request access →
             </a>
           </div>

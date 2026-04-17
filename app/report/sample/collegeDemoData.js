@@ -572,6 +572,40 @@ export const collegeDemoDocument = {
         },
       ],
     },
+    guest_accommodation: {
+      title: "For Visiting Family & Guests",
+      intro: "Parents and family traveling to Boca Raton for games and events have great options close to campus.",
+      neighborhoods_tip: "The areas along US-1 and near Mizner Park offer the best mix of proximity to FAU, restaurants, and walkability for visiting family.",
+      hotels: [
+        {
+          name: "Marriott Boca Raton at Boca Center",
+          url: "https://www.marriott.com",
+          stars: 4,
+          location: "5150 Town Center Circle, Boca Raton — 5 min from FAU",
+          description: "Reliable 4-star hotel with a pool, restaurant, and easy access to campus. Frequently used by visiting athletic families.",
+          price_range: "$180–$260/night",
+          why_recommended: "Closest full-service hotel to FAU Stadium — ideal for game weekends.",
+        },
+        {
+          name: "Hyatt Place Boca Raton",
+          url: "https://www.hyatt.com",
+          stars: 3,
+          location: "2101 NW Corporate Blvd, Boca Raton — 8 min from FAU",
+          description: "Modern, comfortable hotel with free breakfast and spacious suites — great value for multi-night stays.",
+          price_range: "$130–$190/night",
+          why_recommended: "Best price-to-comfort ratio near campus. Free breakfast saves money during longer visits.",
+        },
+        {
+          name: "Airbnb Near Mizner Park",
+          url: "https://www.airbnb.com",
+          stars: 0,
+          location: "Downtown Boca Raton — 10 min from FAU",
+          description: "Private apartments and homes near Mizner Park give families a home base with kitchen access — ideal for week-long visits.",
+          price_range: "$100–$180/night",
+          why_recommended: "More space and privacy than a hotel. Kitchen access helps families support the athlete's nutrition during visits.",
+        },
+      ],
+    },
     emergency_contacts: {
       title: "Emergency Contacts",
       intro:

@@ -7,13 +7,16 @@ const INCLUDED_SECTIONS = [
   "Housing Options",
   "Schools & Education",
   "Transportation & Cars",
-  "Family Life & Weekends",
-  "For Visiting Family & Guests",
   "Integration & Community",
+  "Practical Information",
+  "Safety & Campus Security",
+  "Emergency Contacts",
+];
+
+const PREMIUM_SECTIONS = [
+  "For Visiting Family & Guests",
   "Day Trips & Weekend Getaways",
   "Local Life & Daily Tips",
-  "Practical Information",
-  "Emergency Contacts",
 ];
 
 const STEPS = [
@@ -153,10 +156,10 @@ export default function LandingPage() {
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-3 block">What's included</span>
             <h2 className="text-3xl font-bold text-foreground">Built for performance, not just relocation</h2>
             <p className="text-muted mt-4 max-w-xl mx-auto text-sm leading-relaxed">
-              Every guide covers 15 sections — starting with recovery, sports medicine, and nutrition, then everything else an athlete needs to feel at home.
+              Essentials includes 12 sections. Premium adds 3 more — starting with recovery, sports medicine, and nutrition, then everything an athlete needs to feel at home.
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
             {INCLUDED_SECTIONS.map((s) => (
               <div key={s} className="flex items-center gap-3 bg-surface border border-border rounded-xl px-4 py-3">
                 <div className="w-5 h-5 rounded-full bg-brand-500 flex items-center justify-center shrink-0">
@@ -165,6 +168,17 @@ export default function LandingPage() {
                   </svg>
                 </div>
                 <span className="text-sm font-medium text-foreground">{s}</span>
+              </div>
+            ))}
+            {PREMIUM_SECTIONS.map((s) => (
+              <div key={s} className="flex items-center gap-3 bg-white border border-amber-200 rounded-xl px-4 py-3">
+                <div className="w-5 h-5 rounded-full bg-amber-400 flex items-center justify-center shrink-0">
+                  <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span className="text-sm font-medium text-foreground">{s}</span>
+                <span className="ml-auto text-xs font-semibold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full shrink-0">Premium</span>
               </div>
             ))}
           </div>

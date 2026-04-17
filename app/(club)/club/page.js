@@ -28,7 +28,7 @@ export default async function ClubDashboard() {
 
   const { data: requests } = await admin
     .from("requests")
-    .select("id, status, athlete_name, created_at")
+    .select("id, status, athlete_name, created_at, athlete_link_token")
     .eq("club_id", profile.club_id)
     .order("created_at", { ascending: false });
 
@@ -92,6 +92,7 @@ export default async function ClubDashboard() {
                 <th className="text-left px-6 py-3 text-xs text-muted font-medium uppercase tracking-wider">Athlete</th>
                 <th className="text-left px-6 py-3 text-xs text-muted font-medium uppercase tracking-wider">Status</th>
                 <th className="text-left px-6 py-3 text-xs text-muted font-medium uppercase tracking-wider">Date</th>
+                <th className="px-6 py-3"></th>
               </tr>
             </thead>
             <tbody>
@@ -102,6 +103,22 @@ export default async function ClubDashboard() {
                     <StatusBadge status={r.status} />
                   </td>
                   <td className="px-6 py-4 text-muted">{new Date(r.created_at).toLocaleDateString()}</td>
+                  <td className="px-6 py-4 text-right">
+                    {r.status === "delivered" && r.athlete_link_token ? (
+                      <a
+                        href={`/report/${r.athlete_link_token}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-brand-600 font-semibold hover:underline"
+                      >
+                        View guide →
+                      </a>
+                    ) : (
+                      <a href={`/club/athletes/${r.id}`} className="text-xs text-muted hover:text-foreground transition-colors">
+                        View →
+                      </a>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>

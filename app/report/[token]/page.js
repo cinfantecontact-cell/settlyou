@@ -28,7 +28,7 @@ export default async function AthleteReportPage({ params }) {
         <img src="/settlyou-logo.png" alt="Settl" className="h-8 rounded-md" />
         <div className="flex items-center gap-4">
           <span className="text-sm text-muted">Relocation Guide · {request.athlete_name}</span>
-          {isPremium && <PrintButton />}
+          <PrintButton />
         </div>
       </nav>
 
@@ -49,8 +49,8 @@ export default async function AthleteReportPage({ params }) {
             ...document.content,
             meta: {
               ...document.content?.meta,
-              ...(request.clubs?.logo_url && { club_logo_url: request.clubs.logo_url }),
-              ...(request.clubs?.primary_color && { club_primary_color: request.clubs.primary_color }),
+              ...(isPremium && request.clubs?.logo_url && { club_logo_url: request.clubs.logo_url }),
+              ...(isPremium && request.clubs?.primary_color && { club_primary_color: request.clubs.primary_color }),
             }
           }} />
         ) : (

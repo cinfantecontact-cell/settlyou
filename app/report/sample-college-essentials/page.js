@@ -1,27 +1,39 @@
 import DocumentView from "@/app/(admin)/admin/relocations/[id]/_components/DocumentView";
 import { collegeDemoDocument } from "../sample/collegeDemoData";
 
-export default function CollegeSampleReportPage() {
+export default function CollegeSampleEssentialsPage() {
+  const { local_life, day_trips, guest_accommodation, ...essentialsSections } = collegeDemoDocument.sections;
+
+  const content = {
+    ...collegeDemoDocument,
+    meta: {
+      ...collegeDemoDocument.meta,
+      club_logo_url: "/settlyou-logo.png",
+      club_primary_color: null,
+    },
+    sections: essentialsSections,
+  };
+
   return (
     <div className="min-h-screen bg-surface">
       <nav className="bg-white border-b border-border px-6 py-4 flex items-center justify-between no-print">
         <a href="/"><img src="/settlyou-logo.png" alt="Settl" className="h-8 rounded-md" /></a>
         <div className="flex items-center bg-surface border border-border rounded-lg p-0.5 gap-0.5">
+          <span className="px-4 py-1.5 rounded-md text-sm font-semibold bg-brand-600 text-white">
+            Essentials
+          </span>
           <a
-            href="/report/sample-college-essentials"
+            href="/report/sample-college"
             className="px-4 py-1.5 rounded-md text-sm font-medium text-muted hover:text-foreground transition-colors"
           >
-            Essentials
-          </a>
-          <span className="px-4 py-1.5 rounded-md text-sm font-semibold bg-brand-600 text-white">
             Premium
-          </span>
+          </a>
         </div>
         <a href="/pricing" className="text-xs text-brand-600 hover:underline font-medium">View pricing →</a>
       </nav>
 
       <div className="max-w-4xl mx-auto px-4 py-10">
-        <DocumentView content={collegeDemoDocument} />
+        <DocumentView content={content} />
       </div>
 
       <footer className="border-t border-border px-6 py-4 text-center text-xs text-muted no-print">

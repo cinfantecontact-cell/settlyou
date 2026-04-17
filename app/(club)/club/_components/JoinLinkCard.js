@@ -41,7 +41,7 @@ export default function JoinLinkCard({ slug, pin, clubName }) {
   }
 
   return (
-    <div className="bg-brand-600 rounded-xl p-6 mb-8 text-white">
+    <div className="bg-brand-600 rounded-xl p-6 mb-8 text-white overflow-hidden">
       <div className="flex items-start justify-between gap-4 mb-4">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.2em] opacity-70 mb-1">Player Join Link</p>
@@ -57,7 +57,8 @@ export default function JoinLinkCard({ slug, pin, clubName }) {
         </a>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-3">
+      {/* Input fields row */}
+      <div className="flex flex-col sm:flex-row gap-3 mb-3">
         {/* Link field */}
         <div
           className="flex-1 flex items-center gap-2 rounded-lg px-4 py-2.5"
@@ -96,8 +97,10 @@ export default function JoinLinkCard({ slug, pin, clubName }) {
             </button>
           </div>
         )}
+      </div>
 
-        {/* Copy invite button */}
+      {/* Action buttons row */}
+      <div className="flex gap-3">
         <button
           onClick={copyInvite}
           className="shrink-0 text-white font-semibold text-sm px-5 py-2.5 rounded-lg transition-colors"
@@ -108,7 +111,6 @@ export default function JoinLinkCard({ slug, pin, clubName }) {
           {copiedInvite ? "Copied!" : "Copy invite"}
         </button>
 
-        {/* Email button */}
         <button
           onClick={shareByEmail}
           className="shrink-0 bg-white text-brand-600 font-semibold text-sm px-5 py-2.5 rounded-lg hover:bg-brand-50 transition-colors"
