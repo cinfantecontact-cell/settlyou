@@ -58,7 +58,8 @@ function DashIcon() {
 
 function PlanComparison() {
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="overflow-x-auto -mx-6 sm:mx-0 px-6 sm:px-0">
+    <div className="min-w-[480px] max-w-3xl mx-auto">
       {/* Plan headers */}
       <div className="grid grid-cols-2 gap-x-5">
         {/* Essentials header */}
@@ -113,6 +114,7 @@ function PlanComparison() {
           ))}
         </div>
       </div>
+    </div>
     </div>
   );
 }
@@ -181,8 +183,8 @@ export default function PricingPage() {
           </div>
 
           <ScrollReveal delay={100}>
-            <div className="overflow-hidden rounded-2xl border border-border">
-              <table className="w-full text-sm">
+            <div className="overflow-x-auto rounded-2xl border border-border">
+              <table className="w-full min-w-[520px] text-sm">
                 <thead>
                   <tr className="border-b border-border">
                     <th className="text-left px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted bg-surface w-1/4">Per athlete</th>
