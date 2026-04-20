@@ -58,7 +58,7 @@ function DashIcon() {
 
 function PlanComparison() {
   return (
-    <div className="overflow-x-auto -mx-6 sm:mx-0 px-6 sm:px-0">
+    <div className="overflow-x-auto -mx-6 sm:mx-0 px-6 sm:px-0 pt-5">
     <div className="min-w-[480px] max-w-3xl mx-auto">
       {/* Plan headers */}
       <div className="grid grid-cols-2 gap-x-5">
