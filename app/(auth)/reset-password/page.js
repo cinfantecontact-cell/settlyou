@@ -8,11 +8,6 @@ export default function ResetPasswordPage() {
   const [error, setError] = useState(null);
   const [done, setDone] = useState(false);
 
-  const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  );
-
   async function handleSubmit(e) {
     e.preventDefault();
     setError(null);
@@ -29,6 +24,10 @@ export default function ResetPasswordPage() {
     }
 
     setLoading(true);
+    const supabase = createBrowserClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    );
     const { error: updateError } = await supabase.auth.updateUser({ password });
     setLoading(false);
 
