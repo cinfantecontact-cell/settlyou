@@ -3,7 +3,6 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://settlyou.com";
 
 function generateTempPassword() {
@@ -12,6 +11,7 @@ function generateTempPassword() {
 }
 
 export async function POST(request) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
   const supabase = await createClient();
   const admin = createAdminClient();
 

@@ -2,12 +2,12 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 const ALERT_TO = "hello@settlyou.com";
 const STUCK_GENERATING_MINUTES = 15;
 const STUCK_SUBMITTED_HOURS = 1;
 
 export async function GET(request) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
   // Verify cron secret
   const auth = request.headers.get("authorization");
   if (auth !== `Bearer ${process.env.CRON_SECRET}`) {

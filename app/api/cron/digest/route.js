@@ -3,11 +3,11 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import Anthropic from "@anthropic-ai/sdk";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 const DIGEST_TO = "hello@settlyou.com";
 
 export async function GET(request) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   const auth = request.headers.get("authorization");
   if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
