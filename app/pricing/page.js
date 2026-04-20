@@ -29,6 +29,8 @@ const COLLEGE_PLANS = [
     features: [
       "100 guides per year — all sports",
       "15-section personalized guide",
+      "Custom join link with PIN protection",
+      "Web guide + downloadable PDF",
       "University logo & colors on every guide",
       "Athlete tracking — see who opened their guide",
       "Custom coach notes inside guides",
