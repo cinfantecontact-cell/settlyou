@@ -1,3 +1,4 @@
+import ScrollReveal from "../_components/ScrollReveal";
 
 const COLLEGE_PLANS = [
   {
@@ -37,6 +38,35 @@ const COLLEGE_PLANS = [
       "Onboarding call + priority support",
     ],
   },
+];
+
+const STATS = [
+  {
+    number: "~$60",
+    label: "per guide with Settlyou Essentials",
+    comparison: "vs. $1,500–$3,000 per athlete at relocation firms",
+    accent: "brand",
+  },
+  {
+    number: "10–15 hrs",
+    label: "of staff time saved per athlete",
+    comparison: "$300–$750 in labor costs eliminated",
+    accent: "brand",
+  },
+  {
+    number: "3–6 mo",
+    label: "faster path to peak performance",
+    comparison: "Athletes with proper relocation support adapt significantly faster (Journal of Sports Sciences)",
+    accent: "brand",
+  },
+];
+
+const COMPARISON_ROWS = [
+  { label: "Cost per athlete",       firm: "$1,500–$3,000",  staff: "$300–$750",    settl: "~$60" },
+  { label: "Time to deliver",        firm: "2–4 weeks",      staff: "10–15 hrs",    settl: "~3 min" },
+  { label: "Athlete-specific guide", firm: "Sometimes",      staff: "Rarely",       settl: "Always" },
+  { label: "Multi-language",         firm: "Extra cost",     staff: "Not included", settl: "Included" },
+  { label: "Available instantly",    firm: "No",             staff: "No",           settl: "Yes" },
 ];
 
 function Check() {
@@ -136,6 +166,65 @@ export default function PricingPage() {
           <p className="text-sm text-muted leading-relaxed">
             Every guide includes F-1 visa steps, campus life orientation, student health insurance, safety tips, and local recommendations — everything your incoming athletes need to hit the ground running.
           </p>
+        </div>
+      </section>
+
+      {/* ROI / Stats section */}
+      <section className="bg-surface border-t border-b border-border py-24 px-6">
+        <div className="max-w-5xl mx-auto">
+
+          <ScrollReveal>
+            <div className="text-center mb-16">
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-3 block">The math</span>
+              <h2 className="text-3xl font-bold text-foreground">Why $60/guide is a no-brainer</h2>
+              <p className="text-muted mt-4 max-w-xl mx-auto text-sm leading-relaxed">
+                Relocation is expensive and slow — whether you outsource it or do it in-house. Settlyou delivers more, faster, at a fraction of the cost.
+              </p>
+            </div>
+          </ScrollReveal>
+
+          {/* 3 stat cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-16">
+            {STATS.map((s, i) => (
+              <ScrollReveal key={s.number} delay={i * 120}>
+                <div className="bg-white border border-border rounded-2xl p-8 flex flex-col gap-3 hover:border-brand-200 hover:shadow-lg transition-all duration-300 h-full">
+                  <div className="w-8 h-1 rounded-full bg-brand-500 mb-2" />
+                  <p className="text-5xl font-bold text-brand-600 leading-none tracking-tight">{s.number}</p>
+                  <p className="text-base font-semibold text-foreground leading-snug">{s.label}</p>
+                  <p className="text-xs text-muted leading-relaxed mt-auto pt-3 border-t border-border">{s.comparison}</p>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+
+          {/* Comparison table */}
+          <ScrollReveal delay={100}>
+            <div className="overflow-hidden rounded-2xl border border-border">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="text-left px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted bg-surface w-1/4">Per athlete</th>
+                    <th className="text-center px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted bg-surface">Relocation firm</th>
+                    <th className="text-center px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted bg-surface">In-house staff</th>
+                    <th className="text-center px-5 py-4 text-xs font-bold uppercase tracking-widest text-brand-600 bg-brand-50 border-l border-brand-100">
+                      Settlyou
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {COMPARISON_ROWS.map((row, i) => (
+                    <tr key={row.label} className={`border-b border-border last:border-0 ${i % 2 === 0 ? "bg-white" : "bg-surface/50"}`}>
+                      <td className="px-6 py-4 font-medium text-foreground">{row.label}</td>
+                      <td className="px-6 py-4 text-center text-muted">{row.firm}</td>
+                      <td className="px-6 py-4 text-center text-muted">{row.staff}</td>
+                      <td className="px-5 py-4 text-center font-semibold text-brand-700 bg-brand-50 border-l border-brand-100">{row.settl}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </ScrollReveal>
+
         </div>
       </section>
 
