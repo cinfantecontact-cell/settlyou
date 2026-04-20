@@ -10,7 +10,7 @@ export async function POST(request, { params }) {
   // Load club by slug
   const { data: club, error: clubError } = await admin
     .from("clubs")
-    .select("id, name, type, seat_limit, seats_used, active")
+    .select("id, name, type, plan, seat_limit, seats_used, active")
     .eq("slug", slug)
     .single();
 
@@ -22,8 +22,10 @@ export async function POST(request, { params }) {
     return NextResponse.json({ error: "This link is no longer active" }, { status: 403 });
   }
 
-  if (club.seat_limit && club.seats_used >= club.seat_limit) {
-    return NextResponse.json({ error: "This club has reached its report limit" }, { status: 403 });
+  // Derive effective limit from plan if seat_limit not explicitly set
+  const effectiveLimit = club.seat_limit ?? (club.plan === "premium" ? 100 : 40);
+  if ((club.seats_used ?? 0) >= effectiveLimit) {
+    return NextResponse.json({ error: "This club has reached its guide limit for the year. Please contact hello@settlyou.com." }, { status: 403 });
   }
 
   const body = await request.json();

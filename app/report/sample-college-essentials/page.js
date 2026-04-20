@@ -29,7 +29,7 @@ export default function CollegeSampleEssentialsPage() {
             Premium
           </a>
         </div>
-        <a href="/pricing" className="text-xs text-brand-600 hover:underline font-medium">View pricing →</a>
+        <a href="/pricing" className="text-xs font-semibold px-4 py-2 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors">View pricing →</a>
       </nav>
 
       <div className="max-w-4xl mx-auto px-4 py-10">

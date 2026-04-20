@@ -18,7 +18,7 @@ export default function PrivacyPage() {
         <div className="mb-12">
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-3 block">Legal</span>
           <h1 className="text-4xl font-bold text-foreground mb-4">Privacy Policy</h1>
-          <p className="text-sm text-muted">Last updated: April 2025</p>
+          <p className="text-sm text-muted">Last updated: April 17, 2026</p>
         </div>
 
         <div className="prose prose-sm max-w-none space-y-10 text-foreground">
@@ -147,7 +147,21 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold mb-3">12. Contact us</h2>
+            <h2 className="text-lg font-bold mb-3">12. Governing law and jurisdiction</h2>
+            <p className="text-sm text-muted leading-relaxed mb-3">
+              Settlyou is incorporated and operated in Chile. This Privacy Policy is governed by the laws of Chile, including Law No. 19,628 on the Protection of Private Life (Ley de Protección de Datos Personales).
+            </p>
+            <p className="text-sm text-muted leading-relaxed mb-3">
+              We serve athletes and institutions in the United States. To the extent that U.S. state privacy laws apply — including the California Consumer Privacy Act (CCPA) — California residents have the right to know what personal data we collect, request deletion of their data, and opt out of any sale of personal information. We do not sell personal information. To exercise your rights, contact us at{" "}
+              <a href="mailto:hello@settlyou.com" className="text-brand-600 hover:underline">hello@settlyou.com</a>.
+            </p>
+            <p className="text-sm text-muted leading-relaxed">
+              Any disputes arising from this policy shall be subject to the exclusive jurisdiction of the courts of Santiago, Chile, unless applicable law requires otherwise.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-bold mb-3">13. Contact us</h2>
             <p className="text-sm text-muted leading-relaxed">
               For any privacy-related questions, data requests, or concerns, contact us at:{" "}
               <a href="mailto:hello@settlyou.com" className="text-brand-600 hover:underline font-medium">hello@settlyou.com</a>
@@ -163,6 +177,7 @@ export default function PrivacyPage() {
         <div className="flex items-center gap-4">
           <a href="mailto:hello@settlyou.com" className="hover:text-foreground transition-colors">hello@settlyou.com</a>
           <a href="/privacy" className="text-foreground font-medium">Privacy policy</a>
+          <a href="/terms" className="hover:text-foreground transition-colors">Terms of service</a>
         </div>
       </footer>
 

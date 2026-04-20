@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import AccountForm from "./_components/AccountForm";
 import BrandingForm from "./_components/BrandingForm";
+import TourDriver from "../_components/TourDriver";
 
 export default async function AccountPage() {
   const supabase = await createClient();
@@ -21,12 +22,15 @@ export default async function AccountPage() {
 
   return (
     <div className="p-8 max-w-lg flex flex-col gap-6">
+      <TourDriver page="account" />
       <div>
         <h1 className="text-2xl font-bold text-foreground mb-1">Account</h1>
         <p className="text-sm text-muted">Manage your account and branding settings.</p>
       </div>
+      <div id="tour-account-form" className="flex flex-col gap-6">
       <AccountForm email={user.email} clubName={club?.name} />
       <BrandingForm club={club} />
+      </div>
     </div>
   );
 }

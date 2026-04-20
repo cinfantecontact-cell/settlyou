@@ -1,6 +1,8 @@
 export const dynamic = 'force-dynamic';
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
+import LeadStatusSelect from "./_components/LeadStatusSelect";
 
 export const metadata = { title: "Admin — Settl" };
 
@@ -25,7 +27,8 @@ export default async function AdminPage() {
 
   if (profile?.role !== "settl_admin") redirect("/dashboard");
 
-  const { data: contactRequests } = await supabase
+  const admin = createAdminClient();
+  const { data: contactRequests } = await admin
     .from("contact_requests")
     .select("*")
     .order("created_at", { ascending: false });
@@ -66,9 +69,7 @@ export default async function AdminPage() {
                   <td className="px-4 py-3 text-muted">{req.country}</td>
                   <td className="px-4 py-3 text-muted">{req.email}</td>
                   <td className="px-4 py-3">
-                    <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium capitalize ${STATUS_COLORS[req.status]}`}>
-                      {req.status}
-                    </span>
+                    <LeadStatusSelect leadId={req.id} currentStatus={req.status} />
                   </td>
                   <td className="px-4 py-3 text-muted">
                     {new Date(req.created_at).toLocaleDateString("en-US", {

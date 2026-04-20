@@ -36,7 +36,7 @@ export default async function AdminClientsPage() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Clients</h1>
-          <p className="text-sm text-muted mt-1">{total} total · clubs and university programs</p>
+          <p className="text-sm text-muted mt-1">{total} total · university programs</p>
         </div>
         <a
           href="/admin/clubs/new"
@@ -102,14 +102,14 @@ export default async function AdminClientsPage() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-muted font-mono truncate max-w-[160px]">
-                        {baseUrl}/join/{club.slug}
+                      <span className="text-xs text-muted font-mono truncate max-w-[140px]">
+                        /join/{club.slug}
                       </span>
                       <a
                         href={`${baseUrl}/join/${club.slug}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs text-brand-600 hover:underline shrink-0"
+                        className="text-xs font-medium px-3 py-1.5 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors shrink-0"
                       >
                         Open ↗
                       </a>
@@ -120,12 +120,9 @@ export default async function AdminClientsPage() {
                       <SendWelcomeEmailButton clubId={club.id} clubName={club.name} />
                       <a
                         href={`/admin/clubs/${club.id}/edit`}
-                        title="Edit"
-                        className="p-1.5 rounded-md text-muted hover:text-brand-600 hover:bg-brand-50 transition-colors"
+                        className="text-xs font-medium px-3 py-1.5 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors"
                       >
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                        </svg>
+                        Edit
                       </a>
                       <DeleteClubButton clubId={club.id} clubName={club.name} />
                     </div>

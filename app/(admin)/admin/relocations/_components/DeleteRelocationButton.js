@@ -44,10 +44,9 @@ export default function DeleteRelocationButton({ requestId, athleteName }) {
   return (
     <button
       onClick={() => setConfirming(true)}
-      title="Delete"
-      className="text-red-300 hover:text-red-500 transition-colors"
+      className="text-xs font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-red-600 hover:border-red-200 transition-colors"
     >
-      🗑️
+      Delete
     </button>
   );
 }

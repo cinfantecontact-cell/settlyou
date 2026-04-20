@@ -66,7 +66,7 @@ export default function AccountForm({ email, clubName }) {
       </div>
 
       {/* Change password */}
-      <div className="bg-white rounded-xl border border-border p-6">
+      <div id="tour-change-password" className="bg-white rounded-xl border border-border p-6">
         <h2 className="text-sm font-semibold text-foreground mb-4">Change password</h2>
 
         {error && (

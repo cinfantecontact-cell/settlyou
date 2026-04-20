@@ -32,6 +32,8 @@ export default async function ClubDashboard() {
     .eq("club_id", profile.club_id)
     .order("created_at", { ascending: false });
 
+  const isPremium = club?.plan === "premium";
+  const sampleGuideUrl = isPremium ? "/report/sample-college" : "/report/sample-college-essentials";
   const total = requests?.length || 0;
   const delivered = requests?.filter(r => r.status === "delivered").length || 0;
   const pending = requests?.filter(r => ["submitted", "generating", "under_review", "approved"].includes(r.status)).length || 0;
@@ -44,15 +46,17 @@ export default async function ClubDashboard() {
         <p className="text-sm text-muted mt-1">Welcome to your Settlyou portal</p>
       </div>
 
-      <OnboardingTutorial />
+      <OnboardingTutorial page="dashboard" />
 
       {/* Join link */}
       {club?.slug && (
-        <JoinLinkCard slug={club.slug} pin={club.pin} clubName={club.name} />
+        <div id="tour-join-link">
+          <JoinLinkCard slug={club.slug} pin={club.pin} clubName={club.name} />
+        </div>
       )}
 
       {/* Stat cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
+      <div id="tour-stats" className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
         <div className="bg-white border border-border rounded-xl p-5">
           <p className="text-xs text-muted uppercase tracking-widest mb-1">Total Reports</p>
           <p className="text-3xl font-bold text-foreground">{total}</p>
@@ -76,14 +80,14 @@ export default async function ClubDashboard() {
         <div className="px-6 py-4 border-b border-border flex items-center justify-between">
           <h2 className="text-sm font-semibold text-foreground">Recent Athletes</h2>
           <div className="flex items-center gap-4">
-            <a href="/report/sample-college" target="_blank" rel="noopener noreferrer" className="text-xs text-muted hover:text-brand-600 transition-colors">Preview sample guide ↗</a>
-            <a href="/club/athletes" className="text-xs text-brand-600 hover:underline font-medium">View all →</a>
+            <a href={sampleGuideUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-foreground/30 transition-colors">Preview sample guide ↗</a>
+            <a href="/club/athletes" className="text-xs font-medium px-3 py-1.5 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors">View all →</a>
           </div>
         </div>
         {requests?.length === 0 ? (
           <div className="px-6 py-12 text-center">
             <p className="text-sm text-muted mb-2">No athletes yet. Share your join link above to get started.</p>
-            <a href="/report/sample-college" target="_blank" rel="noopener noreferrer" className="text-xs text-brand-600 hover:underline font-medium">Preview what a guide looks like →</a>
+            <a href={sampleGuideUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-brand-600 hover:underline font-medium">Preview what a guide looks like →</a>
           </div>
         ) : (
           <table className="w-full text-sm">
@@ -104,20 +108,21 @@ export default async function ClubDashboard() {
                   </td>
                   <td className="px-6 py-4 text-muted">{new Date(r.created_at).toLocaleDateString()}</td>
                   <td className="px-6 py-4 text-right">
-                    {r.status === "delivered" && r.athlete_link_token ? (
-                      <a
-                        href={`/report/${r.athlete_link_token}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs text-brand-600 font-semibold hover:underline"
-                      >
-                        View guide →
+                    <div className="flex items-center justify-end gap-2">
+                      <a href={`/club/athletes/${r.id}`} className="text-xs font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-foreground/30 transition-colors">
+                        Info
                       </a>
-                    ) : (
-                      <a href={`/club/athletes/${r.id}`} className="text-xs text-muted hover:text-foreground transition-colors">
-                        View →
-                      </a>
-                    )}
+                      {r.status === "delivered" && r.athlete_link_token && (
+                        <a
+                          href={`/report/${r.athlete_link_token}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs font-medium px-3 py-1.5 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors whitespace-nowrap"
+                        >
+                          View guide
+                        </a>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}

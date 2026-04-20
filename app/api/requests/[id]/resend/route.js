@@ -19,7 +19,7 @@ export async function POST(request, { params }) {
 
   const { data: req } = await admin
     .from("requests")
-    .select("athlete_name, athlete_email, athlete_link_token, club_id, clubs(name)")
+    .select("athlete_name, athlete_email, athlete_link_token, club_id, status, clubs(name)")
     .eq("id", id)
     .single();
 

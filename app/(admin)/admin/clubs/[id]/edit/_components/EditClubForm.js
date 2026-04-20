@@ -162,7 +162,13 @@ export default function EditClubForm({ club }) {
               style={{ backgroundColor: c.value }} />
           ))}
         </div>
-        <p className="text-xs text-muted">Selected: <span className="font-medium">{COLORS.find(c => c.value === color)?.label ?? color}</span></p>
+        <div className="flex items-center gap-2 mt-1">
+          <input type="color" value={color} onChange={e => setColor(e.target.value)}
+            className="w-8 h-8 rounded-md border border-border cursor-pointer p-0.5 bg-white shrink-0" />
+          <input type="text" value={color} onChange={e => setColor(e.target.value)}
+            className="w-28 border border-border rounded-md px-2 py-1 text-sm font-mono outline-none focus:ring-2 focus:ring-brand-500" />
+          <span className="text-xs text-muted">{COLORS.find(c => c.value === color)?.label ?? "Custom"}</span>
+        </div>
         <input type="hidden" name="primary_color" value={color} />
       </div>
 
@@ -176,7 +182,13 @@ export default function EditClubForm({ club }) {
               style={{ backgroundColor: c.value }} />
           ))}
         </div>
-        <p className="text-xs text-muted">Selected: <span className="font-medium">{COLORS.find(c => c.value === secondaryColor)?.label ?? secondaryColor}</span></p>
+        <div className="flex items-center gap-2 mt-1">
+          <input type="color" value={secondaryColor} onChange={e => setSecondaryColor(e.target.value)}
+            className="w-8 h-8 rounded-md border border-border cursor-pointer p-0.5 bg-white shrink-0" />
+          <input type="text" value={secondaryColor} onChange={e => setSecondaryColor(e.target.value)}
+            className="w-28 border border-border rounded-md px-2 py-1 text-sm font-mono outline-none focus:ring-2 focus:ring-brand-500" />
+          <span className="text-xs text-muted">{COLORS.find(c => c.value === secondaryColor)?.label ?? "Custom"}</span>
+        </div>
         <input type="hidden" name="secondary_color" value={secondaryColor} />
       </div>
 

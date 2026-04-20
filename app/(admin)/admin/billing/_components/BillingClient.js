@@ -265,7 +265,7 @@ export default function BillingClient({ billing, clubs }) {
                     </td>
                     <td className="px-4 py-3 text-muted text-xs max-w-[180px] truncate">{b.notes ?? "—"}</td>
                     <td className="px-4 py-3 text-right">
-                      <button onClick={() => handleDelete(b.id)} className="text-red-300 hover:text-red-500 transition-colors" title="Delete">🗑️</button>
+                      <button onClick={() => handleDelete(b.id)} className="text-xs font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-red-600 hover:border-red-200 transition-colors">Delete</button>
                     </td>
                   </tr>
                 ))}
@@ -307,7 +307,7 @@ export default function BillingClient({ billing, clubs }) {
                     </td>
                     <td className="px-4 py-3 text-muted text-xs max-w-[180px] truncate">{b.notes ?? "—"}</td>
                     <td className="px-4 py-3 text-right">
-                      <button onClick={() => handleDelete(b.id)} className="text-red-300 hover:text-red-500 transition-colors" title="Delete">🗑️</button>
+                      <button onClick={() => handleDelete(b.id)} className="text-xs font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-red-600 hover:border-red-200 transition-colors">Delete</button>
                     </td>
                   </tr>
                 ))}

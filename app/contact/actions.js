@@ -20,6 +20,7 @@ export async function submitContactRequest(formData) {
 
   const { error } = await supabase.from("contact_requests").insert({
     full_name,
+    role,
     organization_name,
     organization_type,
     country,

@@ -2,12 +2,12 @@
 const COLLEGE_PLANS = [
   {
     name: "Essentials",
-    price: "$1,499",
+    price: "$2,399",
     description: "Everything your athletic department needs to onboard international athletes across all sports.",
     highlight: false,
     demo: "/report/sample-college-essentials",
     features: [
-      "Unlimited guides — all sports, all athletes",
+      "40 guides per year — all sports",
       "College athlete flow",
       "F-1 visa & campus life guidance",
       "12-section personalized guide",
@@ -21,17 +21,17 @@ const COLLEGE_PLANS = [
   },
   {
     name: "Premium",
-    price: "$2,499",
+    price: "$3,599",
     description: "Everything in Essentials, plus branding, tracking, and deeper personalization.",
     highlight: true,
     demo: "/report/sample-college",
     features: [
-      "Everything in Essentials",
+      "100 guides per year — all sports",
       "15-section personalized guide",
       "University logo & colors on every guide",
       "Athlete tracking — see who opened their guide",
       "Custom coach notes inside guides",
-      "Unlimited staff logins",
+      "5 staff login accounts",
       "Priority generation",
       "Analytics dashboard",
       "Onboarding call + priority support",
@@ -159,7 +159,7 @@ export default function PricingPage() {
               },
               {
                 q: "How many guides can we generate?",
-                a: "Both plans are unlimited — all sports, all athletes, no caps. One flat fee covers your entire athletic department for the year.",
+                a: "Essentials includes 40 guides per year. Premium includes 100. Both cover all sports — no per-sport or per-athlete restrictions. One flat annual fee, no surprises. If you reach your limit, contact us and we'll work something out.",
               },
               {
                 q: "What languages are supported?",

@@ -1177,8 +1177,8 @@ export default function JoinForm({ club }) {
       <style>{formCSS}</style>
 
       {/* Progress bar */}
-      <div className="h-0.5 bg-white/5 fixed top-0 left-0 right-0 z-10">
-        <div className="club-progress h-full transition-all duration-500 ease-out" style={{ width: `${progress}%` }} />
+      <div className="h-1 bg-white/10 fixed top-0 left-0 right-0 z-10">
+        <div className="club-progress h-full transition-all duration-500 ease-out rounded-r-full" style={{ width: `${progress}%` }} />
       </div>
 
       {/* Header */}
@@ -1190,7 +1190,7 @@ export default function JoinForm({ club }) {
           }
           <span className="text-sm text-white/40 font-medium">{club.name}</span>
         </div>
-        <span className="text-xs text-white/25">{qIndex + 1} / {questions.length}</span>
+        <span className="text-xs text-white/50 font-medium">{qIndex + 1} / {questions.length}</span>
       </div>
 
       {/* Question */}

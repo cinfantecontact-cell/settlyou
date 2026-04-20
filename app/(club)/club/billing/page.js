@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic';
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
+import TourDriver from "../_components/TourDriver";
 
 const ESSENTIALS_FEATURES = [
   "AI-generated relocation guides",
@@ -59,7 +60,7 @@ export default async function ClubBilling() {
 
   const isPremium = club?.plan === "premium";
   const seatsUsed = club?.seats_used || 0;
-  const seatLimit = club?.seat_limit;
+  const seatLimit = club?.seat_limit ?? (isPremium ? 100 : 40);
   const renewalDate = billing?.billing_date
     ? new Date(new Date(billing.billing_date).setFullYear(
         new Date(billing.billing_date).getFullYear() + 1
@@ -68,13 +69,14 @@ export default async function ClubBilling() {
 
   return (
     <div className="p-8 max-w-3xl mx-auto">
+      <TourDriver page="billing" />
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-foreground">Plan & Billing</h1>
         <p className="text-sm text-muted mt-1">Your current plan details</p>
       </div>
 
       {/* Plan card */}
-      <div className="bg-white border border-border rounded-xl p-6 mb-6">
+      <div id="tour-billing-card" className="bg-white border border-border rounded-xl p-6 mb-6">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-lg font-bold text-foreground">{isPremium ? "Premium" : "Essentials"}</h2>
@@ -157,7 +159,7 @@ export default async function ClubBilling() {
                 Add custom coach notes to every guide, and see exactly when athletes open or download their guide — useful for tracking engagement after signing.
               </p>
             </div>
-            <span className="text-sm font-bold text-brand-600 shrink-0 mt-0.5">+$1,000/yr</span>
+            <span className="text-sm font-bold text-brand-600 shrink-0 mt-0.5">+$1,200/yr</span>
           </div>
           <a
             href={`https://mail.google.com/mail/?view=cm&to=hello@settlyou.com&su=${encodeURIComponent(`Upgrade to Premium — ${club?.name || "our program"}`)}&body=${encodeURIComponent(`Hi Settlyou team,\n\nWe'd like to upgrade our account to Premium.\n\nProgram: ${club?.name || ""}\n\nPlease get in touch to discuss next steps.\n\nThanks!`)}`}

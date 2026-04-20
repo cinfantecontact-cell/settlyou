@@ -102,20 +102,21 @@ export default async function AdminRelocationsPage() {
                       month: "short", day: "numeric", year: "numeric",
                     })}
                   </td>
-                  <td className="px-4 py-3 flex items-center gap-2">
-                    {req.status === "submitted" && (
-                      <GenerateButton requestId={req.id} />
-                    )}
-                    {["under_review", "approved", "delivered"].includes(req.status) && (
-                      <a
-                        href={`/admin/relocations/${req.id}`}
-                        title="View document"
-                        className="text-brand-400 hover:text-brand-600 transition-colors"
-                      >
-                        👁️
-                      </a>
-                    )}
-                    <DeleteRelocationButton requestId={req.id} athleteName={req.athlete_name} />
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-2">
+                      {req.status === "submitted" && (
+                        <GenerateButton requestId={req.id} />
+                      )}
+                      {["under_review", "approved", "delivered"].includes(req.status) && (
+                        <a
+                          href={`/admin/relocations/${req.id}`}
+                          className="text-xs font-medium px-3 py-1.5 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors whitespace-nowrap"
+                        >
+                          View
+                        </a>
+                      )}
+                      <DeleteRelocationButton requestId={req.id} athleteName={req.athlete_name} />
+                    </div>
                   </td>
                 </tr>
               ))}

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { sendAthleteReportReady, sendClubGuideDelivered } from "@/lib/email/send";
+import { sendAthleteReportReady } from "@/lib/email/send";
 
 export async function POST(request, { params }) {
   const supabase = await createClient();
@@ -56,19 +56,18 @@ export async function POST(request, { params }) {
     }
   }
 
-  // Send club notification
-  if (clubAdminEmail && req?.athlete_link_token) {
-    try {
-      await sendClubGuideDelivered({
-        athleteName: req.athlete_name || "Athlete",
-        athleteEmail: req.athlete_email || null,
-        clubAdminEmail,
-        clubName: req.clubs?.name || "",
-        reportToken: req.athlete_link_token,
-      });
-    } catch (e) {
-      console.error("Failed to send club email:", e.message);
-    }
+  // Log in-app notification for club
+  if (req?.club_id) {
+    await admin.from("events").insert({
+      event_type: "guide_delivered",
+      request_id: id,
+      club_id: req.club_id,
+      metadata: {
+        athlete_name: req.athlete_name || "Athlete",
+        athlete_email: req.athlete_email || null,
+        report_token: req.athlete_link_token,
+      },
+    });
   }
 
   return NextResponse.json({ ok: true });
