@@ -57,7 +57,13 @@ export async function POST(request, { params }) {
     has_scholarship: body.has_scholarship || false,
     on_campus_housing: body.on_campus_housing || false,
     semester_start: body.semester_start || null,
+    is_part_of_team: body.is_part_of_team ?? false,
     is_international: body.is_international ?? true,
+    student_level: body.student_level || null,
+    study_style: body.study_style || null,
+    work_plans: body.work_plans || null,
+    social_goals: body.social_goals || [],
+    training_schedule: body.training_schedule || null,
     // Family
     family_size: body.family_size || 1,
     children_ages: body.children_ages || [],
@@ -142,15 +148,30 @@ export async function POST(request, { params }) {
           .from("requests").select("*").eq("id", requestId).single();
 
         const { data: clubData } = await admin
-          .from("clubs").select("custom_notes, logo_url, primary_color").eq("id", club.id).single();
+          .from("clubs").select("custom_notes, logo_url, primary_color, division").eq("id", club.id).single();
 
         if (clubData?.custom_notes) relocationRequest.club_custom_notes = clubData.custom_notes;
         if (clubData?.logo_url) relocationRequest.club_logo_url = clubData.logo_url;
         if (clubData?.primary_color) relocationRequest.club_primary_color = clubData.primary_color;
+        if (clubData?.division) relocationRequest.division = clubData.division;
 
         await admin.from("requests").update({ status: "generating" }).eq("id", requestId);
 
-        const document = await generateRelocationDocument(relocationRequest);
+        // Look up pre-generated base data for this club
+        let baseData = null;
+        const { data: base } = await admin
+          .from("city_base_data")
+          .select("content")
+          .eq("club_id", club.id)
+          .eq("language", "en")
+          .eq("status", "ready")
+          .single();
+        if (base?.content) {
+          baseData = base.content;
+          console.log("[auto-generate] using pre-generated base data (two-tier)");
+        }
+
+        const document = await generateRelocationDocument(relocationRequest, baseData);
 
         if (clubData?.logo_url) document.meta.club_logo_url = clubData.logo_url;
         if (clubData?.primary_color) document.meta.club_primary_color = clubData.primary_color;

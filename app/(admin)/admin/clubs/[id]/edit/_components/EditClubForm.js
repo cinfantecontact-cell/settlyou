@@ -21,7 +21,7 @@ const COLORS = [
   { label: "Gray", value: "#6b7280" },
 ];
 
-export default function EditClubForm({ club }) {
+export default function EditClubForm({ club, baseDataStatus, baseDataGeneratedAt }) {
   const [color, setColor] = useState(club.primary_color || "#111111");
   const [secondaryColor, setSecondaryColor] = useState(club.secondary_color || "#ffffff");
   const [logoPreview, setLogoPreview] = useState(club.logo_url || null);
@@ -29,7 +29,25 @@ export default function EditClubForm({ club }) {
   const [plan, setPlan] = useState(club.plan || "essentials");
   const [submitting, setSubmitting] = useState(false);
   const [pinVisible, setPinVisible] = useState(false);
+  const [baseStatus, setBaseStatus] = useState(baseDataStatus);
+  const [baseGenerating, setBaseGenerating] = useState(false);
   const fileRef = useRef(null);
+
+  async function handleGenerateBase() {
+    setBaseGenerating(true);
+    setBaseStatus("generating");
+    try {
+      const res = await fetch(`/api/admin/clubs/${club.id}/generate-base`, { method: "POST" });
+      if (!res.ok) {
+        const data = await res.json();
+        alert(data.error || "Failed to start generation");
+        setBaseStatus("failed");
+      }
+    } catch {
+      setBaseStatus("failed");
+    }
+    setBaseGenerating(false);
+  }
 
   function handleLogo(e) {
     const file = e.target.files?.[0];
@@ -65,7 +83,7 @@ export default function EditClubForm({ club }) {
 
       {/* Name */}
       <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-foreground">Club / Institution name</label>
+        <label className="text-sm font-medium text-foreground">University name</label>
         <input name="name" required defaultValue={club.name}
           className="border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white" />
       </div>
@@ -90,13 +108,33 @@ export default function EditClubForm({ club }) {
         </select>
       </div>
 
-      {/* Plan */}
+      {/* Division */}
       <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-foreground">Plan</label>
+        <label className="text-sm font-medium text-foreground">Athletic division <span className="text-muted font-normal">(optional)</span></label>
+        <select name="division" defaultValue={club.division || ""}
+          className="border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white">
+          <option value="">— Not set —</option>
+          <option value="NCAA Division I">NCAA Division I</option>
+          <option value="NCAA Division II">NCAA Division II</option>
+          <option value="NCAA Division III">NCAA Division III</option>
+          <option value="NAIA">NAIA</option>
+          <option value="NJCAA">NJCAA</option>
+          <option value="Canadian U Sport">Canadian U Sport</option>
+          <option value="Community College">Community College</option>
+          <option value="High School">High School</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      {/* Pricing tier */}
+      <div className="flex flex-col gap-1.5">
+        <label className="text-sm font-medium text-foreground">Pricing tier</label>
         <select value={plan} onChange={(e) => setPlan(e.target.value)}
           className="border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white">
-          <option value="essentials">Essentials — $1,499/yr</option>
-          <option value="premium">Premium — $2,499/yr</option>
+          <option value="49">$49/guide — up to 50 guides</option>
+          <option value="35">$35/guide — up to 150 guides</option>
+          <option value="25">$25/guide — up to 400 guides</option>
+          <option value="custom">Custom</option>
         </select>
       </div>
 
@@ -192,30 +230,6 @@ export default function EditClubForm({ club }) {
         <input type="hidden" name="secondary_color" value={secondaryColor} />
       </div>
 
-      {/* Custom notes — Premium only */}
-      <div className="flex flex-col gap-1.5">
-        <div className="flex items-center gap-2">
-          <label className="text-sm font-medium text-foreground">Club notes for every guide</label>
-          {plan !== "premium" && (
-            <span className="text-xs font-semibold bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">Premium</span>
-          )}
-        </div>
-        <textarea
-          name="custom_notes"
-          defaultValue={club.custom_notes || ""}
-          rows={5}
-          disabled={plan !== "premium"}
-          placeholder={plan === "premium"
-            ? "Add anything you want included in every guide for this club — local spots, important contacts, specific advice, anything. The AI will weave it in naturally."
-            : "Upgrade to Premium to add custom coach notes to every guide."}
-          className={`border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 resize-y ${plan !== "premium" ? "bg-surface text-muted cursor-not-allowed" : "bg-white"}`}
-        />
-        {plan !== "premium" ? (
-          <p className="text-xs text-amber-600">Custom coach notes are included in every guide on the Premium plan.</p>
-        ) : (
-          <p className="text-xs text-muted">These notes will be included in every relocation guide generated for this club.</p>
-        )}
-      </div>
 
       {/* Active toggle */}
       <div className="flex flex-col gap-1.5">
@@ -226,8 +240,47 @@ export default function EditClubForm({ club }) {
             className={`w-10 h-6 rounded-full transition-colors flex items-center px-1 cursor-pointer ${active ? "bg-brand-600" : "bg-gray-200"}`}>
             <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${active ? "translate-x-4" : "translate-x-0"}`} />
           </div>
-          <span className="text-sm text-foreground">{active ? "Active — athletes can submit" : "Inactive — link is disabled"}</span>
+          <span className="text-sm text-foreground">{active ? "Active — students can submit" : "Inactive — link is disabled"}</span>
         </label>
+      </div>
+
+      {/* City Base Data */}
+      <div className="flex flex-col gap-2 border-t border-border pt-6">
+        <label className="text-sm font-medium text-foreground">City base data</label>
+        <p className="text-xs text-muted">Pre-generated city info (restaurants, hospitals, neighborhoods) used to speed up guide generation. Generated once, reused for all students.</p>
+        <div className="flex items-center gap-3 mt-1">
+          {baseStatus === "ready" && (
+            <span className="text-xs font-medium text-brand-700 bg-brand-50 border border-brand-200 px-2.5 py-1 rounded-full">
+              Ready
+            </span>
+          )}
+          {baseStatus === "generating" && (
+            <span className="text-xs font-medium text-yellow-700 bg-yellow-50 border border-yellow-200 px-2.5 py-1 rounded-full">
+              Generating...
+            </span>
+          )}
+          {baseStatus === "failed" && (
+            <span className="text-xs font-medium text-red-700 bg-red-50 border border-red-200 px-2.5 py-1 rounded-full">
+              Failed
+            </span>
+          )}
+          {!baseStatus && (
+            <span className="text-xs font-medium text-gray-500 bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-full">
+              Not generated
+            </span>
+          )}
+          <button
+            type="button"
+            onClick={handleGenerateBase}
+            disabled={baseGenerating || baseStatus === "generating"}
+            className="text-xs font-semibold text-brand-600 hover:text-brand-700 border border-brand-200 px-3 py-1.5 rounded-lg hover:bg-brand-50 transition-colors disabled:opacity-50"
+          >
+            {baseStatus === "ready" ? "Regenerate" : baseStatus === "generating" ? "Generating..." : "Generate now"}
+          </button>
+        </div>
+        {baseDataGeneratedAt && baseStatus === "ready" && (
+          <p className="text-xs text-muted">Last generated: {new Date(baseDataGeneratedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" })}</p>
+        )}
       </div>
 
       <button type="submit" disabled={submitting}

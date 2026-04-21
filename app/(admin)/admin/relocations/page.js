@@ -61,10 +61,10 @@ export default async function AdminRelocationsPage() {
           <table className="w-full text-sm">
             <thead className="bg-surface border-b border-border">
               <tr>
-                <th className="px-4 py-3 text-left font-medium text-muted">Athlete</th>
-                <th className="px-4 py-3 text-left font-medium text-muted">Club / Agency</th>
+                <th className="px-4 py-3 text-left font-medium text-muted">Student</th>
+                <th className="px-4 py-3 text-left font-medium text-muted">University</th>
                 <th className="px-4 py-3 text-left font-medium text-muted">Destination</th>
-                <th className="px-4 py-3 text-left font-medium text-muted">Tier</th>
+                <th className="px-4 py-3 text-left font-medium text-muted">Type</th>
                 <th className="px-4 py-3 text-left font-medium text-muted">Status</th>
                 <th className="px-4 py-3 text-left font-medium text-muted">Date</th>
                 <th className="px-4 py-3 text-left font-medium text-muted">Actions</th>
@@ -82,10 +82,8 @@ export default async function AdminRelocationsPage() {
                   </td>
                   <td className="px-4 py-3 text-muted">{req.destination_city}, {formatCountry(req.destination_country)}</td>
                   <td className="px-4 py-3">
-                    <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium capitalize ${
-                      req.service_tier === "premium" ? "bg-brand-100 text-brand-800" : "bg-gray-100 text-gray-600"
-                    }`}>
-                      {req.service_tier}
+                    <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium capitalize bg-gray-100 text-gray-600">
+                      {req.athlete_type === "college" ? (req.is_part_of_team ? "Athlete" : "Student") : "Pro"}
                     </span>
                   </td>
                   <td className="px-4 py-3">

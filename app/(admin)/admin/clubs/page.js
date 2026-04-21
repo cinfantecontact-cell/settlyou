@@ -31,7 +31,7 @@ export default async function AdminClubsPage() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Clients</h1>
-          <p className="text-sm text-muted mt-1">{clubs?.length ?? 0} universities · Each gets a unique join link</p>
+          <p className="text-sm text-muted mt-1">{clubs?.length ?? 0} total · university programs</p>
         </div>
         <a
           href="/admin/clubs/new"
@@ -66,13 +66,9 @@ export default async function AdminClubsPage() {
                 <p className="text-xs text-muted">{club.slug}</p>
               </div>
 
-              {/* Plan */}
-              <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold shrink-0 ${
-                club.plan === "premium"
-                  ? "bg-brand-100 text-brand-700"
-                  : "bg-surface text-muted border border-border"
-              }`}>
-                {club.plan === "premium" ? "Premium" : "Essentials"}
+              {/* Tier */}
+              <span className="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold shrink-0 bg-brand-100 text-brand-700">
+                {(club.seat_limit ?? 0) >= 400 ? "$25/guide" : (club.seat_limit ?? 0) >= 150 ? "$35/guide" : "$49/guide"}
               </span>
 
               {/* Guides */}

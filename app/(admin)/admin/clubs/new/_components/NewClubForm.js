@@ -30,7 +30,7 @@ export default function NewClubForm() {
   const [color, setColor] = useState("#111111");
   const [secondaryColor, setSecondaryColor] = useState("#ffffff");
   const [logoPreview, setLogoPreview] = useState(null);
-  const [plan, setPlan] = useState("essentials");
+  const [tier, setTier] = useState("49");
   const [submitting, setSubmitting] = useState(false);
   const [lookingUp, setLookingUp] = useState(false);
   const [address, setAddress] = useState("");
@@ -111,6 +111,23 @@ export default function NewClubForm() {
         </div>
 
         <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-foreground">Athletic division <span className="text-muted font-normal">(optional)</span></label>
+          <select name="division"
+            className="border border-border rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white">
+            <option value="">— Select division —</option>
+            <option value="NCAA Division I">NCAA Division I</option>
+            <option value="NCAA Division II">NCAA Division II</option>
+            <option value="NCAA Division III">NCAA Division III</option>
+            <option value="NAIA">NAIA</option>
+            <option value="NJCAA">NJCAA</option>
+            <option value="Canadian U Sport">Canadian U Sport</option>
+            <option value="Community College">Community College</option>
+            <option value="High School">High School</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-1.5">
           <label className="text-sm font-medium text-foreground">Join link slug</label>
           <div className="flex items-center gap-0 border border-border rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-brand-500">
             <span className="text-sm text-muted bg-surface px-3 py-2.5 border-r border-border shrink-0">settl.com/join/</span>
@@ -149,11 +166,13 @@ export default function NewClubForm() {
         <SectionTitle>Access & limits</SectionTitle>
 
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-foreground">Plan</label>
-          <select name="plan" required value={plan} onChange={(e) => setPlan(e.target.value)}
+          <label className="text-sm font-medium text-foreground">Pricing tier</label>
+          <select name="plan" required value={tier} onChange={(e) => setTier(e.target.value)}
             className="border border-border rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white">
-            <option value="essentials">Essentials — $1,499/yr</option>
-            <option value="premium">Premium — $2,499/yr</option>
+            <option value="49">$49/guide — up to 50 guides (min $2,450)</option>
+            <option value="35">$35/guide — up to 150 guides (min $5,250)</option>
+            <option value="25">$25/guide — up to 400 guides (min $10,000)</option>
+            <option value="custom">Custom</option>
           </select>
         </div>
 
@@ -180,21 +199,16 @@ export default function NewClubForm() {
         </div>
       </div>
 
-      {/* Branding — Premium only */}
+      {/* Branding */}
       <div className="bg-white rounded-xl border border-border p-6 flex flex-col gap-5">
-        <div className="flex items-center gap-2">
-          <SectionTitle>Branding</SectionTitle>
-          {plan !== "premium" && (
-            <span className="text-xs font-semibold bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full mb-4">Premium</span>
-          )}
-        </div>
+        <SectionTitle>Branding</SectionTitle>
 
         <div className="flex flex-col gap-1.5">
           <label className="text-sm font-medium text-foreground">University logo <span className="text-muted font-normal">(optional)</span></label>
-          <div className={`flex items-center gap-4 ${plan !== "premium" ? "opacity-50 pointer-events-none" : ""}`}>
+          <div className="flex items-center gap-4">
             <div
               className="w-16 h-16 rounded-xl border border-dashed border-border bg-surface flex items-center justify-center overflow-hidden cursor-pointer"
-              onClick={() => plan === "premium" && fileRef.current?.click()}
+              onClick={() => fileRef.current?.click()}
             >
               {logoPreview
                 ? <img src={logoPreview} alt="Logo preview" className="w-full h-full object-contain p-1" />
@@ -202,21 +216,21 @@ export default function NewClubForm() {
               }
             </div>
             <div>
-              <button type="button" onClick={() => plan === "premium" && fileRef.current?.click()}
+              <button type="button" onClick={() => fileRef.current?.click()}
                 className="text-sm text-brand-600 font-medium hover:underline block">
                 {logoPreview ? "Change logo" : "Upload logo"}
               </button>
               <p className="text-xs text-muted mt-0.5">PNG, JPG, or SVG</p>
             </div>
-            <input ref={fileRef} name="logo" type="file" accept="image/*" className="hidden" onChange={handleLogo} disabled={plan !== "premium"} />
+            <input ref={fileRef} name="logo" type="file" accept="image/*" className="hidden" onChange={handleLogo} />
           </div>
         </div>
 
         <div className="flex flex-col gap-2">
           <label className="text-sm font-medium text-foreground">Primary color</label>
-          <div className={`flex flex-wrap gap-2 ${plan !== "premium" ? "opacity-50 pointer-events-none" : ""}`}>
+          <div className="flex flex-wrap gap-2">
             {COLORS.map((c) => (
-              <button key={c.value} type="button" title={c.label} onClick={() => plan === "premium" && setColor(c.value)}
+              <button key={c.value} type="button" title={c.label} onClick={() => setColor(c.value)}
                 className={`w-7 h-7 rounded-full border-2 transition-all ${color === c.value ? "border-brand-600 scale-110" : "border-transparent hover:scale-105"} ${c.value === "#ffffff" ? "border-border" : ""}`}
                 style={{ backgroundColor: c.value }} />
             ))}
@@ -227,9 +241,9 @@ export default function NewClubForm() {
 
         <div className="flex flex-col gap-2">
           <label className="text-sm font-medium text-foreground">Secondary color</label>
-          <div className={`flex flex-wrap gap-2 ${plan !== "premium" ? "opacity-50 pointer-events-none" : ""}`}>
+          <div className="flex flex-wrap gap-2">
             {COLORS.map((c) => (
-              <button key={c.value} type="button" title={c.label} onClick={() => plan === "premium" && setSecondaryColor(c.value)}
+              <button key={c.value} type="button" title={c.label} onClick={() => setSecondaryColor(c.value)}
                 className={`w-7 h-7 rounded-full border-2 transition-all ${secondaryColor === c.value ? "border-brand-600 scale-110" : "border-transparent hover:scale-105"} ${c.value === "#ffffff" ? "border-border" : ""}`}
                 style={{ backgroundColor: c.value }} />
             ))}
@@ -237,36 +251,8 @@ export default function NewClubForm() {
           <p className="text-xs text-muted">Selected: <span className="font-medium">{COLORS.find(c => c.value === secondaryColor)?.label ?? secondaryColor}</span></p>
           <input type="hidden" name="secondary_color" value={secondaryColor} />
         </div>
-
-        {plan !== "premium" && (
-          <p className="text-xs text-amber-600">Logo and colors appear on the athlete's guide. Upgrade to Premium to enable.</p>
-        )}
       </div>
 
-      {/* Custom notes — Premium only */}
-      <div className="bg-white rounded-xl border border-border p-6 flex flex-col gap-3">
-        <div className="flex items-center gap-2">
-          <SectionTitle>Custom notes</SectionTitle>
-          {plan !== "premium" && (
-            <span className="text-xs font-semibold bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full mb-4">Premium</span>
-          )}
-        </div>
-        <label className="text-sm font-medium text-foreground">Notes for every guide <span className="text-muted font-normal">(optional)</span></label>
-        <textarea
-          name="custom_notes"
-          rows={4}
-          disabled={plan !== "premium"}
-          placeholder={plan === "premium"
-            ? "Add anything you want included in every guide — local spots, important contacts, campus resources. The AI will weave it in naturally."
-            : "Upgrade to Premium to add custom coach notes to every guide."}
-          className={`border border-border rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500 resize-y ${plan !== "premium" ? "bg-surface text-muted cursor-not-allowed" : "bg-white"}`}
-        />
-        {plan !== "premium" ? (
-          <p className="text-xs text-amber-600">Custom coach notes are a Premium feature. Select Premium above to enable.</p>
-        ) : (
-          <p className="text-xs text-muted">Included in every guide generated for this university.</p>
-        )}
-      </div>
 
       <button type="submit" disabled={submitting}
         className="bg-brand-600 text-white px-6 py-3 rounded-lg text-sm font-semibold hover:bg-brand-700 transition-colors disabled:opacity-50">

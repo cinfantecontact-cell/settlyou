@@ -579,6 +579,152 @@ export default function DocumentView({ content }) {
         </Section>
       )}
 
+      {/* Eligibility (college athlete only) */}
+      {sections.eligibility && (
+        <Section title={sections.eligibility.title}>
+          <p className="text-sm text-muted mb-4">{sections.eligibility.intro}</p>
+          {sections.eligibility.warning && (
+            <Callout variant="yellow">{sections.eligibility.warning}</Callout>
+          )}
+          <div className="flex flex-col gap-4">
+            {(sections.eligibility.items || sections.eligibility.key_requirements)?.map((item, i) => (
+              <div key={i} className="border border-border rounded-xl p-5">
+                {item.category && (
+                  <div className="flex items-center gap-2 mb-2 flex-wrap">
+                    <span className="text-xs font-bold text-brand-600 uppercase tracking-wide bg-brand-50 border border-brand-100 px-2.5 py-0.5 rounded-full">{item.category}</span>
+                  </div>
+                )}
+                <h3 className="font-bold text-foreground mb-2">
+                  <ExternalLink url={item.url}>{item.title}</ExternalLink>
+                </h3>
+                <p className="text-sm text-muted leading-relaxed mb-3">{item.description}</p>
+                {item.steps?.length > 0 && (
+                  <div className="flex flex-col gap-1.5 mt-2">
+                    {item.steps.map((step, j) => (
+                      <div key={j} className="flex items-start gap-2.5 text-sm text-muted">
+                        <span className="w-5 h-5 rounded-full bg-brand-100 text-brand-700 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">{j + 1}</span>
+                        <span>{step}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+          {sections.eligibility.international_notes && (
+            <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-xl">
+              <p className="text-sm text-yellow-800">{sections.eligibility.international_notes}</p>
+            </div>
+          )}
+          {sections.eligibility.resources?.length > 0 && (
+            <div className="mt-4 flex flex-col gap-2">
+              {sections.eligibility.resources.map((r, i) => (
+                <div key={i} className="text-sm text-muted">
+                  <ExternalLink url={r.url}><span className="font-semibold text-foreground">{r.name}</span></ExternalLink>
+                  {r.description && <span> — {r.description}</span>}
+                </div>
+              ))}
+            </div>
+          )}
+        </Section>
+      )}
+
+      {/* Banking (general student) */}
+      {sections.banking && (
+        <Section title={sections.banking.title}>
+          <p className="text-sm text-muted mb-4">{sections.banking.intro}</p>
+          {sections.banking.tips?.length > 0 && (
+            <div className="flex flex-col gap-1.5 mb-5">
+              {sections.banking.tips.map((tip, i) => (
+                <div key={i} className="flex items-start gap-2 text-sm text-muted">
+                  <span className="text-brand-500 shrink-0 mt-0.5">·</span>
+                  <span>{tip}</span>
+                </div>
+              ))}
+            </div>
+          )}
+          <div className="flex flex-col gap-4">
+            {sections.banking.items?.map((item, i) => (
+              <div key={i} className="border border-border rounded-xl p-5">
+                <div className="flex items-start justify-between gap-3 mb-2 flex-wrap">
+                  <div>
+                    <h3 className="font-bold text-foreground">
+                      <ExternalLink url={item.url}>{item.name}</ExternalLink>
+                    </h3>
+                    <p className="text-xs text-muted mt-0.5">{item.type} · {item.location}</p>
+                  </div>
+                  {item.price_range && (
+                    <span className="text-xs font-semibold text-brand-600 shrink-0">{item.price_range}</span>
+                  )}
+                </div>
+                <p className="text-sm text-muted leading-relaxed mb-3">{item.description}</p>
+                {item.what_to_bring?.length > 0 && (
+                  <div>
+                    <p className="text-xs font-bold text-foreground uppercase tracking-widest mb-2">What to bring</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {item.what_to_bring.map((doc, j) => (
+                        <span key={j} className="text-xs bg-brand-50 border border-brand-100 text-brand-700 px-2.5 py-0.5 rounded-full">{doc}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </Section>
+      )}
+
+      {/* Social Life (general student) */}
+      {sections.social_life && (
+        <Section title={sections.social_life.title}>
+          <p className="text-sm text-muted mb-4">{sections.social_life.intro}</p>
+          {sections.social_life.language_tip && (
+            <Callout variant="yellow">{sections.social_life.language_tip}</Callout>
+          )}
+          {sections.social_life.expat_community && (
+            <Callout variant="gray">{sections.social_life.expat_community}</Callout>
+          )}
+          <div className="flex flex-col gap-3">
+            {sections.social_life.items?.map((item, i) => (
+              <div key={i} className="border border-border rounded-xl p-4">
+                <h3 className="font-bold text-foreground mb-0.5">
+                  <ExternalLink url={item.url}>{item.name}</ExternalLink>
+                </h3>
+                <p className="text-xs text-muted mb-2">{item.type}</p>
+                <p className="text-sm text-muted leading-relaxed">{item.description}</p>
+                {item.tip && (
+                  <p className="text-xs text-brand-600 font-medium mt-2 border-l-2 border-brand-200 pl-3">{item.tip}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        </Section>
+      )}
+
+      {/* International student resources */}
+      {sections.international && (
+        <Section title={sections.international.title}>
+          <p className="text-sm text-muted mb-5">{sections.international.intro}</p>
+          <div className="flex flex-col gap-4">
+            {sections.international.items?.map((item, i) => (
+              <div key={i} className="border border-border rounded-xl p-5">
+                <h3 className="font-bold text-foreground mb-0.5">
+                  <ExternalLink url={item.url}>{item.name}</ExternalLink>
+                </h3>
+                <p className="text-xs text-muted mb-1">{item.type}{item.location ? ` · ${item.location}` : ""}</p>
+                <p className="text-sm text-muted leading-relaxed mb-2">{item.description}</p>
+                {item.contact && (
+                  <p className="text-xs text-brand-600 font-medium">{item.contact}</p>
+                )}
+                {item.tip && (
+                  <p className="text-xs text-muted font-medium mt-2 border-l-2 border-brand-200 pl-3 italic">{item.tip}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        </Section>
+      )}
+
       {/* Emergency Contacts */}
       {sections.emergency_contacts && (
         <Section title={sections.emergency_contacts.title}>

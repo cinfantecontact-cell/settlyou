@@ -19,6 +19,14 @@ export default async function EditClubPage({ params, searchParams }) {
   const { data: club } = await admin.from("clubs").select("*").eq("id", id).single();
   if (!club) redirect("/admin/clubs");
 
+  // Fetch base data status
+  const { data: baseData } = await admin
+    .from("city_base_data")
+    .select("status, generated_at")
+    .eq("club_id", id)
+    .eq("language", "en")
+    .single();
+
   const sp = await searchParams;
 
   return (
@@ -26,7 +34,7 @@ export default async function EditClubPage({ params, searchParams }) {
       <div className="mb-8">
         <a href="/admin/clubs" className="text-sm text-muted hover:text-foreground transition-colors">← Clubs</a>
         <h1 className="text-2xl font-bold text-foreground mt-4">{club.name}</h1>
-        <p className="text-sm text-muted mt-1">Edit club details, PIN, logo, and status.</p>
+        <p className="text-sm text-muted mt-1">Edit university details, PIN, logo, and status.</p>
       </div>
 
       {sp?.success && (
@@ -40,7 +48,7 @@ export default async function EditClubPage({ params, searchParams }) {
         </div>
       )}
 
-      <EditClubForm club={club} />
+      <EditClubForm club={club} baseDataStatus={baseData?.status || null} baseDataGeneratedAt={baseData?.generated_at || null} />
     </div>
   );
 }

@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { Resend } from "resend";
+import { generateBaseData } from "@/lib/ai/generate-document";
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://settlyou.com";
 
@@ -37,6 +38,7 @@ export async function POST(request) {
   const country = formData.get("country") || null;
   const plan = formData.get("plan") || "essentials";
   const admin_email = formData.get("admin_email") || null;
+  const division = formData.get("division") || null;
 
   // Upload logo if provided
   let logo_url = null;
@@ -66,15 +68,16 @@ export async function POST(request) {
     slug,
     type,
     seat_limit,
-    primary_color: plan === "premium" ? primary_color : null,
-    secondary_color: plan === "premium" ? secondary_color : null,
+    primary_color,
+    secondary_color,
     pin,
-    logo_url: plan === "premium" ? logo_url : null,
-    custom_notes: plan === "premium" ? custom_notes : null,
+    logo_url,
+    custom_notes,
     address,
     city,
     country,
     plan,
+    division,
     active: true,
     seats_used: 0,
   });
@@ -119,6 +122,49 @@ export async function POST(request) {
     }
   }
 
+  // Auto-generate base city data if city is set
+  if (city) {
+    const { data: newClubForBase } = await admin
+      .from("clubs")
+      .select("id, name, slug, type, city, country, address, division, custom_notes")
+      .eq("slug", slug)
+      .single();
+
+    if (newClubForBase) {
+      await admin.from("city_base_data").insert({
+        club_id: newClubForBase.id,
+        club_type: type,
+        status: "generating",
+        content: {},
+        language: "en",
+      });
+
+      after(async () => {
+        console.log(`[generate-base] auto-generating for new club ${name}...`);
+        try {
+          const content = await generateBaseData(newClubForBase);
+          await admin
+            .from("city_base_data")
+            .update({
+              content,
+              status: "ready",
+              generated_at: new Date().toISOString(),
+            })
+            .eq("club_id", newClubForBase.id)
+            .eq("language", "en");
+          console.log(`[generate-base] done for ${name}`);
+        } catch (err) {
+          console.error(`[generate-base] failed for ${name}:`, err.message);
+          await admin
+            .from("city_base_data")
+            .update({ status: "failed" })
+            .eq("club_id", newClubForBase.id)
+            .eq("language", "en");
+        }
+      });
+    }
+  }
+
   return NextResponse.json({ ok: true });
 }
 
@@ -151,7 +197,7 @@ function buildWelcomeEmail({ clubName, planLabel, joinLink, loginLink, pin, emai
                   <tr><td style="padding-top:16px;padding-bottom:16px;border-bottom:1px solid #e4e4e7;">
                     <p style="margin:0 0 4px;font-size:11px;font-weight:600;color:#a1a1aa;text-transform:uppercase;letter-spacing:0.06em;">Athlete Join Link</p>
                     <p style="margin:0;font-size:14px;color:#16a34a;word-break:break-all;">${joinLink}</p>
-                    <p style="margin:4px 0 0;font-size:12px;color:#71717a;">Share this link with incoming athletes</p>
+                    <p style="margin:4px 0 0;font-size:12px;color:#71717a;">Share this link with incoming students</p>
                   </td></tr>
                   <tr><td style="padding-top:16px;padding-bottom:16px;border-bottom:1px solid #e4e4e7;">
                     <p style="margin:0 0 4px;font-size:11px;font-weight:600;color:#a1a1aa;text-transform:uppercase;letter-spacing:0.06em;">Athlete PIN</p>
@@ -180,7 +226,7 @@ function buildWelcomeEmail({ clubName, planLabel, joinLink, loginLink, pin, emai
               </tr>
               <tr>
                 <td width="32" valign="top" style="padding-bottom:12px;"><div style="width:24px;height:24px;border-radius:50%;background:#16a34a;color:#fff;font-size:12px;font-weight:700;text-align:center;line-height:24px;">2</div></td>
-                <td style="padding-bottom:12px;padding-left:12px;font-size:14px;color:#52525b;line-height:1.5;">Each athlete fills out a short relocation form — takes about 3 minutes.</td>
+                <td style="padding-bottom:12px;padding-left:12px;font-size:14px;color:#52525b;line-height:1.5;">Each student fills out a short relocation form — takes about 3 minutes.</td>
               </tr>
               <tr>
                 <td width="32" valign="top"><div style="width:24px;height:24px;border-radius:50%;background:#16a34a;color:#fff;font-size:12px;font-weight:700;text-align:center;line-height:24px;">3</div></td>

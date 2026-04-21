@@ -40,13 +40,13 @@ export async function POST(request, { params }) {
   if (relocationRequest.club_id) {
     const { data: club } = await admin
       .from("clubs")
-      .select("custom_notes, logo_url, primary_color, plan")
+      .select("custom_notes, logo_url, primary_color, plan, division")
       .eq("id", relocationRequest.club_id)
       .single();
-    relocationRequest.club_plan = club?.plan || "essentials";
-    if (club?.plan === "premium" && club?.custom_notes) relocationRequest.club_custom_notes = club.custom_notes;
+    if (club?.custom_notes) relocationRequest.club_custom_notes = club.custom_notes;
     if (club?.logo_url) relocationRequest.club_logo_url = club.logo_url;
     if (club?.primary_color) relocationRequest.club_primary_color = club.primary_color;
+    if (club?.division) relocationRequest.division = club.division;
   }
 
   // Mark as generating and return immediately — generation runs in background
@@ -56,7 +56,23 @@ export async function POST(request, { params }) {
   after(async () => {
     console.log("[generate] background: calling AI...");
     try {
-      const document = await generateRelocationDocument(relocationRequest);
+      // Look up pre-generated base data for this club
+      let baseData = null;
+      if (relocationRequest.club_id) {
+        const { data: base } = await admin
+          .from("city_base_data")
+          .select("content")
+          .eq("club_id", relocationRequest.club_id)
+          .eq("language", "en")
+          .eq("status", "ready")
+          .single();
+        if (base?.content) {
+          baseData = base.content;
+          console.log("[generate] using pre-generated base data (two-tier)");
+        }
+      }
+
+      const document = await generateRelocationDocument(relocationRequest, baseData);
       console.log("[generate] background: AI responded, saving document...");
 
       // Override meta with real club data
