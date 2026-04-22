@@ -1,27 +1,88 @@
+"use client";
+
 import DocumentView from "@/app/(admin)/admin/relocations/[id]/_components/DocumentView";
-import { collegeDemoDocument } from "../sample/collegeDemoData";
+import { collegeDemoDocumentV2 } from "../sample/collegeDemoData";
+
+const headerColor = "#16a34a";
+const ctaColor = "#16a34a";
 
 export default function CollegeSampleReportPage() {
   return (
     <div className="min-h-screen bg-surface">
-      <nav className="bg-white border-b border-border px-6 py-4 flex items-center justify-between no-print">
-        <a href="/"><img src="/settlyou-logo.png" alt="Settl" className="h-8 rounded-md" /></a>
-        <div className="flex items-center bg-surface border border-border rounded-lg p-0.5 gap-0.5">
-          <a
-            href="/report/sample-college-essentials"
-            className="px-4 py-1.5 rounded-md text-sm font-medium text-muted hover:text-foreground transition-colors"
-          >
-            Essentials
-          </a>
-          <span className="px-4 py-1.5 rounded-md text-sm font-semibold bg-brand-600 text-white">
-            Premium
-          </span>
-        </div>
-        <a href="/pricing" className="text-xs font-semibold px-4 py-2 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors">View pricing →</a>
+
+      {/* Nav */}
+      <nav className="bg-white border-b border-border px-6 py-4 flex items-center justify-between no-print sticky top-0 z-50">
+        <a href="/">
+          <img src="/settlyou-logo-dark.png" alt="Settl" className="h-7" />
+        </a>
+        <a
+          href="/pricing"
+          className="text-xs font-semibold px-4 py-2 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors"
+        >
+          Request a quote →
+        </a>
       </nav>
 
-      <div className="max-w-4xl mx-auto px-4 py-10">
-        <DocumentView content={collegeDemoDocument} />
+      {/* Hero header */}
+      <div className="no-print" style={{ background: headerColor }}>
+        <div className="max-w-4xl mx-auto px-4 pt-10 pb-8">
+          {/* FAU + Settlyou lockup */}
+          <div className="flex items-center gap-3 mb-6">
+            <img
+              src="/Florida_Atlantic_Owls_logo.svg.png"
+              alt="Florida Atlantic University"
+              className="w-12 h-12 object-contain bg-white rounded-xl p-1.5 shrink-0"
+            />
+            <div className="text-white opacity-40 text-2xl font-light">×</div>
+            <img
+              src="/settlyou-logo-white.png"
+              alt="Settlyou"
+              className="h-6 object-contain"
+            />
+          </div>
+
+          <h1 className="text-3xl font-bold text-white mb-2 leading-tight">
+            Florida Atlantic University
+            <br />
+            <span className="text-white opacity-70">Student Relocation Guide</span>
+          </h1>
+          <p className="text-white opacity-60 text-sm max-w-xl leading-relaxed">
+            Every incoming student gets a personalized guide — built around who they are, where they're coming from, and what they need to hit the ground running in Boca Raton.
+          </p>
+        </div>
+      </div>
+
+      {/* Document */}
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <DocumentView content={collegeDemoDocumentV2} />
+      </div>
+
+      {/* CTA footer */}
+      <div className="no-print" style={{ background: ctaColor }}>
+        <div className="max-w-4xl mx-auto px-4 py-16 text-center">
+          <p className="text-xs font-bold uppercase tracking-widest text-white/60 mb-3">Powered by Settlyou</p>
+          <h2 className="text-3xl font-bold text-white mb-3">
+            Want guides like this for every incoming student?
+          </h2>
+          <p className="text-white/70 max-w-lg mx-auto mb-10 leading-relaxed text-sm">
+            Every student gets their own guide — personalized to their background, destination, visa status, and goals. NCAA eligibility, banking, housing, community, and everything in between.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <a
+              href="/pricing"
+              className="inline-block px-8 py-3 rounded-lg text-sm font-semibold bg-white transition-colors hover:bg-white/90"
+              style={{ color: ctaColor }}
+            >
+              Request a quote
+            </a>
+            <a
+              href="/"
+              className="inline-block px-8 py-3 rounded-lg text-sm font-semibold border border-white/30 text-white hover:bg-white/10 transition-colors"
+            >
+              Learn how it works
+            </a>
+          </div>
+        </div>
       </div>
 
       <footer className="border-t border-border px-6 py-4 text-center text-xs text-muted no-print">
