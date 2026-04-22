@@ -81,8 +81,7 @@ function ExternalLink({ url, children }) {
   );
 }
 
-export default function DocumentView({ content }) {
-  if (!content) return null;
+function LegacyDocumentView({ content }) {
   const { meta, sections } = content;
 
   const headerBg = meta.club_primary_color || "#2f7d2f";
@@ -768,4 +767,621 @@ export default function DocumentView({ content }) {
       )}
     </div>
   );
+}
+
+// ─── V2 Renderer (schema_version 2 — short 3-section guide) ───
+
+function V2SectionHeader({ number, title, accent }) {
+  return (
+    <div className="flex items-center gap-4 mb-6">
+      <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 text-white text-sm font-bold"
+        style={{ backgroundColor: accent }}>
+        {number}
+      </div>
+      <h2 className="text-xl font-bold text-foreground">{title}</h2>
+      <div className="flex-1 h-px bg-border" />
+    </div>
+  );
+}
+
+function V2Block({ children }) {
+  return <div className="bg-white rounded-2xl border border-border shadow-sm mb-8 p-7">{children}</div>;
+}
+
+function V2SubLabel({ children }) {
+  return <p className="text-[11px] font-bold text-muted uppercase tracking-[0.12em] mb-3">{children}</p>;
+}
+
+function V2Divider() {
+  return <div className="h-px bg-border my-5" />;
+}
+
+function V2Steps({ steps, accent }) {
+  if (!steps?.length) return null;
+  return (
+    <div className="flex flex-col gap-0">
+      {steps.map((s, i) => (
+        <div key={i} className="flex gap-4">
+          {/* Timeline spine */}
+          <div className="flex flex-col items-center">
+            <div className="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
+              style={{ backgroundColor: accent }}>
+              {s.step ?? i + 1}
+            </div>
+            {i < steps.length - 1 && (
+              <div className="w-px flex-1 my-1" style={{ backgroundColor: accent, opacity: 0.2 }} />
+            )}
+          </div>
+          {/* Content */}
+          <div className={`flex-1 min-w-0 ${i < steps.length - 1 ? "pb-5" : ""}`}>
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                {s.title && <p className="font-semibold text-foreground text-sm mb-1">{s.title}</p>}
+                <p className="text-sm text-muted leading-relaxed">{s.description}</p>
+              </div>
+              {s.url && (
+                <a href={s.url} target="_blank" rel="noopener noreferrer"
+                  className="shrink-0 text-xs font-semibold px-2.5 py-1 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors whitespace-nowrap">
+                  Open →
+                </a>
+              )}
+            </div>
+            {s.deadline && (
+              <span className="inline-flex items-center gap-1 mt-2 text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full">
+                Due: {s.deadline}
+              </span>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function V2CheckList({ items }) {
+  if (!items?.length) return null;
+  return (
+    <div className="flex flex-col gap-2">
+      {items.map((item, i) => (
+        <div key={i} className="flex items-start gap-2.5 text-sm text-muted">
+          <div className="w-4 h-4 rounded border-2 border-brand-300 bg-brand-50 shrink-0 mt-0.5" />
+          <span className="leading-relaxed">{item}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function V2LinkCard({ title, description, meta, url }) {
+  return (
+    <div className="flex items-start justify-between gap-4 rounded-xl border border-border p-4 bg-surface">
+      <div className="flex-1 min-w-0">
+        {title && <p className="font-semibold text-foreground text-sm mb-0.5">{title}</p>}
+        <p className="text-sm text-muted leading-relaxed">{description}</p>
+        {meta && <p className="text-xs text-muted mt-1 font-medium">{meta}</p>}
+      </div>
+      {url && (
+        <a href={url} target="_blank" rel="noopener noreferrer"
+          className="shrink-0 text-xs font-semibold px-3 py-1.5 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors whitespace-nowrap">
+          Open →
+        </a>
+      )}
+    </div>
+  );
+}
+
+function V2AudienceBadge({ type }) {
+  if (type === "athlete") return (
+    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0"
+      style={{ background: "#16a34a15", color: "#16a34a", border: "1px solid #16a34a40" }}>
+      Student-Athletes
+    </span>
+  );
+  if (type === "international") return (
+    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0"
+      style={{ background: "#2563eb15", color: "#2563eb", border: "1px solid #2563eb40" }}>
+      International Students
+    </span>
+  );
+  return null;
+}
+
+function DocumentViewV2({ content }) {
+  const { meta, sections } = content;
+  const accent = meta.club_primary_color || "#2f7d2f";
+
+  return (
+    <div className="font-sans">
+
+      {/* ── Hero ── */}
+      <div className="rounded-2xl mb-6 overflow-hidden text-white" style={{ backgroundColor: accent }}>
+        <div className="px-8 pt-7 pb-6">
+          <div className="flex items-start justify-between gap-6">
+            <div className="flex-1 min-w-0">
+              <p className="text-[11px] font-bold uppercase tracking-[0.2em] mb-4" style={{ opacity: 0.45 }}>
+                Settlyou · Relocation Guide
+              </p>
+              <h1 className="text-[2.6rem] font-extrabold leading-none mb-4 tracking-tight">{meta.athlete_name}</h1>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-xs font-semibold px-3 py-1 rounded-full" style={{ background: "rgba(255,255,255,0.15)" }}>
+                  {meta.destination}
+                </span>
+                {meta.club && (
+                  <span className="text-xs font-semibold px-3 py-1 rounded-full" style={{ background: "rgba(255,255,255,0.15)" }}>
+                    {meta.club}
+                  </span>
+                )}
+              </div>
+            </div>
+            <ClubLogo url={meta.club_logo_url} name={meta.club} />
+          </div>
+        </div>
+        {meta.generated_summary && (
+          <div className="px-8 py-5" style={{ background: "rgba(0,0,0,0.22)" }}>
+            <p className="text-sm leading-relaxed" style={{ opacity: 0.88 }}>{meta.generated_summary}</p>
+          </div>
+        )}
+      </div>
+
+      {/* ── Welcome ── */}
+      {meta.welcome_letter && (
+        <div className="bg-white rounded-2xl border border-border shadow-sm mb-6 px-8 py-7">
+          <div className="flex items-start gap-5">
+            <div className="text-4xl opacity-20 font-serif leading-none select-none mt-1">"</div>
+            <div className="flex-1">
+              <p className="text-base text-foreground leading-relaxed">{meta.welcome_letter}</p>
+              <p className="text-xs text-muted mt-5 font-semibold tracking-wide uppercase">— The Settlyou Team</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── University Notes ── */}
+      {content.university_notes && (
+        <div className="rounded-2xl mb-6 overflow-hidden" style={{ border: `2px solid ${accent}33`, backgroundColor: `${accent}08` }}>
+          <div className="flex items-center gap-3 px-7 py-4 border-b" style={{ borderColor: `${accent}22`, backgroundColor: `${accent}12` }}>
+            <ClubLogo url={meta.club_logo_url} name={meta.club} />
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest" style={{ color: accent }}>Message from your institution</p>
+              <p className="text-sm font-semibold text-foreground mt-0.5">{meta.club}</p>
+            </div>
+          </div>
+          <div className="px-7 py-6">
+            {content.university_notes.split("\n").filter(Boolean).map((para, i) => (
+              <p key={i} className="text-sm text-foreground leading-relaxed mb-3 last:mb-0">{para}</p>
+            ))}
+            {content.university_links?.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-5">
+                {content.university_links.map((link, i) => (
+                  <a key={i} href={link.url} target="_blank" rel="noopener noreferrer"
+                    className="text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-colors"
+                    style={{ borderColor: `${accent}44`, color: accent, backgroundColor: "white" }}>
+                    {link.label} ↗
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ── Section 1: Your New City ── */}
+      {sections.city_essentials && (
+        <V2Block>
+          <V2SectionHeader number="1" title={sections.city_essentials.title || "Your New City"} accent={accent} />
+
+          {sections.city_essentials.restaurants?.length > 0 && (
+            <div className="mb-6">
+              <V2SubLabel>Where to Eat</V2SubLabel>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 print-single-col">
+                {sections.city_essentials.restaurants.map((r, i) => (
+                  <div key={i} className="rounded-xl border border-border p-4 bg-surface">
+                    <p className="font-bold text-foreground text-sm">{r.name}</p>
+                    <p className="text-xs text-muted mt-0.5 mb-2">{r.cuisine} · {r.location}</p>
+                    <p className="text-xs text-muted leading-relaxed">{r.why}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {sections.city_essentials.places_to_visit?.length > 0 && (
+            <div className="mb-6">
+              <V2Divider />
+              <V2SubLabel>Places to Explore</V2SubLabel>
+              <div className="flex flex-col gap-3">
+                {sections.city_essentials.places_to_visit.map((p, i) => (
+                  <div key={i} className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full mt-2 shrink-0" style={{ backgroundColor: accent }} />
+                    <div>
+                      <span className="font-semibold text-foreground text-sm">{p.name}</span>
+                      {p.type && <span className="text-xs text-muted ml-2 capitalize bg-surface border border-border px-2 py-0.5 rounded-full">{p.type}</span>}
+                      <p className="text-sm text-muted leading-relaxed mt-1">{p.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {sections.city_essentials.transportation && (
+            <div>
+              <V2Divider />
+              <V2SubLabel>Getting Around</V2SubLabel>
+              {sections.city_essentials.transportation.intro && (
+                <p className="text-sm text-muted mb-3">{sections.city_essentials.transportation.intro}</p>
+              )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 print-single-col">
+                {sections.city_essentials.transportation.options?.map((opt, i) => (
+                  <div key={i} className="flex items-start gap-2.5 bg-surface rounded-xl border border-border px-4 py-3 text-sm text-muted">
+                    <span className="font-bold shrink-0" style={{ color: accent }}>{i + 1}.</span>
+                    <span className="leading-relaxed">{opt}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {sections.city_essentials.housing?.length > 0 && (
+            <div>
+              <V2Divider />
+              <V2SubLabel>Quick Housing Options</V2SubLabel>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 print-single-col">
+                {sections.city_essentials.housing.map((h, i) => (
+                  <div key={i} className="rounded-xl border border-border p-4 bg-surface">
+                    <p className="font-bold text-foreground text-sm mb-0.5">{h.option}</p>
+                    {h.price_range && <p className="text-xs font-semibold text-brand-600 mb-1">{h.price_range}</p>}
+                    <p className="text-xs text-muted mb-1.5">{h.area}</p>
+                    <p className="text-xs text-muted leading-relaxed">{h.why}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {sections.city_essentials.healthcare?.length > 0 && (
+            <div>
+              <V2Divider />
+              <V2SubLabel>Health & Wellness</V2SubLabel>
+              <div className="flex flex-col gap-3">
+                {sections.city_essentials.healthcare.map((h, i) => (
+                  <div key={i} className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full mt-2 shrink-0" style={{ backgroundColor: accent }} />
+                    <div>
+                      <span className="font-semibold text-foreground text-sm">{h.name}</span>
+                      <span className="text-xs text-muted ml-2">{h.type}{h.location ? ` · ${h.location}` : ""}</span>
+                      {h.note && <p className="text-xs text-muted mt-0.5 leading-relaxed">{h.note}</p>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {sections.city_essentials.social?.length > 0 && (
+            <div>
+              <V2Divider />
+              <V2SubLabel>Social Life</V2SubLabel>
+              <div className="flex flex-col gap-3">
+                {sections.city_essentials.social.map((s, i) => (
+                  <div key={i} className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full mt-2 shrink-0" style={{ backgroundColor: accent }} />
+                    <div>
+                      <span className="font-semibold text-foreground text-sm">{s.name}</span>
+                      {s.type && <span className="text-xs text-muted bg-surface border border-border px-2 py-0.5 rounded-full ml-2 capitalize">{s.type}</span>}
+                      <p className="text-sm text-muted leading-relaxed mt-1">{s.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </V2Block>
+      )}
+
+      {/* ── Section 2: Your University ── */}
+      {sections.your_university && (
+        <V2Block>
+          <V2SectionHeader number="2" title={sections.your_university.title || "Your University"} accent={accent} />
+
+          {sections.your_university.campus_spots?.length > 0 && (
+            <div className="mb-6">
+              <V2SubLabel>Key Campus Spots</V2SubLabel>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 print-single-col">
+                {sections.your_university.campus_spots.map((s, i) => (
+                  <div key={i} className="rounded-xl border border-border p-4">
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <p className="font-bold text-foreground text-sm leading-snug">{s.name}</p>
+                      {s.type && (
+                        <span className="text-xs font-medium shrink-0 px-2 py-0.5 rounded-full capitalize"
+                          style={{ backgroundColor: `${accent}15`, color: accent }}>
+                          {s.type}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-sm text-muted leading-relaxed">{s.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {sections.your_university.athletic_facilities?.length > 0 && (
+            <div className="mb-6">
+              <V2Divider />
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-[11px] font-bold text-muted uppercase tracking-[0.12em]">Athletic Facilities</span>
+                <V2AudienceBadge type="athlete" />
+              </div>
+              <div className="flex flex-col gap-3">
+                {sections.your_university.athletic_facilities.map((f, i) => (
+                  <div key={i} className="rounded-xl p-4" style={{ backgroundColor: `${accent}10`, borderLeft: `3px solid ${accent}` }}>
+                    <p className="font-semibold text-foreground text-sm mb-1">{f.name}</p>
+                    <p className="text-sm leading-relaxed" style={{ color: `${accent}cc` }}>{f.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {sections.your_university.food_nearby?.length > 0 && (
+            <div className="mb-6">
+              <V2Divider />
+              <V2SubLabel>Food On & Near Campus</V2SubLabel>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 print-single-col">
+                {sections.your_university.food_nearby.map((f, i) => (
+                  <div key={i} className="flex items-start gap-2 bg-surface rounded-xl border border-border px-4 py-3">
+                    <div className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style={{ backgroundColor: accent }} />
+                    <div className="text-sm">
+                      <span className="font-semibold text-foreground">{f.name}</span>
+                      {f.location && <span className="text-muted"> · {f.location}</span>}
+                      {f.note && <p className="text-muted text-xs mt-0.5">{f.note}</p>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {sections.your_university.student_life?.length > 0 && (
+            <div>
+              <V2Divider />
+              <V2SubLabel>Student Life</V2SubLabel>
+              <div className="flex flex-col gap-3">
+                {sections.your_university.student_life.map((s, i) => (
+                  <div key={i} className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full mt-2 shrink-0" style={{ backgroundColor: accent }} />
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                        <span className="font-semibold text-foreground text-sm">{s.name}</span>
+                        {s.type && (
+                          <span className="text-xs text-muted bg-surface border border-border px-2 py-0.5 rounded-full capitalize">{s.type}</span>
+                        )}
+                      </div>
+                      <p className="text-sm text-muted leading-relaxed">{s.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </V2Block>
+      )}
+
+      {/* ── Section 3: To Do Before Arrival ── */}
+      {sections.your_paperwork && (
+        <V2Block>
+          <V2SectionHeader number="3" title="To Do Before Arrival" accent={accent} />
+
+          {sections.your_paperwork.eligibility && (
+            <div className="mb-6">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-[11px] font-bold text-muted uppercase tracking-[0.12em]">Athletic Eligibility</span>
+                <V2AudienceBadge type="athlete" />
+              </div>
+              {sections.your_paperwork.eligibility.intro && (
+                <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 mb-4 text-sm text-amber-800 leading-relaxed">
+                  {sections.your_paperwork.eligibility.intro}
+                </div>
+              )}
+              <V2Steps steps={sections.your_paperwork.eligibility.steps} accent={accent} />
+            </div>
+          )}
+
+          {sections.your_paperwork.athletic_forms?.length > 0 && (
+            <div className={sections.your_paperwork.eligibility ? "" : "mb-0"}>
+              {sections.your_paperwork.eligibility && <V2Divider />}
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-[11px] font-bold text-muted uppercase tracking-[0.12em]">Athletic Forms & Compliance</span>
+                <V2AudienceBadge type="athlete" />
+              </div>
+              <div className="flex flex-col gap-2">
+                {sections.your_paperwork.athletic_forms.map((f, i) => (
+                  <V2LinkCard key={i} title={f.title} description={f.description} url={f.url} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {sections.your_paperwork.health_insurance && (
+            <div>
+              {(sections.your_paperwork.eligibility || sections.your_paperwork.athletic_forms?.length > 0) && <V2Divider />}
+              <V2SubLabel>Health Insurance</V2SubLabel>
+              <V2LinkCard
+                description={sections.your_paperwork.health_insurance.description}
+                meta={sections.your_paperwork.health_insurance.deadline ? `Deadline: ${sections.your_paperwork.health_insurance.deadline}` : null}
+                url={sections.your_paperwork.health_insurance.url}
+              />
+            </div>
+          )}
+
+          {sections.your_paperwork.financial_aid?.length > 0 && (
+            <div>
+              <V2Divider />
+              <V2SubLabel>Financial Aid</V2SubLabel>
+              <div className="flex flex-col gap-2">
+                {sections.your_paperwork.financial_aid.map((f, i) => (
+                  <V2LinkCard key={i} title={f.title} description={f.description} url={f.url} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {sections.your_paperwork.international_academic && (
+            <div>
+              {(sections.your_paperwork.eligibility || sections.your_paperwork.athletic_forms?.length > 0 || sections.your_paperwork.health_insurance || sections.your_paperwork.financial_aid?.length > 0) && <V2Divider />}
+              {sections.your_paperwork.international_academic.intro && (
+                <p className="text-sm text-muted mb-4 leading-relaxed">{sections.your_paperwork.international_academic.intro}</p>
+              )}
+
+              {sections.your_paperwork.international_academic.transcript_evaluation?.length > 0 && (
+                <div className="mb-5">
+                  <p className="text-xs font-semibold text-foreground mb-3">Transcript Evaluation</p>
+                  <V2Steps steps={sections.your_paperwork.international_academic.transcript_evaluation} accent={accent} />
+                </div>
+              )}
+
+              {sections.your_paperwork.international_academic.gpa_conversion && (
+                <div className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 mb-5 text-sm text-blue-800 leading-relaxed">
+                  <p className="font-semibold mb-1 text-xs uppercase tracking-wide text-blue-600">GPA Conversion</p>
+                  {sections.your_paperwork.international_academic.gpa_conversion}
+                </div>
+              )}
+
+              {sections.your_paperwork.international_academic.required_vaccines?.length > 0 && (
+                <div className="mb-5">
+                  <div className="flex items-center justify-between gap-3 mb-3">
+                    <p className="text-xs font-semibold text-foreground">Required Vaccines</p>
+                    {sections.your_paperwork.international_academic.vaccines_url && (
+                      <a href={sections.your_paperwork.international_academic.vaccines_url} target="_blank" rel="noopener noreferrer"
+                        className="text-xs font-semibold text-brand-600 hover:underline whitespace-nowrap">
+                        View requirements →
+                      </a>
+                    )}
+                  </div>
+                  <V2CheckList items={sections.your_paperwork.international_academic.required_vaccines} />
+                </div>
+              )}
+
+              {sections.your_paperwork.international_academic.pre_arrival_docs?.length > 0 && (
+                <div>
+                  <p className="text-xs font-semibold text-foreground mb-3">Documents Checklist</p>
+                  <V2CheckList items={sections.your_paperwork.international_academic.pre_arrival_docs} />
+                </div>
+              )}
+            </div>
+          )}
+        </V2Block>
+      )}
+
+      {/* ── Section 4: To Do When You Arrive ── */}
+      {sections.your_paperwork?.post_arrival && (
+        <V2Block>
+          <V2SectionHeader number="4" title="To Do When You Arrive" accent={accent} />
+
+          {sections.your_paperwork.post_arrival.intro && (
+            <p className="text-sm text-muted mb-5 leading-relaxed">{sections.your_paperwork.post_arrival.intro}</p>
+          )}
+
+          {sections.your_paperwork.post_arrival.i94_check && (
+            <div className="mb-5">
+              <p className="text-xs font-semibold text-foreground mb-3">I-94 Arrival Record</p>
+              <V2LinkCard description={sections.your_paperwork.post_arrival.i94_check.description} url={sections.your_paperwork.post_arrival.i94_check.url} />
+            </div>
+          )}
+
+          {sections.your_paperwork.post_arrival.social_security?.length > 0 && (
+            <div className="mb-5">
+              <div className="flex items-center justify-between gap-3 mb-3">
+                <p className="text-xs font-semibold text-foreground">Social Security Number</p>
+                {sections.your_paperwork.post_arrival.ssa_office_url && (
+                  <a href={sections.your_paperwork.post_arrival.ssa_office_url} target="_blank" rel="noopener noreferrer"
+                    className="text-xs font-semibold text-brand-600 hover:underline whitespace-nowrap">
+                    Find nearest office →
+                  </a>
+                )}
+              </div>
+              <V2Steps steps={sections.your_paperwork.post_arrival.social_security} accent={accent} />
+            </div>
+          )}
+
+          {sections.your_paperwork.post_arrival.itin && (
+            <div className="mb-5">
+              <p className="text-xs font-semibold text-foreground mb-3">ITIN — Individual Taxpayer ID</p>
+              <V2LinkCard description={sections.your_paperwork.post_arrival.itin.description} url={sections.your_paperwork.post_arrival.itin.url} />
+            </div>
+          )}
+
+          {sections.your_paperwork.post_arrival.bank_account?.length > 0 && (
+            <div className="mb-5">
+              <p className="text-xs font-semibold text-foreground mb-3">Opening a Bank Account</p>
+              <V2Steps steps={sections.your_paperwork.post_arrival.bank_account} accent={accent} />
+            </div>
+          )}
+
+          {sections.your_paperwork.post_arrival.us_taxes && (
+            <div className="mb-5">
+              <p className="text-xs font-semibold text-foreground mb-3">US Tax Filing</p>
+              <V2LinkCard description={sections.your_paperwork.post_arrival.us_taxes.description} url={sections.your_paperwork.post_arrival.us_taxes.url} />
+            </div>
+          )}
+
+          {sections.your_paperwork.post_arrival.opt_cpt && (
+            <div className="rounded-xl border border-border bg-surface px-4 py-4 mb-5">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold text-foreground mb-2 uppercase tracking-wide">OPT & CPT — Work Authorization</p>
+                  <p className="text-sm text-muted leading-relaxed">
+                    {typeof sections.your_paperwork.post_arrival.opt_cpt === "string"
+                      ? sections.your_paperwork.post_arrival.opt_cpt
+                      : sections.your_paperwork.post_arrival.opt_cpt.text}
+                  </p>
+                </div>
+                {typeof sections.your_paperwork.post_arrival.opt_cpt !== "string" && sections.your_paperwork.post_arrival.opt_cpt.url && (
+                  <a href={sections.your_paperwork.post_arrival.opt_cpt.url} target="_blank" rel="noopener noreferrer"
+                    className="shrink-0 text-xs font-semibold px-3 py-1.5 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors whitespace-nowrap">
+                    Open →
+                  </a>
+                )}
+              </div>
+            </div>
+          )}
+
+          {sections.your_paperwork.post_arrival.state_id && (
+            <div className="mb-5">
+              <p className="text-xs font-semibold text-foreground mb-3">State ID / Driver's License</p>
+              <V2LinkCard description={sections.your_paperwork.post_arrival.state_id.description} url={sections.your_paperwork.post_arrival.state_id.url} />
+            </div>
+          )}
+
+          {sections.your_paperwork.post_arrival.cv_tips?.length > 0 && (
+            <div>
+              <p className="text-xs font-semibold text-foreground mb-3">Building Your US Resume</p>
+              <div className="flex flex-col gap-2 mb-3">
+                {sections.your_paperwork.post_arrival.cv_tips.map((tip, i) => (
+                  <div key={i} className="flex items-start gap-2.5 text-sm text-muted">
+                    <span className="font-bold shrink-0 text-xs mt-0.5" style={{ color: accent }}>{i + 1}.</span>
+                    <span className="leading-relaxed">{tip}</span>
+                  </div>
+                ))}
+              </div>
+              {sections.your_paperwork.post_arrival.resume_tools_url && (
+                <V2LinkCard
+                  title="Build your resume on Canva"
+                  description="Free resume builder with clean, one-page US-style templates — no design experience needed."
+                  url={sections.your_paperwork.post_arrival.resume_tools_url}
+                />
+              )}
+            </div>
+          )}
+        </V2Block>
+      )}
+    </div>
+  );
+}
+
+export default function DocumentView({ content }) {
+  if (!content) return null;
+  if (content.schema_version === 2) return <DocumentViewV2 content={content} />;
+  return <LegacyDocumentView content={content} />;
 }

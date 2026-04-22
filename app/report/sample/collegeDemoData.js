@@ -148,6 +148,95 @@ export const collegeDemoDocument = {
         },
       ],
     },
+    eligibility: {
+      title: "NCAA D1 Eligibility & Admissions",
+      intro:
+        "As an international student-athlete competing in NCAA Division I soccer, Alejandro must satisfy eligibility requirements from two governing bodies — the NCAA and Florida Atlantic University's Admissions office. This section covers every step in order.",
+      warning:
+        "Every eligibility action must go through FAU's Compliance Office before you take it. Do not accept any money, endorsement deal, training payment, or paid coaching role without compliance approval — any unauthorized benefit can end your eligibility permanently, even retroactively.",
+      items: [
+        {
+          category: "Initial Eligibility",
+          title: "NCAA Eligibility Center — Register Before Your First Game",
+          description:
+            "The NCAA Eligibility Center (formerly the NCAA Clearinghouse) is the mandatory first step for every Division I student-athlete. You must register at eligibilitycenter.org and submit your Venezuelan high school transcripts, proof of graduation, and any prior collegiate enrollment. The NCAA evaluates your academic record — GPA in NCAA-approved core courses, number of core course credits — and awards a 'qualifier' status that determines whether you can compete as a freshman. FAU's soccer coaching staff cannot officially process your scholarship until the Eligibility Center issues your clearance. Start this process 12+ months before your first season.",
+          steps: [
+            "Register at eligibilitycenter.org — create your profile and note your Eligibility ID",
+            "Request your Venezuelan bachillerato and any university transcripts be sent directly to the Eligibility Center",
+            "Have your transcripts evaluated by a NACES-approved service (WES or ECE) and submitted to the Eligibility Center",
+            "Submit your ACT or SAT scores — international athletes may substitute TOEFL/IELTS in some cases, confirm with FAU compliance",
+            "Monitor your eligibility status on the NCAA portal — clearance typically takes 4–8 weeks after all documents are received",
+          ],
+          url: "https://www.eligibilitycenter.org",
+        },
+        {
+          category: "Academic Requirements",
+          title: "NCAA D1 Core Course & GPA Requirements",
+          description:
+            "NCAA Division I requires completion of 16 core academic courses in designated subjects (English, math, natural/physical science, social science, foreign language). For Venezuelan students, your bachillerato courses must be evaluated and mapped to NCAA core course equivalents. The minimum core GPA requirement is 2.3 on a 4.0 scale in those core courses. If your core GPA is between 2.0–2.299, you may still qualify as a non-qualifier with limited eligibility (can practice but cannot compete in year one). Your SAT/ACT scores are used on a sliding scale with your GPA — a higher GPA compensates for lower test scores.",
+          steps: [
+            "Confirm which Venezuelan bachillerato subjects map to NCAA core courses — work with your high school to get official course descriptions translated",
+            "Your core GPA must be at least 2.3 on a 4.0 scale in the 16 core courses",
+            "NCAA SAT minimum: 400 combined (evidence-based reading + math) — higher GPA allows lower test score via sliding scale",
+            "All credits must be from an NCAA-approved school — Venezuelan institutions must appear on the Eligibility Center's approved school list",
+          ],
+          url: "https://www.ncaa.org/sports/2014/10/6/division-i-initial-eligibility.aspx",
+        },
+        {
+          category: "English Proficiency",
+          title: "TOEFL / IELTS Requirements for D1 International Athletes",
+          description:
+            "FAU's general admission requires proof of English proficiency for international students. FAU accepts TOEFL iBT (minimum 550 paper-based / 79 internet-based) or IELTS (minimum 6.0 band score) for undergraduate admission. The NCAA does not impose separate English test requirements — the university requirements apply. If Alejandro's TOEFL/IELTS scores were used for FAU admission, no additional testing is required for NCAA purposes. However, if your English proficiency is conditional, FAU's English Language Institute (ELI) courses may be required — confirm with FAU International Admissions before enrolling.",
+          steps: [
+            "FAU minimum: TOEFL iBT 79 or IELTS 6.0 — verify your scores meet this before arriving",
+            "Test centers in Venezuela: TOEFL testing at Caracas and major cities — register at ets.org at least 6 weeks in advance",
+            "IELTS testing available at British Council Venezuela — register at ielts.org",
+            "Scores are valid for 2 years — if your score is expiring, retake before FAU enrollment",
+            "Contact FAU International Admissions (intl.admissions@fau.edu) to confirm your score satisfies the requirement and no ELI placement is required",
+          ],
+          url: "https://www.ets.org/toefl",
+        },
+        {
+          category: "Transcript Evaluation",
+          title: "WES or ECE Transcript Evaluation — Required for International Athletes",
+          description:
+            "Venezuelan university transcripts and high school records (bachillerato) must be evaluated by a NACES-approved credential evaluation service before they are accepted by both FAU Admissions and the NCAA Eligibility Center. World Education Services (WES) and Educational Credential Evaluators (ECE) are both widely accepted. The evaluation converts your Venezuelan grades to the US GPA scale and verifies the authenticity of your credentials. Allow 3–4 weeks for standard evaluation processing — rush service (3–5 business days) is available at additional cost.",
+          steps: [
+            "Request a 'Course-by-Course' evaluation from WES or ECE — this is required by the NCAA Eligibility Center (document-by-document is not sufficient)",
+            "Your Venezuelan school must send transcripts directly to WES/ECE — apostilled or notarized copies are accepted",
+            "Submit the WES/ECE report directly to the Eligibility Center and to FAU Admissions",
+            "Start this 4–6 months before your intended enrollment date to avoid delays",
+          ],
+          url: "https://www.wes.org",
+        },
+        {
+          category: "Amateurism",
+          title: "Amateurism Rules — What You Can and Cannot Do",
+          description:
+            "NCAA D1 amateurism rules require that you have not: been paid to play soccer, signed with a professional agent, received benefits beyond your scholarship package, or competed on a non-amateur team without prior approval. Playing in Venezuela's professional or semi-professional leagues could jeopardize your eligibility — the NCAA reviews the specific league's classification. The NCAA now allows Name, Image, and Likeness (NIL) deals — you can earn money from endorsements, social media, and personal appearances without losing eligibility, but all NIL activity must be disclosed to FAU's compliance office in advance. You cannot receive NIL payments directly from the university or boosters in exchange for enrollment.",
+          steps: [
+            "Complete the NCAA amateurism declaration at eligibilitycenter.org accurately — disclose any payment, tryout fees, or professional activity",
+            "If you played in any league that may have professional status, report it to FAU compliance immediately — they can help evaluate your situation before it becomes a problem",
+            "Before signing any NIL deal, sponsorship, or monetizing social media, get written clearance from FAU compliance",
+            "Never accept cash, gifts, housing, or meals from boosters, agents, or anyone connected to FAU athletics outside of your scholarship package",
+          ],
+          url: "https://www.ncaa.org/sports/2014/10/6/amateurism.aspx",
+        },
+        {
+          category: "Ongoing Eligibility",
+          title: "Maintaining Eligibility Year-to-Year",
+          description:
+            "Eligibility is not a one-time clearance — it is maintained semester by semester. NCAA D1 requires you to pass at least 6 credit hours per semester to remain eligible for competition, complete at least 18 credit hours per academic year, and maintain satisfactory progress toward your degree (40% complete after year 1, 60% after year 2, 80% after year 3). Your cumulative GPA must remain at or above 1.8 after year 1, 1.9 after year 2, and 2.0 from year 3 onward. FAU's Student-Athlete Support Services (SASS) team monitors your academic progress and alerts you to any eligibility risk — meet with your academic advisor every semester without fail.",
+          steps: [
+            "Register for and attend at least 12 credit hours per semester — full-time enrollment is required",
+            "Meet with SASS (Student-Athlete Support Services) at FAU at the start of every semester",
+            "Check your academic progress toward your degree — stay on track with major requirements",
+            "Report any grade concern to your academic advisor before the withdrawal deadline — withdrawing from a course mid-semester reduces your credit count and may trigger eligibility review",
+          ],
+          url: "https://fausports.com/sports/2014/1/10/GEN_0110145248.aspx",
+        },
+      ],
+    },
     performance_recovery: {
       title: "Performance & Recovery",
       intro:
@@ -619,6 +708,340 @@ export const collegeDemoDocument = {
         { category: "Mental Health", name: "FAU CAPS (Counseling Services)", number: "1-561-297-3540", note: "Free confidential counseling for all FAU students — adjusting to international student-athlete life is hard. Seeking support is smart." },
         { category: "Consulate", name: "Venezuelan Consulate Miami", number: "1-305-577-4214", note: "1101 Brickell Ave, Miami. For passport renewal, emergency travel documents, and consular services for Venezuelan nationals." },
       ],
+    },
+  },
+};
+
+// ─── V2 Demo (schema_version 2 — short 3-section guide) ───
+
+export const collegeDemoDocumentV2 = {
+  schema_version: 2,
+  meta: {
+    athlete_name: "Alejandro Rivera",
+    destination: "Boca Raton, FL, United States",
+    club: "Florida Atlantic University",
+    club_logo_url: "/Florida_Atlantic_Owls_logo.svg.png",
+    club_primary_color: "#003087",
+    generated_summary:
+      "Boca Raton is a sunny, vibrant coastal city with year-round warmth, a large Latin American community, and strong Division I athletics. Florida Atlantic University's growing soccer program and top-tier campus facilities make it an ideal environment for a student-athlete to compete and study at the highest level.",
+    welcome_letter:
+      "Alejandro, welcome to Florida Atlantic University. Moving from Caracas to Boca Raton is a big step, and this guide is here to make sure you arrive confident and ready — not overwhelmed. South Florida has a warmth and energy that Venezuelans find immediately familiar: Spanish is everywhere, the food reminds you of home, and the people are warm. For your first week, visit the FAU International Student Office (Bldg 96, Room 204) on day one — they'll check your I-20, help you with SEVIS, and point you to everything else on this list.",
+  },
+  university_notes: null,
+  university_links: null,
+  sections: {
+    city_essentials: {
+      title: "Your New City",
+      restaurants: [
+        {
+          name: "Boca Chica Restaurant",
+          cuisine: "Venezuelan / Latin American",
+          location: "NW 2nd Ave, Boca Raton",
+          why: "Arepas, pabellón criollo, and tequeños — a true taste of home five minutes from campus.",
+        },
+        {
+          name: "Louie Bossi's Ristorante",
+          cuisine: "Italian",
+          location: "East Las Olas Blvd, Fort Lauderdale",
+          why: "High-quality pasta and protein — great for pre-match carb loading with teammates.",
+        },
+        {
+          name: "Batch Gastropub",
+          cuisine: "American / Burgers",
+          location: "Federal Hwy, Boca Raton",
+          why: "Affordable, filling, popular with FAU students. Excellent post-training burgers.",
+        },
+        {
+          name: "Whole Foods Market",
+          cuisine: "Grocery / Prepared Foods",
+          location: "Glades Rd, Boca Raton (2 miles from FAU)",
+          why: "Best option for performance nutrition shopping — protein, produce, and international foods.",
+        },
+      ],
+      places_to_visit: [
+        {
+          name: "South Beach Boca (Red Reef Park)",
+          type: "beach",
+          description:
+            "A calm, beautiful Atlantic beach 10 minutes from campus. Free parking on weekdays. Perfect for active recovery days — open water swimming, running on the sand, or just decompressing after exams.",
+        },
+        {
+          name: "Mizner Park",
+          type: "cultural / social",
+          description:
+            "Boca Raton's main outdoor shopping and dining promenade. Great for a Sunday walk, a coffee meeting, or exploring the Boca Museum of Art. The amphitheater hosts free events throughout the year.",
+        },
+        {
+          name: "Grassy Waters Preserve",
+          type: "nature",
+          description:
+            "A large nature preserve west of Boca ideal for trail runs and mental reset. 20 km of trails through wetlands and cypress forest — free entry, open from sunrise to sunset.",
+        },
+      ],
+      transportation: {
+        intro:
+          "Boca Raton is car-friendly but the FAU campus is bikeable. Most student-athletes bike or walk on campus and use rideshare for anything off-campus.",
+        options: [
+          "Bike: Campus is flat and compact — a $150–$200 used bike from Facebook Marketplace covers 90% of daily needs.",
+          "Uber / Lyft: $8–$15 to most Boca destinations. Split with teammates to keep costs low.",
+          "Palm Tran Bus Route 94: Runs along Glades Rd connecting FAU to Delray Beach and Boynton Beach. $2/ride.",
+          "Car rental (Zipcar): Available on campus by the hour ($12–$18/hr) for larger errands like IKEA runs.",
+        ],
+      },
+      housing: [
+        { option: "Shared 2BR near campus", area: "Glades Rd corridor, Boca Raton", price_range: "$700–$950/mo per person", why: "Best value for a first-year student-athlete — splits costs with a teammate and puts you 5 minutes from the athletic complex." },
+        { option: "1BR apartment near campus", area: "NW 20th St, Boca Raton", price_range: "$1,200–$1,600/mo", why: "Full independence with modern amenities; most buildings near FAU accept I-20 letters instead of US credit history." },
+        { option: "Delray Beach 1BR", area: "Atlantic Ave area, Delray Beach", price_range: "$1,300–$1,800/mo", why: "South Florida beach lifestyle with a 15-min drive to campus — ideal if you want social energy outside of athletics." },
+      ],
+      healthcare: [
+        { name: "FAU Student Health Services", type: "Campus clinic", location: "Building 98, FAU campus", note: "Free or low-cost for enrolled students — first stop for any injury, illness, or prescription. Spanish-speaking providers available." },
+        { name: "FAU Counseling & Psychological Services (CAPS)", type: "Mental health", location: "Student Services Building", note: "Free confidential counseling for all students — adjusting to international student-athlete life is hard. Book a free 30-min consult anytime." },
+        { name: "Boca Raton Regional Hospital ER", type: "Emergency / Urgent care", location: "800 Meadows Rd, Boca Raton", note: "Nearest Level II trauma center — for serious injuries or emergencies only. Always call FAU Student Health first for non-emergencies." },
+      ],
+      social: [
+        { name: "Hispanic/Latino Student Association", type: "student org", description: "FAU's most active Latin American student organization — cultural events, mentorship, and a ready-made social network from day one." },
+        { name: "Atlantic Avenue, Delray Beach", type: "social scene", description: "15 minutes from campus — outdoor restaurants, bars, and weekend events on one of Florida's best main streets. Most popular off-campus destination for FAU students." },
+        { name: "Red Reef Park Beach", type: "outdoors", description: "Free on weekdays, 10 minutes from campus — open-water swimming, beach runs, and the easiest way to decompress on a recovery day." },
+      ],
+    },
+    your_university: {
+      title: "Your University",
+      campus_spots: [
+        {
+          name: "FAU Student Recreation Center",
+          type: "gym",
+          description:
+            "Full fitness facility on campus with weight rooms, group classes, a pool, and basketball courts. Free with your student ID. Open daily 6am–11pm — use it for supplemental training outside of team sessions.",
+        },
+        {
+          name: "Schmidt College of Medicine & FAU Student Health Services",
+          type: "health-center",
+          description:
+            "Located in Building 98. Primary care, sports medicine referrals, and mental health services. Your student health fee covers most visits. This is your first stop for any injury or illness.",
+        },
+        {
+          name: "S.E. Wimberly Library",
+          type: "library",
+          description:
+            "Open until midnight on weekdays. Has private study rooms you can book online — essential during finals week. The Ground Floor has a cafe and is a popular spot for athlete study groups.",
+        },
+        {
+          name: "FAU Stadium & Soccer Complex",
+          type: "athletic",
+          description:
+            "Home of FAU Athletics. The soccer training complex is directly adjacent to the stadium — you'll be here daily. The equipment room, athletic training staff, and film room are all in the same building.",
+        },
+      ],
+      athletic_facilities: [
+        {
+          name: "FAU Soccer Complex (Howard Schnellenberger Field)",
+          description:
+            "The primary training and match venue for FAU soccer. Features a natural grass pitch, sprinkler system, and team locker rooms. Access is controlled through the Athletic Department — your coach will walk you through the access process on day one.",
+        },
+        {
+          name: "FAU Athletic Training Room",
+          description:
+            "Full-service athletic training room with certified ATCs on staff. Available to student-athletes daily before and after practice. For any injury — no matter how minor — report it here immediately so it's documented and treated before it becomes serious.",
+        },
+      ],
+      food_nearby: [
+        { name: "FAU Dining Hall (The Market)", location: "Student Union", note: "Included in most meal plans. Open 7am–10pm. Has a dedicated athletic performance station with high-protein options." },
+        { name: "Starbucks on campus", location: "Student Union", note: "Quick breakfast between morning practice and first class." },
+        { name: "Pei Wei Asian Kitchen", location: "Glades Rd, 1.5 miles from FAU", note: "Under $15 for a full protein-forward meal. Popular with the soccer team." },
+        { name: "Publix Supermarket", location: "Yamato Rd, 2 miles from FAU", note: "Best everyday grocery store. Has a deli counter for quick ready-made meals." },
+      ],
+      student_life: [
+        {
+          name: "FAU Student Government Association",
+          type: "organization",
+          description: "Represents all students and funds 300+ clubs. Join a club in your first month — it's one of the fastest ways to build a social life outside the team.",
+        },
+        {
+          name: "Hispanic/Latino Student Association",
+          type: "club",
+          description:
+            "One of FAU's most active student organizations. Monthly cultural events, mentorship from older Latin students, and a strong alumni network. A natural first connection for you.",
+        },
+        {
+          name: "FAU International Student & Scholar Services",
+          type: "resource",
+          description:
+            "Building 96, Room 204. Your primary contact for anything F-1 related: OPT, CPT, SEVIS updates, travel signatures. Check in with them within 48 hours of arriving on campus — it's required.",
+        },
+      ],
+    },
+    your_paperwork: {
+      title: "What You Need to Do",
+      eligibility: {
+        intro:
+          "As an NCAA Division I student-athlete, you must maintain eligibility every semester. Falling below requirements — even by one credit — can cost you your spot on the roster.",
+        steps: [
+          {
+            step: 1,
+            title: "Submit your academic transcripts to the NCAA Eligibility Center",
+            description:
+              "Before you can compete, the NCAA must certify your eligibility. Go to eligibilitycenter.org and create an account. Submit all high school transcripts and, if applicable, any university transcripts from Venezuela. FAU's compliance office (compliance@fau.edu) will guide you through the process — contact them before your first training session.",
+            deadline: "Before your first official practice",
+            url: "https://web3.ncaa.org/ecwr3/",
+          },
+          {
+            step: 2,
+            title: "Complete your FAU Amateurism Certification",
+            description:
+              "If you have ever been paid to play soccer — even a small amount — you must disclose it. Contact the FAU Athletics Compliance Office in Building 96. Failing to disclose can result in immediate ineligibility. When in doubt, report it and let compliance determine if it's an issue.",
+            deadline: null,
+          },
+          {
+            step: 3,
+            title: "Enroll in at least 12 credit hours per semester",
+            description:
+              "NCAA Division I requires full-time enrollment (12+ credits) to compete. Your coach and academic advisor will help you build a schedule that works around your training and competition calendar. Do not drop below 12 credits without talking to compliance first.",
+            deadline: "Each semester",
+          },
+          {
+            step: 4,
+            title: "Maintain a minimum 2.0 GPA",
+            description:
+              "Division I requires a cumulative 2.0 GPA to remain eligible. FAU Athletics provides mandatory academic study hall and tutoring — use them. If you're struggling in a class, email your academic advisor (assigned to you at orientation) within the first two weeks.",
+            deadline: "Every semester",
+          },
+        ],
+      },
+      athletic_forms: [
+        {
+          title: "Pre-Participation Physical / Medical Clearance",
+          description: "Submit your completed physical examination form to FAU Sports Medicine (Building 97) before your first official practice — no physical on file means no practice, no exceptions.",
+          url: "https://fausports.com/sports/2019/6/17/sports-medicine.aspx",
+        },
+        {
+          title: "NIL — Name, Image & Likeness",
+          description: "As an NCAA athlete you can monetize your NIL — but you must register with FAU's NIL portal (built on Opendorse) and disclose any deals to the compliance office before signing anything.",
+          url: "https://www.ncaa.org/sports/2021/6/3/student-athletes-name-image-likeness.aspx",
+        },
+        {
+          title: "Drug Testing Consent & Emergency Forms",
+          description: "Sign the NCAA drug testing consent form, submit your emergency contact information, and complete the travel consent form — all go to the FAU Athletics Compliance Office before the first team meeting.",
+          url: null,
+        },
+      ],
+      health_insurance: {
+        description: "FAU international students are automatically enrolled in the FAU Student Health Insurance Plan — review your coverage at studentinsurance.fau.edu and confirm your card arrives before your first semester.",
+        deadline: "Before semester start",
+        url: "https://www.fau.edu/studenthealth/insurance/",
+      },
+      financial_aid: null,
+      international_academic: {
+        intro:
+          "As an international student from Venezuela, you need to complete several academic and administrative steps before and right after arriving. Start these as early as possible — some processes take 6–8 weeks.",
+        transcript_evaluation: [
+          {
+            step: 1,
+            title: "Order an official transcript evaluation through WES or ECE",
+            description:
+              "The NCAA Eligibility Center requires your Venezuelan transcripts to be evaluated by a NACES-approved service. Use World Education Services (wes.org) or Educational Credential Evaluators (ece.org). You will need official transcripts sent directly from your high school or university in Venezuela. WES costs approximately $220 and takes 7 business days for express service.",
+            url: "https://www.wes.org",
+          },
+          {
+            step: 2,
+            title: "Get your transcripts apostilled in Venezuela",
+            description:
+              "Venezuelan transcripts must carry an apostille stamp from SAREN (Servicio Autónomo de Registros y Notarías) to be accepted as official. Have a trusted family member or lawyer in Venezuela coordinate this before you leave. Without the apostille, WES cannot process your documents.",
+            url: null,
+          },
+          {
+            step: 3,
+            title: "Submit TOEFL/IELTS scores to FAU and the NCAA",
+            description:
+              "FAU requires a minimum TOEFL score of 72 (internet-based) or IELTS of 6.0 for admission. The NCAA may also require proof of English proficiency for eligibility. If you haven't taken the test yet, register at ets.org (TOEFL) or ielts.org immediately — testing slots fill up quickly.",
+            url: "https://www.ets.org/toefl",
+          },
+        ],
+        gpa_conversion:
+          "Venezuelan grades use a 1–20 scale (20 being perfect). When WES evaluates your transcripts, they will convert your grades to the US 4.0 GPA scale. A grade of 16/20 in Venezuela typically converts to approximately 3.5/4.0 in the US system. The NCAA Eligibility Center uses this conversion to determine your academic eligibility, so make sure your transcript evaluation is done by a NACES-approved agency.",
+        required_vaccines: [
+          "MMR (Measles, Mumps, Rubella) — 2 doses required. Get proof of vaccination from your doctor in Venezuela before leaving.",
+          "Meningococcal vaccine — required for all students living in residence halls. Can be obtained at FAU Student Health Services on arrival.",
+          "COVID-19 vaccination — recommended but not currently mandated by FAU. Check fau.edu/health for the latest policy.",
+          "Tuberculosis (TB) screening — international students from Venezuela are required to complete a TB test within 30 days of arrival. FAU Student Health can administer this ($25).",
+        ],
+        vaccines_url: "https://www.fau.edu/studenthealth/immunization/",
+        pre_arrival_docs: [
+          "Valid Venezuelan passport (at least 6 months validity beyond your program end date)",
+          "F-1 Student Visa — obtained from the US Embassy/Consulate in Venezuela or Bogotá",
+          "Form I-20 — issued by FAU International Student Services. Do not travel without this.",
+          "SEVIS fee payment receipt (Form I-901) — pay at fmjfee.com before your visa interview. Cost: $350.",
+          "FAU acceptance letter and scholarship award letter",
+          "Proof of financial support (bank statements showing $25,000+ for the academic year)",
+          "Health insurance documentation — FAU international students are automatically enrolled in the FAU student health insurance plan",
+        ],
+      },
+      post_arrival: {
+        intro:
+          "These are the most important things to take care of in your first 30 days. Do them in order — some require others to be complete first.",
+        i94_check: {
+          description: "Within your first 3 days in the US, go to i94.cbp.dhs.gov and confirm your arrival record shows 'D/S' (Duration of Status) — if anything looks wrong, contact FAU International Student Services immediately before it becomes a visa compliance issue.",
+          url: "https://i94.cbp.dhs.gov",
+        },
+        ssa_office_url: "https://www.google.com/maps/search/Social+Security+Administration+Boca+Raton+FL",
+        social_security: [
+          {
+            step: 1,
+            title: "Wait 10 days after arriving before applying",
+            description:
+              "The Social Security Administration requires your entry to be recorded in the SEVIS system before you can apply. This takes approximately 10 business days after your F-1 entry into the US.",
+          },
+          {
+            step: 2,
+            title: "Gather your documents",
+            description:
+              "You will need: your passport with F-1 visa, your I-94 arrival record (printed from i94.cbp.dhs.gov), your I-20, a letter from the FAU International Student Office confirming your enrollment, and proof of your campus address.",
+          },
+          {
+            step: 3,
+            title: "Visit the Boca Raton Social Security Office",
+            description:
+              "Located at 500 NW Spanish River Blvd, Suite 21, Boca Raton, FL 33431. Hours: Monday–Friday 9am–4pm. No appointment needed for first-time SSN applications. Bring all original documents — photocopies are not accepted. Your card will arrive by mail in 2–4 weeks.",
+          },
+        ],
+        bank_account: [
+          {
+            step: 1,
+            title: "Open a student checking account at a major US bank",
+            description:
+              "Most large national banks — such as Chase, Bank of America, and Wells Fargo — offer student checking accounts with no monthly fees and are accustomed to opening accounts for F-1 students. You do NOT need an SSN — your passport, I-20, and I-94 are sufficient. Look for a branch near campus and call ahead to confirm they can process international student accounts.",
+          },
+          {
+            step: 2,
+            title: "Set up a Wise account for international transfers",
+            description:
+              "Wise (wise.com) allows you to receive money from Venezuela at close to the real exchange rate with minimal fees. Set this up before arriving — it will be your main way of receiving money from family. Link it to your US Chase account once that's open.",
+          },
+          {
+            step: 3,
+            title: "Apply for a secured credit card to start building US credit history",
+            description:
+              "Without US credit history, you can't rent an apartment independently in future years. A secured card (like Chase Secured Visa) requires a $200–$500 deposit as collateral. Use it for groceries and pay it off every month. After 12 months, your credit score will be high enough for normal credit products.",
+          },
+        ],
+        itin: {
+          description: "If you cannot yet get an SSN, apply for an ITIN (IRS Form W-7) through FAU's international student office — you'll need it to file US taxes and open certain bank accounts while waiting for SSN eligibility.",
+          url: "https://www.irs.gov/individuals/individual-taxpayer-identification-number",
+        },
+        us_taxes: {
+          description: "Every F-1 student must file Form 8843 with the IRS each spring even with zero US income; if your scholarship covers room and board, you'll also receive a 1042-S and must file Form 1040-NR — use Sprintax, which is built specifically for international students.",
+          url: "https://www.sprintax.com",
+        },
+        opt_cpt: {
+          text: "OPT lets you work in the US in your field for up to 12 months after graduation (36 months for STEM). CPT lets you work during your studies through an approved internship. Both require authorization from FAU's International Student Office — apply at least 90 days before you want to start. Unauthorized work is a federal visa violation.",
+          url: "https://www.fau.edu/international/current-students/opt-cpt/",
+        },
+        cv_tips: [
+          "US resumes are 1 page for undergraduates — remove photos, date of birth, and marital status.",
+          "List 'NCAA Division I Athlete, FAU Soccer' prominently — US employers respect the discipline it signals.",
+          "Use your .edu email on your resume — it signals current enrollment.",
+        ],
+        resume_tools_url: "https://www.canva.com/resumes/",
+      },
     },
   },
 };
