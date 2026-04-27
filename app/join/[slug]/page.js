@@ -22,27 +22,23 @@ export default async function JoinPage({ params }) {
     metadata: { slug },
   });
 
-  const full = club.seat_limit && club.seats_used >= club.seat_limit;
+  const effectiveLimit = club.seat_limit ?? (club.plan === "premium" ? 100 : 40);
+  const full = (club.seats_used ?? 0) >= effectiveLimit;
 
   if (full) {
     return (
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center px-6">
         <div className="text-center">
           <p className="text-2xl font-bold text-white mb-3">Link unavailable</p>
-          <p className="text-white/40">This club has reached its guide limit. Please contact your club directly.</p>
+          <p className="text-white/40">This institution has reached its guide limit. Please contact your institution directly.</p>
         </div>
       </div>
     );
   }
 
-  const isPremium = club.plan === "premium";
-
   return <JoinForm club={{
     ...club,
     pin: undefined,
     hasPin: !!club.pin,
-    logo_url: isPremium ? club.logo_url : null,
-    primary_color: isPremium ? club.primary_color : "#16a34a",
-    secondary_color: isPremium ? club.secondary_color : "#ffffff",
   }} />;
 }

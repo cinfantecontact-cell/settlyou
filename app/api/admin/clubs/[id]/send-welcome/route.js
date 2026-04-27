@@ -44,7 +44,7 @@ export async function POST(request, { params }) {
           <!-- Logo -->
           <tr>
             <td align="center" style="padding-bottom:28px;">
-              <img src="${baseUrl}/settlyou-logo.png" alt="Settl" height="32" style="display:block;" />
+              <img src="${baseUrl}/settlyou-logo-dark.png" alt="Settl" height="32" style="display:block;" />
             </td>
           </tr>
 

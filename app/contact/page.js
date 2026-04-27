@@ -15,7 +15,7 @@ export default async function ContactPage({ searchParams }) {
     <div className="min-h-screen bg-surface flex flex-col">
       <nav className="flex items-center px-8 py-5 border-b border-border bg-white">
         <a href="/">
-          <img src="/settlyou-logo.png" alt="Settlyou" className="h-8 rounded-md" />
+          <img src="/settlyou-logo-dark.png" alt="Settlyou" className="h-7" />
         </a>
       </nav>
 

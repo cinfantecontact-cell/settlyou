@@ -54,7 +54,20 @@ export default function CollegeSampleReportPage() {
 
       {/* Document */}
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <DocumentView content={collegeDemoDocumentV2} />
+        <DocumentView content={{
+          ...collegeDemoDocumentV2,
+          meta: {
+            ...collegeDemoDocumentV2.meta,
+            club_logo_url: "/Florida_Atlantic_Owls_logo.svg.png",
+            club_primary_color: "#003366",
+          },
+          university_notes: "Welcome to the FAU Owls family! Before you arrive, make sure you've completed your SEVIS check-in with the International Student Office (Building 96, Room 129). Your compliance forms and pre-participation physical must be on file with Sports Medicine before your first team practice. Housing applications for on-campus residents close July 15th — submit yours as soon as possible. If you have any questions, reach out to your academic advisor — they're expecting you.",
+          university_links: [
+            { label: "FAU Athlete Portal", url: "https://fausports.com" },
+            { label: "International Student Services", url: "https://www.fau.edu/international" },
+            { label: "NCAA Eligibility Center", url: "https://web3.ncaa.org/ecwr3/" },
+          ],
+        }} />
       </div>
 
       {/* CTA footer */}

@@ -1,20 +1,35 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function GeneratingBadge() {
+function formatDuration(seconds) {
+  if (seconds < 60) return `${seconds}s`;
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return s > 0 ? `${m}m ${s}s` : `${m}m`;
+}
+
+export default function GeneratingBadge({ startedAt }) {
   const router = useRouter();
+  const [elapsed, setElapsed] = useState(0);
 
   useEffect(() => {
     const poll = setInterval(() => router.refresh(), 5000);
     return () => clearInterval(poll);
   }, [router]);
 
+  useEffect(() => {
+    if (!startedAt) return;
+    const getElapsed = () => Math.floor((Date.now() - new Date(startedAt)) / 1000);
+    setElapsed(getElapsed());
+    const tick = setInterval(() => setElapsed(getElapsed()), 1000);
+    return () => clearInterval(tick);
+  }, [startedAt]);
+
   return (
-    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-      <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
-      Generating
+    <span className="text-xs text-blue-700 font-mono tabular-nums">
+      {startedAt ? formatDuration(elapsed) : "—"}
     </span>
   );
 }

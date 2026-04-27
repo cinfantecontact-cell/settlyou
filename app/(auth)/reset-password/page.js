@@ -42,7 +42,7 @@ export default function ResetPasswordPage() {
     <div className="min-h-screen flex items-center justify-center bg-surface px-4">
       <div className="w-full max-w-sm bg-white rounded-xl border border-border p-8 shadow-sm">
         <a href="/" className="block mb-8">
-          <img src="/settlyou-logo.png" alt="Settlyou" className="h-8 rounded-md" />
+          <img src="/settlyou-logo-dark.png" alt="Settlyou" className="h-7" />
         </a>
 
         {done ? (

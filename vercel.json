@@ -7,6 +7,10 @@
     {
       "path": "/api/cron/digest",
       "schedule": "0 11 * * *"
+    },
+    {
+      "path": "/api/cron/club-weekly",
+      "schedule": "0 9 * * 1"
     }
   ]
 }

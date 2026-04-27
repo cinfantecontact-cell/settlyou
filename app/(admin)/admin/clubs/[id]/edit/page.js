@@ -32,7 +32,10 @@ export default async function EditClubPage({ params, searchParams }) {
   return (
     <div className="p-8 max-w-xl">
       <div className="mb-8">
-        <a href="/admin/clubs" className="text-sm text-muted hover:text-foreground transition-colors">← Clubs</a>
+        <a href="/admin/clubs" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-foreground transition-colors">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+          All Universities
+        </a>
         <h1 className="text-2xl font-bold text-foreground mt-4">{club.name}</h1>
         <p className="text-sm text-muted mt-1">Edit university details, PIN, logo, and status.</p>
       </div>

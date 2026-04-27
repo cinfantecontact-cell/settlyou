@@ -79,6 +79,7 @@ export async function POST(request) {
     // Service
     service_tier: body.service_tier,
     additional_notes: body.additional_notes || null,
+    athlete_phone: body.athlete_phone || null,
   });
 
   if (error) {

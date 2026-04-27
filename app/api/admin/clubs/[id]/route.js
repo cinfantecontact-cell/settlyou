@@ -24,28 +24,27 @@ export async function PATCH(request, { params }) {
   const logoFile = formData.get("logo");
   const custom_notes = formData.get("custom_notes") || null;
   const plan = formData.get("plan") || "essentials";
+  const division = formData.get("division") || null;
+  const city = formData.get("city") || null;
+  const country = formData.get("country") || null;
+  const address = formData.get("address") || null;
 
-  // Build update object — branding only for premium
-  const updates = { name, type, seat_limit, active, plan };
-  if (plan === "premium") {
-    updates.primary_color = primary_color;
-    updates.secondary_color = secondary_color;
-    updates.custom_notes = custom_notes;
-  } else {
-    // Clear branding if downgraded to essentials
-    updates.custom_notes = null;
-  }
+  const updates = { name, type, seat_limit, active, plan, primary_color, secondary_color, custom_notes, division, city, country, address };
 
   // Only update PIN if a new one was provided
   if (newPin && newPin.length === 4) {
     updates.pin = newPin;
   }
 
-  // Upload new logo if provided — premium only
-  if (plan === "premium" && logoFile && logoFile.size > 0) {
+  // Fetch slug once for all uploads
+  let slug = null;
+
+  // Upload new logo if provided
+  if (logoFile && logoFile.size > 0) {
     const { data: existing } = await admin.from("clubs").select("slug").eq("id", id).single();
+    slug = existing?.slug;
     const ext = logoFile.name.split(".").pop();
-    const path = `${existing.slug}.${ext}`;
+    const path = `${slug}.${ext}`;
     const arrayBuffer = await logoFile.arrayBuffer();
     const buffer = new Uint8Array(arrayBuffer);
 

@@ -22,5 +22,6 @@ export async function login(formData) {
 
   if (profile?.role === "settl_admin") redirect("/admin");
   if (profile?.role === "club_admin") redirect("/club");
+  if (profile?.role === "coach") redirect("/club");
   redirect("/dashboard");
 }

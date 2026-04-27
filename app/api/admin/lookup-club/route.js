@@ -19,6 +19,7 @@ export async function POST(req) {
   const prompt = `You are a sports and university knowledge assistant. Given the ${isCollege ? "university/college" : "sports club"} name "${name}", return a JSON object with:
 - "address": the ${addressLabel} (street address if known, otherwise the facility name and neighborhood)
 - "city": the ${cityLabel}
+- "state": the US state abbreviation if in the United States (e.g. "FL", "CA", "TX"), otherwise null
 - "country": the country
 
 If you're not confident about specific details, return your best reasonable guess based on the name. Always return valid JSON.

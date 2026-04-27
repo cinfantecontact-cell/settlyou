@@ -26,6 +26,7 @@ export async function submitContactRequest(formData) {
     email,
     phone,
     message,
+    status: "pending",
   });
 
   if (error) {

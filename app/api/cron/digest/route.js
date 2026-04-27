@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import Anthropic from "@anthropic-ai/sdk";
 import { Resend } from "resend";
+import { generateLinkedInPost } from "@/lib/linkedin/generate";
+import { publishScheduledPosts } from "@/lib/linkedin/client";
 
 const DIGEST_TO = "hello@settlyou.com";
 
@@ -16,6 +18,8 @@ export async function GET(request) {
   const admin = createAdminClient();
   const now = new Date();
   const yesterday = new Date(now - 24 * 60 * 60 * 1000).toISOString();
+  const thirtyMinsAgo = new Date(now - 30 * 60 * 1000).toISOString();
+  const oneHourAgo = new Date(now - 60 * 60 * 1000).toISOString();
 
   // Gather stats for last 24 hours
   const [
@@ -24,12 +28,18 @@ export async function GET(request) {
     { data: delivered },
     { data: allClubs },
     { data: recentEvents },
+    { data: stuckGenerating },
+    { data: failedSubmissions },
   ] = await Promise.all([
     admin.from("requests").select("id, athlete_name, clubs(name)").eq("status", "submitted").gte("created_at", yesterday),
     admin.from("requests").select("id").in("status", ["under_review", "approved", "generating"]).gte("updated_at", yesterday),
     admin.from("requests").select("id, athlete_name, clubs(name)").eq("status", "delivered").gte("updated_at", yesterday),
     admin.from("clubs").select("name, seats_used, seat_limit, plan, active"),
     admin.from("events").select("event_type").gte("created_at", yesterday),
+    // Stuck in "generating" for more than 30 minutes = crashed
+    admin.from("requests").select("id, athlete_name, clubs(name), updated_at").eq("status", "generating").lte("updated_at", thirtyMinsAgo),
+    // Still "submitted" for more than 1 hour = generation likely failed silently
+    admin.from("requests").select("id, athlete_name, clubs(name), created_at").eq("status", "submitted").lte("created_at", oneHourAgo),
   ]);
 
   // Clubs near limit (>= 80% used)
@@ -72,6 +82,16 @@ export async function GET(request) {
     aiInsight = "AI summary unavailable.";
   }
 
+  const hasIssues = (stuckGenerating?.length || 0) + (failedSubmissions?.length || 0) > 0;
+
+  const stuckRows = stuckGenerating?.length
+    ? stuckGenerating.map(r => `<tr><td style="padding:8px 12px;font-size:13px;color:#111;">${r.athlete_name || "—"}</td><td style="padding:8px 12px;font-size:13px;color:#555;">${r.clubs?.name || "—"}</td><td style="padding:8px 12px;font-size:12px;color:#dc2626;">Stuck generating</td></tr>`).join("")
+    : null;
+
+  const failedRows = failedSubmissions?.length
+    ? failedSubmissions.map(r => `<tr><td style="padding:8px 12px;font-size:13px;color:#111;">${r.athlete_name || "—"}</td><td style="padding:8px 12px;font-size:13px;color:#555;">${r.clubs?.name || "—"}</td><td style="padding:8px 12px;font-size:12px;color:#f59e0b;">Submitted 1h+ ago</td></tr>`).join("")
+    : null;
+
   const nearLimitRows = nearLimit.length
     ? nearLimit.map(c => `<tr><td style="padding:8px 12px;font-size:13px;color:#111;">${c.name}</td><td style="padding:8px 12px;font-size:13px;color:#dc2626;font-weight:600;">${c.used}/${c.limit}</td></tr>`).join("")
     : `<tr><td colspan="2" style="padding:8px 12px;font-size:13px;color:#aaa;">No clubs near limit</td></tr>`;
@@ -89,7 +109,7 @@ export async function GET(request) {
       <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;">
         <tr>
           <td style="background:#ffffff;padding:28px 40px;text-align:center;border-bottom:1px solid #f0f0f0;">
-            <img src="https://settlyou.com/settlyou-logo.png" alt="Settlyou" height="28" style="display:block;margin:0 auto;">
+            <img src="https://settlyou.com/settlyou-logo-dark.png" alt="Settlyou" height="28" style="display:block;margin:0 auto;">
           </td>
         </tr>
         <tr>
@@ -154,12 +174,28 @@ export async function GET(request) {
               </table>
             </div>
 
+            ${hasIssues ? `
+            <!-- Stuck / failed guides alert -->
+            <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:16px 20px;margin-bottom:28px;">
+              <p style="margin:0 0 10px;font-size:13px;font-weight:700;color:#dc2626;">⚠️ Guides needing attention</p>
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr style="background:#fee2e2;">
+                  <th style="padding:6px 12px;font-size:11px;color:#991b1b;text-align:left;text-transform:uppercase;">Student</th>
+                  <th style="padding:6px 12px;font-size:11px;color:#991b1b;text-align:left;text-transform:uppercase;">Institution</th>
+                  <th style="padding:6px 12px;font-size:11px;color:#991b1b;text-align:left;text-transform:uppercase;">Issue</th>
+                </tr>
+                ${[stuckRows, failedRows].filter(Boolean).join("")}
+              </table>
+              <p style="margin:10px 0 0;font-size:12px;color:#991b1b;">Open the admin panel to manually regenerate these guides.</p>
+            </div>
+            ` : ""}
+
             <!-- Clubs near limit -->
             <div style="margin-bottom:28px;">
-              <p style="margin:0 0 10px;font-size:13px;font-weight:600;color:#111;">Clubs Near Guide Limit</p>
+              <p style="margin:0 0 10px;font-size:13px;font-weight:600;color:#111;">Institutions Near Guide Limit</p>
               <table width="100%" cellpadding="0" cellspacing="0" style="background:#f9fafb;border:1px solid #e4e4e7;border-radius:8px;overflow:hidden;">
                 <tr style="background:#f0f0f0;">
-                  <th style="padding:8px 12px;font-size:11px;color:#a1a1aa;text-align:left;text-transform:uppercase;letter-spacing:0.05em;">Club</th>
+                  <th style="padding:8px 12px;font-size:11px;color:#a1a1aa;text-align:left;text-transform:uppercase;letter-spacing:0.05em;">Institution</th>
                   <th style="padding:8px 12px;font-size:11px;color:#a1a1aa;text-align:left;text-transform:uppercase;letter-spacing:0.05em;">Used / Limit</th>
                 </tr>
                 ${nearLimitRows}
@@ -183,5 +219,22 @@ export async function GET(request) {
 </html>`,
   });
 
-  return NextResponse.json({ ok: true, digest_sent: true, stats: dataSummary });
+  // LinkedIn: generate tomorrow's draft + publish any scheduled posts
+  let linkedinResult = {};
+  try {
+    const newPost = await generateLinkedInPost();
+    linkedinResult.generated = newPost?.id ?? null;
+  } catch (e) {
+    console.error("[cron/digest] LinkedIn generate error:", e.message);
+    linkedinResult.generateError = e.message;
+  }
+  try {
+    const published = await publishScheduledPosts();
+    linkedinResult.published = published.length;
+  } catch (e) {
+    console.error("[cron/digest] LinkedIn publish error:", e.message);
+    linkedinResult.publishError = e.message;
+  }
+
+  return NextResponse.json({ ok: true, digest_sent: true, stats: dataSummary, linkedin: linkedinResult });
 }

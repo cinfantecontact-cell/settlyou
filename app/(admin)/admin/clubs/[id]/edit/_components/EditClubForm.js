@@ -98,6 +98,26 @@ export default function EditClubForm({ club, baseDataStatus, baseDataGeneratedAt
         <p className="text-xs text-muted">Slug can't be changed — it would break the existing link.</p>
       </div>
 
+      {/* City / Country / Address */}
+      <div className="flex flex-col gap-1.5">
+        <label className="text-sm font-medium text-foreground">City</label>
+        <input name="city" defaultValue={club.city || ""}
+          className="border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white"
+          placeholder="e.g. Duluth" />
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <label className="text-sm font-medium text-foreground">Country</label>
+        <input name="country" defaultValue={club.country || ""}
+          className="border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white"
+          placeholder="e.g. United States" />
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <label className="text-sm font-medium text-foreground">Campus address <span className="text-muted font-normal">(optional)</span></label>
+        <input name="address" defaultValue={club.address || ""}
+          className="border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white"
+          placeholder="e.g. 1200 Kenwood Ave, Duluth, MN" />
+      </div>
+
       {/* Type */}
       <div className="flex flex-col gap-1.5">
         <label className="text-sm font-medium text-foreground">Type</label>

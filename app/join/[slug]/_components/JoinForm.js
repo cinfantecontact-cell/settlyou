@@ -17,9 +17,21 @@ const COUNTRIES = [
 ];
 
 const SPORTS = [
-  "Soccer / Football", "Basketball", "Baseball", "American Football", "Tennis",
-  "Swimming", "Track & Field", "Volleyball", "Golf", "Wrestling",
-  "Gymnastics", "Rowing", "Cross Country", "Lacrosse", "Other",
+  "Men's Soccer", "Women's Soccer",
+  "Men's Basketball", "Women's Basketball",
+  "Baseball", "Softball",
+  "American Football",
+  "Men's Tennis", "Women's Tennis",
+  "Men's Swimming", "Women's Swimming",
+  "Men's Track & Field", "Women's Track & Field",
+  "Men's Volleyball", "Women's Volleyball",
+  "Men's Golf", "Women's Golf",
+  "Wrestling",
+  "Men's Gymnastics", "Women's Gymnastics",
+  "Men's Rowing", "Women's Rowing",
+  "Men's Cross Country", "Women's Cross Country",
+  "Men's Lacrosse", "Women's Lacrosse",
+  "Other",
 ];
 
 const HOBBIES = ["Golf", "Tennis", "Swimming", "Surfing", "Gaming", "Music", "Fishing", "Cooking", "Travel", "Art", "Reading", "Hiking", "Photography", "Other"];
@@ -35,131 +47,34 @@ const CURRICULUM = ["IB (International Baccalaureate)", "American", "British", "
 const CAR_TYPE = ["Economy", "SUV", "Luxury sedan", "Luxury SUV", "Van / Family", "No preference"];
 const GUIDE_LANGUAGES = ["English", "Spanish", "Portuguese", "French", "German", "Italian", "Dutch", "Arabic"];
 
-// All translatable strings — keys are English originals
-const FORM_STRINGS = {
-  "What language do you prefer?": "What language do you prefer?",
-  "We'll switch the whole form to your language right away.": "We'll switch the whole form to your language right away.",
-  "Translating...": "Translating...",
-  "What's your name?": "What's your name?",
-  "Where are you from?": "Where are you from?",
-  "Sport and languages.": "Sport and languages.",
-  "Which languages do you speak?": "Which languages do you speak?",
-  "Select all that apply": "Select all that apply",
-  "What sport do you play?": "What sport do you play?",
-  "Pick your sport": "Pick your sport",
-  "Your new club.": "Your new club.",
-  "Where are you heading?": "Where are you heading?",
-  "Tell us about your studies.": "Tell us about your studies.",
-  "A few quick things.": "A few quick things.",
-  "What kind of place are you looking for?": "What kind of place are you looking for?",
-  "What kind of home are you looking for?": "What kind of home are you looking for?",
-  "Who's moving with you?": "Who's moving with you?",
-  "How do you eat and move?": "How do you eat and move?",
-  "How do you live day to day?": "How do you live day to day?",
-  "What do you do in your free time?": "What do you do in your free time?",
-  "Schools, cars & healthcare.": "Schools, cars & healthcare.",
-  "Almost there.": "Almost there.",
-  "Last few things and your guide is on its way.": "Last few things and your guide is on its way.",
-  "Full name": "Full name",
-  "Age (optional)": "Age (optional)",
-  "Nationality": "Nationality",
-  "Your nationality": "Your nationality",
-  "Current city (optional)": "Current city (optional)",
-  "Current country (optional)": "Current country (optional)",
-  "Sport": "Sport",
-  "Languages spoken": "Languages spoken",
-  "Club name": "Club name",
-  "Training ground address (optional)": "Training ground address (optional)",
-  "Destination city": "Destination city",
-  "Country": "Country",
-  "Move date (optional)": "Move date (optional)",
-  "Contract duration (optional)": "Contract duration (optional)",
-  "University / College": "University / College",
-  "Campus city": "Campus city",
-  "Major / Field of study (optional)": "Major / Field of study (optional)",
-  "Semester start (optional)": "Semester start (optional)",
-  "Monthly budget in USD (optional)": "Monthly budget in USD (optional)",
-  "I have an athletic scholarship": "I have an athletic scholarship",
-  "I'm part of a team": "I'm part of a team",
-  "I'll be living on campus (dorms)": "I'll be living on campus (dorms)",
-  "I'm coming from outside the US": "I'm coming from outside the US",
-  "Studio": "Studio",
-  "1-bedroom apartment": "1-bedroom apartment",
-  "Shared apartment": "Shared apartment",
-  "No preference": "No preference",
-  "In-unit laundry": "In-unit laundry",
-  "Furnished": "Furnished",
-  "High-speed WiFi": "High-speed WiFi",
-  "Parking": "Parking",
-  "Pet-friendly": "Pet-friendly",
-  "Near campus shuttle": "Near campus shuttle",
-  "Gym access": "Gym access",
-  "Study room": "Study room",
-  "No restrictions": "No restrictions",
-  "Halal": "Halal",
-  "Kosher": "Kosher",
-  "Vegetarian": "Vegetarian",
-  "Vegan": "Vegan",
-  "Gluten-free": "Gluten-free",
-  "Dairy-free": "Dairy-free",
-  "CrossFit": "CrossFit",
-  "Traditional gym": "Traditional gym",
-  "Swimming": "Swimming",
-  "Yoga / Pilates": "Yoga / Pilates",
-  "Cycling": "Cycling",
-  "Martial arts": "Martial arts",
-  "Running": "Running",
-  "Property type": "Property type",
-  "Must-haves (optional)": "Must-haves (optional)",
-  "Max commute to campus in minutes (optional)": "Max commute to campus in minutes (optional)",
-  "Max commute to training in minutes (optional)": "Max commute to training in minutes (optional)",
-  "Minimum bedrooms (optional)": "Minimum bedrooms (optional)",
-  "Monthly budget USD (optional)": "Monthly budget USD (optional)",
-  "Total people moving (including yourself)": "Total people moving (including yourself)",
-  "Partner's name (optional)": "Partner's name (optional)",
-  "Children's ages, comma separated (optional)": "Children's ages, comma separated (optional)",
-  "Family weekend activities (optional)": "Family weekend activities (optional)",
-  "Pets?": "Pets?",
-  "Yes, I have a pet": "Yes, I have a pet",
-  "No pets": "No pets",
-  "Tell us about your pet": "Tell us about your pet",
-  "How often do family or friends visit from back home?": "How often do family or friends visit from back home?",
-  "Preferred hotel budget for guests": "Preferred hotel budget for guests",
-  "Dietary needs": "Dietary needs",
-  "Diet": "Diet",
-  "Fitness": "Fitness",
-  "Fitness preferences": "Fitness preferences",
-  "Hobbies": "Hobbies",
-  "Hobbies & interests": "Hobbies & interests",
-  "Nightlife interest (optional)": "Nightlife interest (optional)",
-  "Religious or cultural needs (optional)": "Religious or cultural needs (optional)",
-  "Do you need schools for your children?": "Do you need schools for your children?",
-  "Yes, I need schools": "Yes, I need schools",
-  "No, not needed": "No, not needed",
-  "Do you need a car?": "Do you need a car?",
-  "Yes": "Yes",
-  "No": "No",
-  "Healthcare preference": "Healthcare preference",
-  "Private preferred": "Private preferred",
-  "Standard / public": "Standard / public",
-  "Your email address — we'll send your guide here": "Your email address — we'll send your guide here",
-  "What language should your guide be written in?": "What language should your guide be written in?",
-  "Anything else we should know? (optional)": "Anything else we should know? (optional)",
-  "Continue →": "Continue →",
-  "Get my guide →": "Get my guide →",
-  "← Back": "← Back",
-  "Press Enter ↵": "Press Enter ↵",
-  "Powered by Settlyou": "Powered by Settlyou",
-  "Enter your PIN": "Enter your PIN",
-  "Your club sent you a 4-digit PIN with this link.": "Your club sent you a 4-digit PIN with this link.",
-  "Checking...": "Checking...",
-  "You're all set!": "You're all set!",
-  "Your personalized relocation guide is being built.": "Your personalized relocation guide is being built.",
-  "We'll send it to your email once it's ready.": "We'll send it to your email once it's ready.",
-  "Your club will share it with you once it's ready.": "Your club will share it with you once it's ready.",
-  "I agree that my information will be used to generate my relocation guide and shared with": "I agree that my information will be used to generate my relocation guide and shared with",
-  "Privacy policy": "Privacy policy",
-};
+const DIAL_CODES = [
+  { code: "+1",   label: "+1 (US/CA)" },
+  { code: "+52",  label: "+52 (MX)" },
+  { code: "+54",  label: "+54 (AR)" },
+  { code: "+55",  label: "+55 (BR)" },
+  { code: "+56",  label: "+56 (CL)" },
+  { code: "+57",  label: "+57 (CO)" },
+  { code: "+58",  label: "+58 (VE)" },
+  { code: "+34",  label: "+34 (ES)" },
+  { code: "+44",  label: "+44 (UK)" },
+  { code: "+49",  label: "+49 (DE)" },
+  { code: "+33",  label: "+33 (FR)" },
+  { code: "+39",  label: "+39 (IT)" },
+  { code: "+351", label: "+351 (PT)" },
+  { code: "+31",  label: "+31 (NL)" },
+  { code: "+32",  label: "+32 (BE)" },
+  { code: "+46",  label: "+46 (SE)" },
+  { code: "+47",  label: "+47 (NO)" },
+  { code: "+45",  label: "+45 (DK)" },
+  { code: "+90",  label: "+90 (TR)" },
+  { code: "+966", label: "+966 (SA)" },
+  { code: "+971", label: "+971 (UAE)" },
+  { code: "+81",  label: "+81 (JP)" },
+  { code: "+82",  label: "+82 (KR)" },
+  { code: "+61",  label: "+61 (AU)" },
+  { code: "+7",   label: "+7 (RU)" },
+];
+
 
 // Returns #ffffff for dark backgrounds, #0f0f0f for light backgrounds
 function getTextColor(hex) {
@@ -198,6 +113,7 @@ function Label({ children }) {
 }
 
 export default function JoinForm({ club }) {
+  const t = (s) => s;
   const isCollege = club.type === "college";
   const DRAFT_KEY = `settl_draft_${club.slug}`;
 
@@ -206,6 +122,7 @@ export default function JoinForm({ club }) {
   const [pinError, setPinError] = useState(null);
   const [pinChecking, setPinChecking] = useState(false);
 
+  const [welcomeSeen, setWelcomeSeen] = useState(false);
   const [qIndex, setQIndex] = useState(0);
   const [animKey, setAnimKey] = useState(0);
   const [formStarted, setFormStarted] = useState(false);
@@ -213,30 +130,6 @@ export default function JoinForm({ club }) {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(null);
   const [consented, setConsented] = useState(false);
-
-  const [formLang, setFormLang] = useState("English");
-  const [translations, setTranslations] = useState(null);
-  const [translating, setTranslating] = useState(false);
-
-  // Returns translated string or original English
-  const t = (str) => translations?.[str] ?? str;
-
-  async function changeLanguage(lang) {
-    setFormLang(lang);
-    set("report_language", lang);
-    if (lang === "English") { setTranslations(null); return; }
-    setTranslating(true);
-    try {
-      const res = await fetch("/api/translate-form", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ language: lang, strings: FORM_STRINGS }),
-      });
-      const data = await res.json();
-      setTranslations(data);
-    } catch { /* fail silently, stay in English */ }
-    finally { setTranslating(false); }
-  }
 
   const [form, setForm] = useState({
     athlete_type: isCollege ? "college" : "professional",
@@ -248,6 +141,8 @@ export default function JoinForm({ club }) {
     current_city: "",
     current_country: "",
     athlete_email: "",
+    phone_code: "+1",
+    phone_number: "",
     report_language: "English",
     club_joining: club.type === "pro" ? club.name : "",
     training_ground_address: "",
@@ -255,7 +150,7 @@ export default function JoinForm({ club }) {
     university: isCollege ? club.name : "",
     major: "",
     has_scholarship: false,
-    is_part_of_team: false,
+    is_part_of_team: true,
     on_campus_housing: false,
     semester_start: "",
     is_international: true,
@@ -270,6 +165,7 @@ export default function JoinForm({ club }) {
     guest_visit_frequency: "",
     guest_hotel_budget: "",
     destination_city: "",
+    destination_state: "",
     destination_country: "",
     move_date: "",
     budget_usd: "",
@@ -294,6 +190,15 @@ export default function JoinForm({ club }) {
     license_country: "",
     needs_private_healthcare: false,
     medical_specialists: "",
+    previous_relocation: "",
+    climate_preference: "",
+    training_schedule: "",
+    cooking_habits: "",
+    student_level: "",
+    study_style: "",
+    work_plans: "",
+    social_goals: [],
+    biggest_concerns: "",
     additional_notes: "",
   });
 
@@ -365,32 +270,8 @@ export default function JoinForm({ club }) {
   const isLight = textColor === "#0f0f0f";
   const bg = `linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(0,0,0,0.18) 100%), ${primary}`;
 
-  // Shared language question — first step in both flows
-  const languageQuestion = {
-    id: "language",
-    question: "What language do you prefer?",
-    hint: translating ? t("Translating...") : t("We'll switch the whole form to your language right away."),
-    valid: !translating,
-    content: (
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-wrap gap-2">
-          {GUIDE_LANGUAGES.map((l) => (
-            <Chip key={l} label={l} selected={formLang === l} onClick={() => changeLanguage(l)} />
-          ))}
-        </div>
-        {translating && (
-          <div className="flex items-center gap-2 mt-2">
-            <div className="w-4 h-4 border-2 border-current/30 border-t-current rounded-full animate-spin shrink-0" style={{ borderTopColor: "currentColor" }} />
-            <span className="text-sm opacity-60">{t("Translating...")}</span>
-          </div>
-        )}
-      </div>
-    ),
-  };
-
   // ── COLLEGE QUESTIONS ──
   const collegeQuestions = [
-    languageQuestion,
     {
       id: "name",
       question: t("What's your name?"),
@@ -402,13 +283,6 @@ export default function JoinForm({ club }) {
             <input autoFocus className={iClass} value={form.athlete_name}
               onChange={(e) => set("athlete_name", e.target.value)}
               placeholder="Carlos Mendoza"
-              onKeyDown={(e) => e.key === "Enter" && form.athlete_name && goNext()} />
-          </div>
-          <div>
-            <Label>{t("Age (optional)")}</Label>
-            <input className={iClass} type="number" min={15} max={30}
-              value={form.athlete_age} onChange={(e) => set("athlete_age", e.target.value)}
-              placeholder="19"
               onKeyDown={(e) => e.key === "Enter" && form.athlete_name && goNext()} />
           </div>
         </div>
@@ -428,28 +302,13 @@ export default function JoinForm({ club }) {
               {COUNTRIES.map((c) => <option key={c} className="bg-zinc-900">{c}</option>)}
             </select>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label>{t("Current city (optional)")}</Label>
-              <input className={iClass} value={form.current_city}
-                onChange={(e) => set("current_city", e.target.value)} placeholder="Bogotá" />
-            </div>
-            <div>
-              <Label>{t("Current country (optional)")}</Label>
-              <select className={sClass} value={form.current_country}
-                onChange={(e) => set("current_country", e.target.value)}>
-                <option value="">Select...</option>
-                {COUNTRIES.map((c) => <option key={c} className="bg-zinc-900">{c}</option>)}
-              </select>
-            </div>
-          </div>
         </div>
       ),
     },
     {
       id: "sport",
       question: t("What sport do you play?"),
-      valid: true,
+      valid: !!form.sport,
       content: (
         <div>
           <Label>{t("Pick your sport")}</Label>
@@ -486,11 +345,16 @@ export default function JoinForm({ club }) {
             <input className={iClass} value={form.university}
               onChange={(e) => set("university", e.target.value)} placeholder="University of Miami" />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div>
               <Label>{t("Campus city")}</Label>
               <input className={iClass} value={form.destination_city}
-                onChange={(e) => set("destination_city", e.target.value)} placeholder="Miami" />
+                onChange={(e) => set("destination_city", e.target.value)} placeholder="Pueblo" />
+            </div>
+            <div>
+              <Label>{t("State")}</Label>
+              <input className={iClass} value={form.destination_state}
+                onChange={(e) => set("destination_state", e.target.value)} placeholder="CO" />
             </div>
             <div>
               <Label>{t("Country")}</Label>
@@ -507,25 +371,59 @@ export default function JoinForm({ club }) {
     {
       id: "studies",
       question: t("Tell us about your studies."),
-      valid: true,
+      valid: !!form.student_level && !!form.semester_start && !!form.budget_usd,
       content: (
         <div className="flex flex-col gap-6">
           <div>
-            <Label>{t("Major / Field of study (optional)")}</Label>
-            <input className={iClass} value={form.major}
-              onChange={(e) => set("major", e.target.value)} placeholder="Business Administration" />
+            <Label>{t("Student level")}</Label>
+            <div className="flex flex-wrap gap-2">
+              {["Freshman", "Sophomore", "Junior", "Senior", "Graduate", "Transfer"].map((l) => (
+                <Chip key={l} label={t(l)} selected={form.student_level === l} onClick={() => set("student_level", l)} />
+              ))}
+            </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label>{t("Semester start (optional)")}</Label>
+              <Label>{t("Semester start")}</Label>
               <input className={iClass} type="date" value={form.semester_start}
                 onChange={(e) => set("semester_start", e.target.value)} />
             </div>
             <div>
-              <Label>{t("Monthly budget in USD (optional)")}</Label>
+              <Label>{t("Monthly budget in USD")}</Label>
               <input className={iClass} type="number" value={form.budget_usd}
                 onChange={(e) => set("budget_usd", e.target.value)} placeholder="1500" />
             </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "routine",
+      question: t("Your routine and habits."),
+      valid: !!form.study_style && !!form.work_plans,
+      content: (
+        <div className="flex flex-col gap-6">
+          <div>
+            <Label>{t("How do you prefer to study?")}</Label>
+            <div className="flex flex-wrap gap-2">
+              {["Library", "Coffee shops", "At home", "Flexible / wherever"].map((s) => (
+                <Chip key={s} label={t(s)} selected={form.study_style === s} onClick={() => set("study_style", s)} />
+              ))}
+            </div>
+          </div>
+          <div>
+            <Label>{t("Work while studying?")}</Label>
+            <div className="flex flex-wrap gap-2">
+              {["No job — studies only", "Work-study on campus", "Part-time job", "Covered by scholarship"].map((w) => (
+                <Chip key={w} label={t(w)} selected={form.work_plans === w} onClick={() => set("work_plans", w)} />
+              ))}
+            </div>
+          </div>
+          <div>
+            <Label>{t("Your team's training schedule (optional)")}</Label>
+            <input className={iClass} value={form.training_schedule}
+              onChange={(e) => set("training_schedule", e.target.value)}
+              placeholder="e.g. Morning practice 6–8am, afternoon 3–5pm" />
           </div>
         </div>
       ),
@@ -538,7 +436,6 @@ export default function JoinForm({ club }) {
         <div className="flex flex-col gap-5">
           {[
             { field: "has_scholarship", label: t("I have an athletic scholarship") },
-            { field: "is_part_of_team", label: t("I'm part of a team") },
             { field: "on_campus_housing", label: t("I'll be living on campus (dorms)") },
             { field: "is_international", label: t("I'm coming from outside the US") },
           ].map(({ field, label }) => (
@@ -606,14 +503,6 @@ export default function JoinForm({ club }) {
               ))}
             </div>
           </div>
-          <div>
-            <Label>{t("Fitness preferences")}</Label>
-            <div className="flex flex-wrap gap-2">
-              {FITNESS.map((f) => (
-                <Chip key={f} label={t(f)} selected={form.fitness.includes(f)} onClick={() => toggle("fitness", f)} />
-              ))}
-            </div>
-          </div>
         </div>
       ),
     },
@@ -632,6 +521,14 @@ export default function JoinForm({ club }) {
             </div>
           </div>
           <div>
+            <Label>{t("What are your social goals?")}</Label>
+            <div className="flex flex-wrap gap-2">
+              {["Making new friends", "Meeting people romantically", "Professional networking", "Exploring the city", "Staying focused on studies", "Building a close friend group"].map((g) => (
+                <Chip key={g} label={t(g)} selected={form.social_goals.includes(g)} onClick={() => toggle("social_goals", g)} />
+              ))}
+            </div>
+          </div>
+          <div>
             <Label>{t("Religious or cultural needs (optional)")}</Label>
             <input className={iClass} value={form.religious_needs}
               onChange={(e) => set("religious_needs", e.target.value)}
@@ -644,7 +541,7 @@ export default function JoinForm({ club }) {
       id: "final",
       question: t("Almost there."),
       hint: t("Last few things and your guide is on its way."),
-      valid: consented,
+      valid: consented && form.phone_number.trim().length > 0,
       isLast: true,
       content: null,
     },
@@ -652,7 +549,6 @@ export default function JoinForm({ club }) {
 
   // ── PRO QUESTIONS ──
   const proQuestions = [
-    languageQuestion,
     {
       id: "name",
       question: t("What's your name?"),
@@ -664,13 +560,6 @@ export default function JoinForm({ club }) {
             <input autoFocus className={iClass} value={form.athlete_name}
               onChange={(e) => set("athlete_name", e.target.value)}
               placeholder="Gabriel Santos"
-              onKeyDown={(e) => e.key === "Enter" && form.athlete_name && goNext()} />
-          </div>
-          <div>
-            <Label>{t("Age (optional)")}</Label>
-            <input className={iClass} type="number" min={16} max={50}
-              value={form.athlete_age} onChange={(e) => set("athlete_age", e.target.value)}
-              placeholder="24"
               onKeyDown={(e) => e.key === "Enter" && form.athlete_name && goNext()} />
           </div>
         </div>
@@ -689,21 +578,6 @@ export default function JoinForm({ club }) {
               <option value="">Select country...</option>
               {COUNTRIES.map((c) => <option key={c} className="bg-zinc-900">{c}</option>)}
             </select>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label>Current city (optional)</Label>
-              <input className={iClass} value={form.current_city}
-                onChange={(e) => set("current_city", e.target.value)} placeholder="Lisbon" />
-            </div>
-            <div>
-              <Label>Current country (optional)</Label>
-              <select className={sClass} value={form.current_country}
-                onChange={(e) => set("current_country", e.target.value)}>
-                <option value="">Select...</option>
-                {COUNTRIES.map((c) => <option key={c} className="bg-zinc-900">{c}</option>)}
-              </select>
-            </div>
           </div>
         </div>
       ),
@@ -737,7 +611,7 @@ export default function JoinForm({ club }) {
     {
       id: "club",
       question: t("Your new club."),
-      valid: !!form.destination_city && !!form.destination_country,
+      valid: !!form.destination_city && !!form.destination_country && !!form.move_date,
       content: (
         <div className="flex flex-col gap-6">
           <div>
@@ -768,7 +642,7 @@ export default function JoinForm({ club }) {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label>{t("Move date (optional)")}</Label>
+              <Label>{t("Move date")}</Label>
               <input className={iClass} type="date" value={form.move_date}
                 onChange={(e) => set("move_date", e.target.value)} />
             </div>
@@ -784,7 +658,7 @@ export default function JoinForm({ club }) {
     {
       id: "housing",
       question: t("What kind of home are you looking for?"),
-      valid: true,
+      valid: !!form.budget_usd,
       content: (
         <div className="flex flex-col gap-6">
           <div>
@@ -802,7 +676,7 @@ export default function JoinForm({ club }) {
                 onChange={(e) => set("min_bedrooms", e.target.value)} placeholder="3" />
             </div>
             <div>
-              <Label>{t("Monthly budget USD (optional)")}</Label>
+              <Label>{t("Monthly budget USD")}</Label>
               <input className={iClass} type="number" value={form.budget_usd}
                 onChange={(e) => set("budget_usd", e.target.value)} placeholder="5000" />
             </div>
@@ -851,15 +725,6 @@ export default function JoinForm({ club }) {
                 <input className={iClass} value={form.children_ages}
                   onChange={(e) => set("children_ages", e.target.value)} placeholder="4, 7, 11" />
               </div>
-              <div>
-                <Label>{t("Family weekend activities (optional)")}</Label>
-                <div className="flex flex-wrap gap-2">
-                  {FAMILY_ACTIVITIES.map((a) => (
-                    <Chip key={a} label={a} selected={form.family_activities.includes(a)}
-                      onClick={() => toggle("family_activities", a)} />
-                  ))}
-                </div>
-              </div>
             </>
           )}
           <div>
@@ -874,26 +739,6 @@ export default function JoinForm({ club }) {
               <Label>{t("Tell us about your pet")}</Label>
               <input className={iClass} value={form.pet_details}
                 onChange={(e) => set("pet_details", e.target.value)} placeholder="Small dog, labrador..." />
-            </div>
-          )}
-          <div>
-            <Label>{t("How often do family or friends visit from back home?")}</Label>
-            <div className="flex flex-wrap gap-2">
-              {["Rarely", "A few times a year", "Monthly", "Very often"].map((f) => (
-                <Chip key={f} label={f} selected={form.guest_visit_frequency === f}
-                  onClick={() => set("guest_visit_frequency", f)} />
-              ))}
-            </div>
-          </div>
-          {form.guest_visit_frequency && form.guest_visit_frequency !== "Rarely" && (
-            <div>
-              <Label>{t("Preferred hotel budget for guests")}</Label>
-              <div className="flex flex-wrap gap-2">
-                {["Budget ($60–100/night)", "Mid-range ($100–200/night)", "Upscale ($200+/night)"].map((b) => (
-                  <Chip key={b} label={b} selected={form.guest_hotel_budget === b}
-                    onClick={() => set("guest_hotel_budget", b)} />
-                ))}
-              </div>
             </div>
           )}
         </div>
@@ -914,27 +759,10 @@ export default function JoinForm({ club }) {
             </div>
           </div>
           <div>
-            <Label>{t("Fitness")}</Label>
-            <div className="flex flex-wrap gap-2">
-              {FITNESS.map((f) => (
-                <Chip key={f} label={t(f)} selected={form.fitness.includes(f)} onClick={() => toggle("fitness", f)} />
-              ))}
-            </div>
-          </div>
-          <div>
             <Label>{t("Hobbies")}</Label>
             <div className="flex flex-wrap gap-2">
               {HOBBIES.map((h) => (
                 <Chip key={h} label={h} selected={form.hobbies.includes(h)} onClick={() => toggle("hobbies", h)} />
-              ))}
-            </div>
-          </div>
-          <div>
-            <Label>{t("Nightlife interest (optional)")}</Label>
-            <div className="flex flex-wrap gap-2">
-              {["Not interested", "Occasional nights out", "Active nightlife"].map((n) => (
-                <Chip key={n} label={n} selected={form.nightlife_interest === n}
-                  onClick={() => set("nightlife_interest", n)} />
               ))}
             </div>
           </div>
@@ -1001,7 +829,7 @@ export default function JoinForm({ club }) {
       id: "final",
       question: t("Almost there."),
       hint: t("Last few things and your guide is on its way."),
-      valid: consented,
+      valid: consented && form.phone_number.trim().length > 0,
       isLast: true,
       content: null,
     },
@@ -1040,10 +868,14 @@ export default function JoinForm({ club }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ...form,
+        destination_city: form.destination_state
+          ? `${form.destination_city}, ${form.destination_state}`
+          : form.destination_city,
         budget_usd: form.budget_usd ? parseInt(form.budget_usd) : null,
         children_ages: form.children_ages
           ? form.children_ages.split(",").map((a) => parseInt(a.trim())).filter(Boolean)
           : [],
+        athlete_phone: form.phone_number ? `${form.phone_code} ${form.phone_number}` : null,
       }),
     });
 
@@ -1114,10 +946,10 @@ export default function JoinForm({ club }) {
         <div className="fade-up text-center max-w-sm w-full">
           {club.logo_url
             ? <img src={club.logo_url} alt={club.name} className="w-14 h-14 object-contain mx-auto mb-6 opacity-90" />
-            : <img src="/settlyou-logo.png" alt="Settl" className="h-8 object-contain mx-auto mb-6 opacity-80" />
+            : <img src="/settlyou-logo-white.png" alt="Settl" className="h-7 object-contain mx-auto mb-6 opacity-90" />
           }
           <h2 className="text-2xl font-bold text-white mb-2">{t("Enter your PIN")}</h2>
-          <p className="text-white/40 text-sm mb-8">{t("Your club sent you a 4-digit PIN with this link.")}</p>
+          <p className="text-white/40 text-sm mb-8">{t("Your institution sent you a 4-digit PIN with this link.")}</p>
           <input
             type="text"
             inputMode="numeric"
@@ -1145,6 +977,33 @@ export default function JoinForm({ club }) {
     );
   }
 
+  // ── WELCOME ──
+  if (!welcomeSeen) {
+    return (
+      <div className="settl-form min-h-screen flex flex-col items-center justify-center px-6" style={{ background: bg }}>
+        <style>{formCSS}</style>
+        <div className="fade-up text-center max-w-sm w-full flex flex-col items-center">
+          {club.logo_url
+            ? <img src={club.logo_url} alt={club.name} className="w-16 h-16 object-contain mx-auto mb-6" />
+            : <img src="/settlyou-logo-white.png" alt="Settl" className="h-8 object-contain mx-auto mb-6 opacity-90" />
+          }
+          <h1 className="text-3xl font-bold text-white mb-3">Welcome to {club.name}</h1>
+          <p className="text-white/50 text-sm leading-relaxed mb-8">
+            {t("We'd love to get to know you a little — it takes under 5 minutes and helps us build a personalized guide with the best recommendations for your new city.")}
+          </p>
+          <button
+            type="button"
+            onClick={() => setWelcomeSeen(true)}
+            className="club-btn w-full py-3.5 rounded-xl text-sm font-semibold transition-all"
+          >
+            {t("Let's get started →")}
+          </button>
+          <p className="text-white/25 text-xs mt-5">{t("Powered by Settlyou")}</p>
+        </div>
+      </div>
+    );
+  }
+
   // ── SUCCESS ──
   if (submitted) {
     if (typeof window !== "undefined") {
@@ -1161,7 +1020,7 @@ export default function JoinForm({ club }) {
           </div>
           <h2 className="text-3xl font-bold text-white mb-3">{t("You're all set!")}</h2>
           <p className="text-white/50 leading-relaxed">
-            {t("Your personalized relocation guide is being built.")}{form.athlete_email ? ` ${t("We'll send it to your email once it's ready.")}` : ` ${t("Your club will share it with you once it's ready.")}`}
+            {t("Your personalized relocation guide is being built.")}{form.athlete_email ? ` ${t("We'll send it to your email once it's ready.")}` : ` ${t("Your institution will share it with you once it's ready.")}`}
           </p>
         </div>
       </div>
@@ -1186,7 +1045,7 @@ export default function JoinForm({ club }) {
         <div className="flex items-center gap-2">
           {club.logo_url
             ? <img src={club.logo_url} alt={club.name} className="w-6 h-6 object-contain opacity-80" />
-            : <img src="/settlyou-logo.png" alt="Settl" className="h-5 object-contain opacity-70" />
+            : <img src="/settlyou-logo-white.png" alt="Settl" className="h-5 object-contain opacity-80" />
           }
           <span className="text-sm text-white/40 font-medium">{club.name}</span>
         </div>
@@ -1207,7 +1066,7 @@ export default function JoinForm({ club }) {
         {current.isLast ? (
           <div className="flex flex-col gap-6">
             <div>
-              <Label>{t("Your email address — we'll send your guide here")}</Label>
+              <Label>{t("Your email address — for email delivery")}</Label>
               <input
                 className={iClass}
                 type="email"
@@ -1217,11 +1076,25 @@ export default function JoinForm({ club }) {
               />
             </div>
             <div>
-              <Label>{t("What language should your guide be written in?")}</Label>
-              <select className={sClass} value={form.report_language}
-                onChange={(e) => set("report_language", e.target.value)}>
-                {GUIDE_LANGUAGES.map((l) => <option key={l} className="bg-zinc-900">{l}</option>)}
-              </select>
+              <Label>{t("Phone number — for WhatsApp or SMS delivery")}</Label>
+              <div className="flex gap-3">
+                <select
+                  value={form.phone_code}
+                  onChange={(e) => set("phone_code", e.target.value)}
+                  className="shrink-0 w-32 bg-white/10 border border-white/20 rounded-xl outline-none text-white text-base py-3 px-3 appearance-none"
+                >
+                  {DIAL_CODES.map((d) => (
+                    <option key={d.code} value={d.code} className="bg-zinc-900">{d.label}</option>
+                  ))}
+                </select>
+                <input
+                  className="flex-1 min-w-0 bg-transparent border-b-2 border-white/40 outline-none text-white text-xl py-3 placeholder-white/30"
+                  type="text"
+                  value={form.phone_number}
+                  onChange={(e) => set("phone_number", e.target.value)}
+                  placeholder="555 123 4567"
+                />
+              </div>
             </div>
             <div>
               <Label>{t("Anything else we should know? (optional)")}</Label>
@@ -1244,6 +1117,7 @@ export default function JoinForm({ club }) {
               <span className="text-white/50 text-sm leading-relaxed">
                 {t("I agree that my information will be used to generate my relocation guide and shared with")} {club.name}.{" "}
                 <a href="/privacy" className="text-brand-400 hover:underline">{t("Privacy policy")}</a>
+                <span className="block text-white/30 text-xs mt-1">Data handled in accordance with FERPA institutional disclosure policies.</span>
               </span>
             </label>
             {error && (

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { createBrowserClient } from "@supabase/ssr";
 
-export default function AccountForm({ email, clubName }) {
+export default function AccountForm({ email, clubName, isCoach = false }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
@@ -18,6 +18,7 @@ export default function AccountForm({ email, clubName }) {
     setError(null);
     setSuccess(false);
 
+    const currentPassword = e.target.current_password.value;
     const password = e.target.password.value;
     const confirm = e.target.confirm.value;
 
@@ -31,6 +32,15 @@ export default function AccountForm({ email, clubName }) {
     }
 
     setLoading(true);
+
+    // Verify current password before changing
+    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password: currentPassword });
+    if (signInError) {
+      setError("Current password is incorrect.");
+      setLoading(false);
+      return;
+    }
+
     const { error: updateError } = await supabase.auth.updateUser({ password });
     setLoading(false);
 
@@ -59,9 +69,10 @@ export default function AccountForm({ email, clubName }) {
         </div>
         <p className="text-xs text-muted mt-4">
           Need to update your email?{" "}
-          <a href="mailto:hello@settlyou.com" className="text-brand-600 hover:underline">
-            Contact us
-          </a>
+          {isCoach
+            ? "Contact your Athletics Director — they can update it from the Coaches tab."
+            : <a href="mailto:hello@settlyou.com" className="text-brand-600 hover:underline">Contact us</a>
+          }
         </p>
       </div>
 
@@ -81,6 +92,17 @@ export default function AccountForm({ email, clubName }) {
         )}
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1">
+            <label htmlFor="current_password" className="text-sm font-medium text-foreground">Current password</label>
+            <input
+              id="current_password"
+              name="current_password"
+              type="password"
+              required
+              className="border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white"
+              placeholder="••••••••"
+            />
+          </div>
           <div className="flex flex-col gap-1">
             <label htmlFor="password" className="text-sm font-medium text-foreground">New password</label>
             <input

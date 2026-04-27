@@ -7,7 +7,7 @@ const PLANS = ["Starter", "Club", "Elite", "Program", "Department", "University"
 const COST_CATEGORIES = ["Claude API", "Vercel", "Supabase", "Domain", "Design", "Marketing", "Other"];
 
 const STATUS_STYLES = {
-  paid: "bg-green-100 text-green-800",
+  paid:    "bg-green-100 text-green-800",
   pending: "bg-yellow-100 text-yellow-800",
   overdue: "bg-red-100 text-red-700",
 };
@@ -22,6 +22,43 @@ const emptyCost = () => ({
   billing_date: new Date().toISOString().slice(0, 10), notes: "", record_type: "cost",
 });
 
+function InlineStatusSelect({ recordId, currentStatus }) {
+  const [status, setStatus] = useState(currentStatus);
+  const [saving, setSaving] = useState(false);
+  const router = useRouter();
+
+  async function handleChange(e) {
+    const next = e.target.value;
+    setSaving(true);
+    await fetch(`/api/admin/billing/${recordId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: next }),
+    });
+    setStatus(next);
+    setSaving(false);
+    router.refresh();
+  }
+
+  return (
+    <div className="relative inline-flex">
+      <select
+        value={status}
+        onChange={handleChange}
+        disabled={saving}
+        className={`appearance-none text-xs font-medium px-2.5 py-1 rounded-full pr-6 cursor-pointer border-0 outline-none focus:ring-2 focus:ring-brand-500 disabled:opacity-50 ${STATUS_STYLES[status] ?? "bg-gray-100 text-gray-600"}`}
+      >
+        <option value="paid">Paid</option>
+        <option value="pending">Pending</option>
+        <option value="overdue">Overdue</option>
+      </select>
+      <svg className="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 opacity-50" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+      </svg>
+    </div>
+  );
+}
+
 export default function BillingClient({ billing, clubs }) {
   const router = useRouter();
   const [tab, setTab] = useState("revenue");
@@ -29,6 +66,8 @@ export default function BillingClient({ billing, clubs }) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
   const [form, setForm] = useState(emptyRevenue());
+  const [deleteId, setDeleteId] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   function set(field, value) { setForm((f) => ({ ...f, [field]: value })); }
 
@@ -63,30 +102,56 @@ export default function BillingClient({ billing, clubs }) {
     setSaving(false);
   }
 
-  async function handleDelete(id) {
-    if (!confirm("Delete this record?")) return;
+  async function handleDelete() {
+    setDeleting(true);
     await fetch("/api/admin/billing", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }),
+      body: JSON.stringify({ id: deleteId }),
     });
+    setDeleting(false);
+    setDeleteId(null);
     router.refresh();
   }
 
   const revenue = billing.filter((b) => (b.record_type ?? "revenue") === "revenue");
-  const costs = billing.filter((b) => b.record_type === "cost");
+  const costs   = billing.filter((b) => b.record_type === "cost");
 
-  const totalRevenue = revenue.reduce((s, b) => s + (b.amount_usd ?? 0), 0);
-  const paidRevenue = revenue.filter((b) => b.status === "paid").reduce((s, b) => s + (b.amount_usd ?? 0), 0);
+  const totalRevenue   = revenue.reduce((s, b) => s + (b.amount_usd ?? 0), 0);
+  const paidRevenue    = revenue.filter((b) => b.status === "paid").reduce((s, b) => s + (b.amount_usd ?? 0), 0);
   const pendingRevenue = revenue.filter((b) => b.status === "pending").reduce((s, b) => s + (b.amount_usd ?? 0), 0);
   const overdueRevenue = revenue.filter((b) => b.status === "overdue").reduce((s, b) => s + (b.amount_usd ?? 0), 0);
-  const totalCosts = costs.reduce((s, b) => s + (b.amount_usd ?? 0), 0);
-  const netProfit = paidRevenue - totalCosts;
+  const totalCosts     = costs.reduce((s, b) => s + (b.amount_usd ?? 0), 0);
+  const netProfit      = paidRevenue - totalCosts;
+
+  // MRR: paid revenue in the last 30 days
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const mrr = revenue
+    .filter((b) => b.status === "paid" && b.billing_date >= thirtyDaysAgo)
+    .reduce((s, b) => s + (b.amount_usd ?? 0), 0);
+  const arr = mrr * 12;
 
   const inputClass = "border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent bg-white w-full";
 
   return (
     <div className="p-8 max-w-5xl">
+      {deleteId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setDeleteId(null)} />
+          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6">
+            <h3 className="text-base font-bold text-foreground mb-2">Delete record?</h3>
+            <p className="text-sm text-muted leading-relaxed mb-6">This will permanently remove this record. This cannot be undone.</p>
+            <div className="flex gap-3">
+              <button onClick={() => setDeleteId(null)} className="flex-1 py-2.5 rounded-lg text-sm font-semibold border border-border text-foreground hover:bg-surface transition-colors">
+                Cancel
+              </button>
+              <button onClick={handleDelete} disabled={deleting} className="flex-1 py-2.5 rounded-lg text-sm font-semibold bg-red-600 text-white hover:bg-red-700 transition-colors disabled:opacity-50">
+                {deleting ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Billing</h1>
@@ -108,8 +173,8 @@ export default function BillingClient({ billing, clubs }) {
         </div>
       </div>
 
-      {/* Summary cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+      {/* Summary cards — row 1 */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         <div className="bg-white rounded-xl border border-border p-5">
           <p className="text-xs font-medium text-muted uppercase tracking-widest mb-1">Paid revenue</p>
           <p className="text-2xl font-bold text-green-700">${paidRevenue.toLocaleString()}</p>
@@ -124,7 +189,14 @@ export default function BillingClient({ billing, clubs }) {
             {netProfit >= 0 ? "+" : ""}${netProfit.toLocaleString()}
           </p>
         </div>
+        <div className="bg-white rounded-xl border border-border p-5">
+          <p className="text-xs font-medium text-muted uppercase tracking-widest mb-1">MRR</p>
+          <p className="text-2xl font-bold text-brand-700">${mrr.toLocaleString()}</p>
+          <p className="text-xs text-muted mt-1">ARR ${arr.toLocaleString()}</p>
+        </div>
       </div>
+
+      {/* Summary cards — row 2 */}
       <div className="grid grid-cols-3 gap-4 mb-8">
         <div className="bg-white rounded-xl border border-border p-5">
           <p className="text-xs font-medium text-muted uppercase tracking-widest mb-1">Total revenue</p>
@@ -150,15 +222,15 @@ export default function BillingClient({ billing, clubs }) {
             {form.record_type === "revenue" ? (
               <>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-sm font-medium text-foreground">Club (optional)</label>
+                  <label className="text-sm font-medium text-foreground">Institution (optional)</label>
                   <select className={inputClass} value={form.club_id} onChange={(e) => handleClubSelect(e.target.value)}>
-                    <option value="">Select a club…</option>
+                    <option value="">Select an institution…</option>
                     {clubs.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
                   </select>
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <label className="text-sm font-medium text-foreground">Client name <span className="text-muted font-normal">(required)</span></label>
-                  <input className={inputClass} placeholder="e.g. Real Madrid CF" value={form.club_name} onChange={(e) => set("club_name", e.target.value)} required />
+                  <input className={inputClass} placeholder="e.g. Stanford Athletics" value={form.club_name} onChange={(e) => set("club_name", e.target.value)} required />
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <label className="text-sm font-medium text-foreground">Plan</label>
@@ -251,21 +323,19 @@ export default function BillingClient({ billing, clubs }) {
               </thead>
               <tbody className="divide-y divide-border">
                 {revenue.map((b) => (
-                  <tr key={b.id} className="hover:bg-surface transition-colors">
+                  <tr key={b.id} className={`hover:bg-surface transition-colors ${b.status === "overdue" ? "bg-red-50/40" : ""}`}>
                     <td className="px-4 py-3 font-medium text-foreground">{b.club_name}</td>
                     <td className="px-4 py-3 text-muted">{b.plan ?? "—"}</td>
                     <td className="px-4 py-3 font-semibold text-foreground">${b.amount_usd?.toLocaleString()}</td>
                     <td className="px-4 py-3">
-                      <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium capitalize ${STATUS_STYLES[b.status] ?? "bg-gray-100 text-gray-600"}`}>
-                        {b.status}
-                      </span>
+                      <InlineStatusSelect recordId={b.id} currentStatus={b.status} />
                     </td>
                     <td className="px-4 py-3 text-muted">
                       {new Date(b.billing_date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                     </td>
                     <td className="px-4 py-3 text-muted text-xs max-w-[180px] truncate">{b.notes ?? "—"}</td>
                     <td className="px-4 py-3 text-right">
-                      <button onClick={() => handleDelete(b.id)} className="text-xs font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-red-600 hover:border-red-200 transition-colors">Delete</button>
+                      <button onClick={() => setDeleteId(b.id)} className="text-xs font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-red-600 hover:border-red-200 transition-colors">Delete</button>
                     </td>
                   </tr>
                 ))}
@@ -307,7 +377,7 @@ export default function BillingClient({ billing, clubs }) {
                     </td>
                     <td className="px-4 py-3 text-muted text-xs max-w-[180px] truncate">{b.notes ?? "—"}</td>
                     <td className="px-4 py-3 text-right">
-                      <button onClick={() => handleDelete(b.id)} className="text-xs font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-red-600 hover:border-red-200 transition-colors">Delete</button>
+                      <button onClick={() => setDeleteId(b.id)} className="text-xs font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-red-600 hover:border-red-200 transition-colors">Delete</button>
                     </td>
                   </tr>
                 ))}

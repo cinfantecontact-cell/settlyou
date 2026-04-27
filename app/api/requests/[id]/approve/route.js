@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendAthleteReportReady } from "@/lib/email/send";
+import { sendAthleteUploadLink } from "@/lib/whatsapp/send";
 
 export async function POST(request, { params }) {
   const supabase = await createClient();
@@ -18,7 +19,7 @@ export async function POST(request, { params }) {
   // Fetch request + club + club admin email
   const { data: req } = await admin
     .from("requests")
-    .select("athlete_name, athlete_email, athlete_link_token, club_id, clubs(name)")
+    .select("athlete_name, athlete_email, athlete_link_token, athlete_phone, upload_token, club_id, sport, clubs(name)")
     .eq("id", id)
     .single();
 
@@ -56,6 +57,21 @@ export async function POST(request, { params }) {
     }
   }
 
+  // Send WhatsApp with upload link
+  if (req?.athlete_phone && req?.upload_token) {
+    try {
+      await sendAthleteUploadLink({
+        athleteName: req.athlete_name || "",
+        athletePhone: req.athlete_phone,
+        uploadToken: req.upload_token,
+        institutionName: req.clubs?.name || "",
+        sport: req.sport || "",
+      });
+    } catch (e) {
+      console.error("Failed to send WhatsApp:", e.message);
+    }
+  }
+
   // Log in-app notification for club
   if (req?.club_id) {
     await admin.from("events").insert({
@@ -66,6 +82,7 @@ export async function POST(request, { params }) {
         athlete_name: req.athlete_name || "Athlete",
         athlete_email: req.athlete_email || null,
         report_token: req.athlete_link_token,
+        sport: req.sport || null,
       },
     });
   }

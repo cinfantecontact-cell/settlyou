@@ -21,9 +21,21 @@ const COUNTRIES = [
 ];
 
 const SPORTS = [
-  "Soccer / Football", "Basketball", "Baseball", "American Football", "Tennis",
-  "Swimming", "Track & Field", "Volleyball", "Golf", "Wrestling",
-  "Gymnastics", "Rowing", "Cross Country", "Lacrosse", "Other",
+  "Men's Soccer", "Women's Soccer",
+  "Men's Basketball", "Women's Basketball",
+  "Baseball", "Softball",
+  "American Football",
+  "Men's Tennis", "Women's Tennis",
+  "Men's Swimming", "Women's Swimming",
+  "Men's Track & Field", "Women's Track & Field",
+  "Men's Volleyball", "Women's Volleyball",
+  "Men's Golf", "Women's Golf",
+  "Wrestling",
+  "Men's Gymnastics", "Women's Gymnastics",
+  "Men's Rowing", "Women's Rowing",
+  "Men's Cross Country", "Women's Cross Country",
+  "Men's Lacrosse", "Women's Lacrosse",
+  "Other",
 ];
 
 const HOUSING_TYPES = ["Apartment", "House", "Villa", "Penthouse", "No preference"];
@@ -37,6 +49,38 @@ const NEIGHBORHOOD = ["City center", "Suburbs", "Gated community", "Near trainin
 const SCHOOL_TYPE = ["International", "Bilingual", "Local / Public", "Religious", "No preference"];
 const CURRICULUM = ["IB (International Baccalaureate)", "American", "British", "French", "Local curriculum", "No preference"];
 const CAR_TYPE = ["Economy", "SUV", "Luxury sedan", "Luxury SUV", "Van / Family", "No preference"];
+const CLIMATE_PREF = ["Used to tropical / hot", "Used to cold / snow", "Used to temperate / mild", "No strong preference"];
+const COOKING_HABITS = ["Cook daily", "Meal prep weekly", "Mix of cooking and eating out", "Eat out mostly"];
+const RELOCATION_EXP = ["First time abroad", "Relocated once before", "Experienced — multiple relocations"];
+const TRAINING_SCHEDULE = ["Morning (before noon)", "Afternoon", "Evening", "Varies / mixed"];
+
+const DIAL_CODES = [
+  { code: "+1",   label: "+1 (US/CA)" },
+  { code: "+52",  label: "+52 (MX)" },
+  { code: "+54",  label: "+54 (AR)" },
+  { code: "+55",  label: "+55 (BR)" },
+  { code: "+56",  label: "+56 (CL)" },
+  { code: "+57",  label: "+57 (CO)" },
+  { code: "+58",  label: "+58 (VE)" },
+  { code: "+34",  label: "+34 (ES)" },
+  { code: "+44",  label: "+44 (UK)" },
+  { code: "+49",  label: "+49 (DE)" },
+  { code: "+33",  label: "+33 (FR)" },
+  { code: "+39",  label: "+39 (IT)" },
+  { code: "+351", label: "+351 (PT)" },
+  { code: "+31",  label: "+31 (NL)" },
+  { code: "+32",  label: "+32 (BE)" },
+  { code: "+46",  label: "+46 (SE)" },
+  { code: "+47",  label: "+47 (NO)" },
+  { code: "+45",  label: "+45 (DK)" },
+  { code: "+90",  label: "+90 (TR)" },
+  { code: "+966", label: "+966 (SA)" },
+  { code: "+971", label: "+971 (UAE)" },
+  { code: "+81",  label: "+81 (JP)" },
+  { code: "+82",  label: "+82 (KR)" },
+  { code: "+61",  label: "+61 (AU)" },
+  { code: "+7",   label: "+7 (RU)" },
+];
 
 const inputClass = "border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition bg-white w-full";
 const selectClass = `${inputClass}`;
@@ -111,6 +155,8 @@ export default function NewRequestPage() {
     athlete_name: "",
     athlete_age: "",
     athlete_nationality: "",
+    phone_code: "+1",
+    phone_number: "",
     athlete_languages: [],
     sport: "",
     current_city: "",
@@ -126,6 +172,8 @@ export default function NewRequestPage() {
     on_campus_housing: false,
     semester_start: "",
     is_international: true,
+    visa_type: "",
+    is_part_of_team: true,
     // Family (pro)
     family_size: 1,
     children_ages: "",
@@ -171,6 +219,12 @@ export default function NewRequestPage() {
     // Healthcare
     needs_private_healthcare: false,
     medical_specialists: "",
+    // New personalization fields
+    previous_relocation: "",
+    climate_preference: "",
+    training_schedule: "",
+    cooking_habits: "",
+    biggest_concerns: "",
     // Service
     service_tier: "basic",
     report_language: "English",
@@ -212,6 +266,7 @@ export default function NewRequestPage() {
         children_ages: form.children_ages
           ? form.children_ages.split(",").map((a) => parseInt(a.trim())).filter(Boolean)
           : [],
+        athlete_phone: form.phone_number ? `${form.phone_code} ${form.phone_number}` : null,
       }),
     });
 
@@ -226,7 +281,7 @@ export default function NewRequestPage() {
 
   const canAdvance = () => {
     if (athleteType === "college") {
-      if (step === 0) return form.athlete_name && form.athlete_nationality && form.athlete_languages.length;
+      if (step === 0) return form.athlete_name && form.athlete_nationality && form.athlete_languages.length && form.sport;
       if (step === 1) return form.university && form.destination_city && form.destination_country;
     } else {
       if (step === 0) return form.athlete_name && form.athlete_nationality && form.athlete_languages.length;
@@ -254,8 +309,8 @@ export default function NewRequestPage() {
           <button type="button" onClick={() => selectType("college")}
             className="text-left p-6 rounded-xl border-2 border-border hover:border-brand-500 transition-colors bg-white group">
             <div className="text-3xl mb-3">🎓</div>
-            <div className="font-bold text-foreground text-lg mb-1">College Athlete</div>
-            <div className="text-sm text-muted">International student arriving at a US or international university.</div>
+            <div className="font-bold text-foreground text-lg mb-1">College Student</div>
+            <div className="text-sm text-muted">Arriving at a US university — athlete or general student, domestic or international.</div>
           </button>
         </div>
       </div>
@@ -283,21 +338,26 @@ export default function NewRequestPage() {
 
         {athleteType === "college" && (
           <>
-            {/* College Step 0: Athlete */}
+            {/* College Step 0: Student */}
             {step === 0 && (
               <div className="flex flex-col gap-5">
-                <SectionTitle>Athlete information</SectionTitle>
+                <SectionTitle>Student information</SectionTitle>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <Field label="Full name">
-                    <input className={inputClass} value={form.athlete_name}
-                      onChange={(e) => set("athlete_name", e.target.value)} placeholder="Carlos Mendoza" />
-                  </Field>
-                  <Field label="Age" hint="(optional)">
-                    <input className={inputClass} type="number" min={15} max={30}
-                      value={form.athlete_age} onChange={(e) => set("athlete_age", e.target.value)} placeholder="19" />
-                  </Field>
-                </div>
+                <Field label="Full name">
+                  <input className={inputClass} value={form.athlete_name}
+                    onChange={(e) => set("athlete_name", e.target.value)} placeholder="Carlos Mendoza" />
+                </Field>
+
+                <Field label="Phone number" hint="(optional)">
+                  <div className="flex gap-2">
+                    <select className={`${selectClass} w-36 shrink-0`} value={form.phone_code}
+                      onChange={(e) => set("phone_code", e.target.value)}>
+                      {DIAL_CODES.map((d) => <option key={d.code} value={d.code}>{d.label}</option>)}
+                    </select>
+                    <input className={`${inputClass} flex-1 min-w-0`} type="text" value={form.phone_number}
+                      onChange={(e) => set("phone_number", e.target.value)} placeholder="555 123 4567" />
+                  </div>
+                </Field>
 
                 <Field label="Nationality">
                   <select className={selectClass} value={form.athlete_nationality}
@@ -325,22 +385,6 @@ export default function NewRequestPage() {
                   </div>
                 </Field>
 
-                <Divider />
-                <SectionTitle>Currently based in</SectionTitle>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <Field label="Current city" hint="(optional)">
-                    <input className={inputClass} value={form.current_city}
-                      onChange={(e) => set("current_city", e.target.value)} placeholder="Bogotá" />
-                  </Field>
-                  <Field label="Current country" hint="(optional)">
-                    <select className={selectClass} value={form.current_country}
-                      onChange={(e) => set("current_country", e.target.value)}>
-                      <option value="">Select...</option>
-                      {COUNTRIES.map((c) => <option key={c}>{c}</option>)}
-                    </select>
-                  </Field>
-                </div>
               </div>
             )}
 
@@ -354,10 +398,14 @@ export default function NewRequestPage() {
                     onChange={(e) => set("university", e.target.value)} placeholder="University of Miami" />
                 </Field>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-3 gap-4">
                   <Field label="Campus city">
                     <input className={inputClass} value={form.destination_city}
                       onChange={(e) => set("destination_city", e.target.value)} placeholder="Miami" />
+                  </Field>
+                  <Field label="State" hint="(US only)">
+                    <input className={inputClass} value={form.destination_state ?? ""}
+                      onChange={(e) => set("destination_state", e.target.value)} placeholder="FL" />
                   </Field>
                   <Field label="Campus country">
                     <select className={selectClass} value={form.destination_country}
@@ -367,11 +415,6 @@ export default function NewRequestPage() {
                     </select>
                   </Field>
                 </div>
-
-                <Field label="Major / Field of study" hint="(optional)">
-                  <input className={inputClass} value={form.major}
-                    onChange={(e) => set("major", e.target.value)} placeholder="Business Administration" />
-                </Field>
 
                 <div className="grid grid-cols-2 gap-4">
                   <Field label="Semester start" hint="(optional)">
@@ -385,11 +428,13 @@ export default function NewRequestPage() {
                 </div>
 
                 <div className="flex flex-col gap-3">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" checked={form.has_scholarship}
-                      onChange={(e) => set("has_scholarship", e.target.checked)} className="accent-brand-600 w-4 h-4" />
-                    <span className="text-sm text-foreground">Athletic scholarship</span>
-                  </label>
+                  {form.is_part_of_team && (
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" checked={form.has_scholarship}
+                        onChange={(e) => set("has_scholarship", e.target.checked)} className="accent-brand-600 w-4 h-4" />
+                      <span className="text-sm text-foreground">Athletic scholarship</span>
+                    </label>
+                  )}
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input type="checkbox" checked={form.on_campus_housing}
                       onChange={(e) => set("on_campus_housing", e.target.checked)} className="accent-brand-600 w-4 h-4" />
@@ -397,10 +442,22 @@ export default function NewRequestPage() {
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input type="checkbox" checked={form.is_international}
-                      onChange={(e) => set("is_international", e.target.checked)} className="accent-brand-600 w-4 h-4" />
+                      onChange={(e) => { set("is_international", e.target.checked); if (!e.target.checked) set("visa_type", ""); }} className="accent-brand-600 w-4 h-4" />
                     <span className="text-sm text-foreground">International student (coming from outside the US)</span>
                   </label>
                 </div>
+
+                {form.is_international && (
+                  <Field label="Visa type">
+                    <select className={selectClass} value={form.visa_type}
+                      onChange={(e) => set("visa_type", e.target.value)}>
+                      <option value="">Select visa type...</option>
+                      <option value="F-1">F-1 Student Visa</option>
+                      <option value="J-1">J-1 Exchange Visitor Visa</option>
+                      <option value="other">Other / Not sure</option>
+                    </select>
+                  </Field>
+                )}
               </div>
             )}
 
@@ -454,6 +511,34 @@ export default function NewRequestPage() {
             {/* College Step 3: Lifestyle */}
             {step === 3 && (
               <div className="flex flex-col gap-5">
+                <SectionTitle>About the student</SectionTitle>
+
+                <Field label="Training schedule">
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    {TRAINING_SCHEDULE.map((t) => (
+                      <ToggleChip key={t} label={t} selected={form.training_schedule === t}
+                        onClick={() => set("training_schedule", t)} />
+                    ))}
+                  </div>
+                </Field>
+
+                <Field label="Cooking habits">
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    {COOKING_HABITS.map((c) => (
+                      <ToggleChip key={c} label={c} selected={form.cooking_habits === c}
+                        onClick={() => set("cooking_habits", c)} />
+                    ))}
+                  </div>
+                </Field>
+
+                <Field label="Biggest concerns about the move" hint="(optional)">
+                  <textarea className={`${inputClass} resize-none`} rows={2}
+                    value={form.biggest_concerns}
+                    onChange={(e) => set("biggest_concerns", e.target.value)}
+                    placeholder="I'm worried about making friends, the language barrier, finding food I like..." />
+                </Field>
+
+                <Divider />
                 <SectionTitle>Diet & Nutrition</SectionTitle>
                 <Field label="Dietary requirements">
                   <div className="flex flex-wrap gap-2 mt-1">
@@ -471,16 +556,7 @@ export default function NewRequestPage() {
                 </Field>
 
                 <Divider />
-                <SectionTitle>Fitness & Hobbies</SectionTitle>
-
-                <Field label="Fitness preferences">
-                  <div className="flex flex-wrap gap-2 mt-1">
-                    {FITNESS.map((f) => (
-                      <ToggleChip key={f} label={f} selected={form.fitness.includes(f)}
-                        onClick={() => toggleArray("fitness", f)} />
-                    ))}
-                  </div>
-                </Field>
+                <SectionTitle>Hobbies & Interests</SectionTitle>
 
                 <Field label="Hobbies & interests">
                   <div className="flex flex-wrap gap-2 mt-1">
@@ -490,73 +566,12 @@ export default function NewRequestPage() {
                     ))}
                   </div>
                 </Field>
-
-                <Field label="Weekend activities">
-                  <div className="flex flex-wrap gap-2 mt-1">
-                    {FAMILY_ACTIVITIES.map((a) => (
-                      <ToggleChip key={a} label={a}
-                        selected={form.family_activities.includes(a)}
-                        onClick={() => toggleArray("family_activities", a)} />
-                    ))}
-                  </div>
-                </Field>
-
-                <Divider />
-                <SectionTitle>Social & Visiting Family</SectionTitle>
-
-                <Field label="Nightlife interest">
-                  <select className={selectClass} value={form.nightlife_interest}
-                    onChange={(e) => set("nightlife_interest", e.target.value)}>
-                    <option value="">No preference</option>
-                    <option>Not important</option>
-                    <option>Occasionally</option>
-                    <option>Important</option>
-                  </select>
-                </Field>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <Field label="How often will family visit?" hint="(optional)">
-                    <select className={selectClass} value={form.guest_visit_frequency}
-                      onChange={(e) => set("guest_visit_frequency", e.target.value)}>
-                      <option value="">Not sure</option>
-                      <option>Rarely</option>
-                      <option>A few times a year</option>
-                      <option>Monthly</option>
-                    </select>
-                  </Field>
-                  <Field label="Guest hotel budget" hint="(optional)">
-                    <select className={selectClass} value={form.guest_hotel_budget}
-                      onChange={(e) => set("guest_hotel_budget", e.target.value)}>
-                      <option value="">No preference</option>
-                      <option>Budget (under $100/night)</option>
-                      <option>Mid-range ($100–$250/night)</option>
-                      <option>Luxury ($250+/night)</option>
-                    </select>
-                  </Field>
-                </div>
               </div>
             )}
 
             {/* College Step 4: Service */}
             {step === 4 && (
               <div className="flex flex-col gap-5">
-                <SectionTitle>Report language</SectionTitle>
-
-                <Field label="Language the report will be written in">
-                  <select className={selectClass} value={form.report_language}
-                    onChange={(e) => set("report_language", e.target.value)}>
-                    <option>English</option>
-                    <option>Spanish</option>
-                    <option>Portuguese</option>
-                    <option>French</option>
-                    <option>German</option>
-                    <option>Italian</option>
-                    <option>Dutch</option>
-                    <option>Arabic</option>
-                  </select>
-                </Field>
-
-                <Divider />
                 <SectionTitle>Anything else?</SectionTitle>
 
                 <Field label="Additional notes" hint="(optional)">
@@ -597,6 +612,17 @@ export default function NewRequestPage() {
                       value={form.athlete_age} onChange={(e) => set("athlete_age", e.target.value)} placeholder="24" />
                   </Field>
                 </div>
+
+                <Field label="Phone number" hint="(optional)">
+                  <div className="flex gap-2">
+                    <select className={`${selectClass} w-36 shrink-0`} value={form.phone_code}
+                      onChange={(e) => set("phone_code", e.target.value)}>
+                      {DIAL_CODES.map((d) => <option key={d.code} value={d.code}>{d.label}</option>)}
+                    </select>
+                    <input className={`${inputClass} flex-1 min-w-0`} type="text" value={form.phone_number}
+                      onChange={(e) => set("phone_number", e.target.value)} placeholder="555 123 4567" />
+                  </div>
+                </Field>
 
                 <Field label="Nationality">
                   <select className={selectClass} value={form.athlete_nationality}
@@ -837,6 +863,52 @@ export default function NewRequestPage() {
             {/* Pro Step 4: Lifestyle */}
             {step === 4 && (
               <div className="flex flex-col gap-5">
+                <SectionTitle>About the athlete</SectionTitle>
+
+                <Field label="Relocation experience">
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    {RELOCATION_EXP.map((r) => (
+                      <ToggleChip key={r} label={r} selected={form.previous_relocation === r}
+                        onClick={() => set("previous_relocation", r)} />
+                    ))}
+                  </div>
+                </Field>
+
+                <Field label="Climate they're used to">
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    {CLIMATE_PREF.map((c) => (
+                      <ToggleChip key={c} label={c} selected={form.climate_preference === c}
+                        onClick={() => set("climate_preference", c)} />
+                    ))}
+                  </div>
+                </Field>
+
+                <Field label="Training schedule">
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    {TRAINING_SCHEDULE.map((t) => (
+                      <ToggleChip key={t} label={t} selected={form.training_schedule === t}
+                        onClick={() => set("training_schedule", t)} />
+                    ))}
+                  </div>
+                </Field>
+
+                <Field label="Cooking habits">
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    {COOKING_HABITS.map((c) => (
+                      <ToggleChip key={c} label={c} selected={form.cooking_habits === c}
+                        onClick={() => set("cooking_habits", c)} />
+                    ))}
+                  </div>
+                </Field>
+
+                <Field label="Biggest concerns about the move" hint="(optional)">
+                  <textarea className={`${inputClass} resize-none`} rows={2}
+                    value={form.biggest_concerns}
+                    onChange={(e) => set("biggest_concerns", e.target.value)}
+                    placeholder="Language barrier, finding the right neighborhood, partner's career..." />
+                </Field>
+
+                <Divider />
                 <SectionTitle>Diet & Nutrition</SectionTitle>
                 <Field label="Dietary requirements">
                   <div className="flex flex-wrap gap-2 mt-1">
@@ -1044,23 +1116,6 @@ export default function NewRequestPage() {
                     </button>
                   ))}
                 </div>
-
-                <Divider />
-                <SectionTitle>Report language</SectionTitle>
-
-                <Field label="Language the report will be written in">
-                  <select className={selectClass} value={form.report_language}
-                    onChange={(e) => set("report_language", e.target.value)}>
-                    <option>English</option>
-                    <option>Spanish</option>
-                    <option>Portuguese</option>
-                    <option>French</option>
-                    <option>German</option>
-                    <option>Italian</option>
-                    <option>Dutch</option>
-                    <option>Arabic</option>
-                  </select>
-                </Field>
 
                 <Divider />
                 <SectionTitle>Anything else?</SectionTitle>

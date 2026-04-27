@@ -20,14 +20,16 @@ export default function LeadStatusSelect({ leadId, currentStatus }) {
   async function handleChange(e) {
     const next = e.target.value;
     setSaving(true);
-    await fetch(`/api/admin/leads/${leadId}`, {
+    const res = await fetch(`/api/admin/leads/${leadId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: next }),
     });
-    setStatus(next);
+    if (res.ok) {
+      setStatus(next);
+      router.refresh();
+    }
     setSaving(false);
-    router.refresh();
   }
 
   return (

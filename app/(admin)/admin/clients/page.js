@@ -2,10 +2,9 @@ export const dynamic = 'force-dynamic';
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
-import DeleteClubButton from "./_components/DeleteClubButton";
-import SendWelcomeEmailButton from "./_components/SendWelcomeEmailButton";
+import ClientsTable from "./_components/ClientsTable";
 
-export const metadata = { title: "Clients — Settl Admin" };
+export const metadata = { title: "Clients — Settlyou Admin" };
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
@@ -24,140 +23,35 @@ export default async function AdminClientsPage() {
 
   if (profile?.role !== "settl_admin") redirect("/dashboard");
 
-  const [{ data: clubs }, { data: organizations }] = await Promise.all([
+  const [{ data: clubs }, { data: organizations }, { data: coaches }] = await Promise.all([
     admin.from("clubs").select("*").order("created_at", { ascending: false }),
     admin.from("organizations").select("*").order("created_at", { ascending: false }),
+    admin.from("profiles").select("club_id").eq("role", "coach"),
   ]);
+
+  const coachCountByClub = (coaches ?? []).reduce((acc, c) => {
+    if (c.club_id) acc[c.club_id] = (acc[c.club_id] ?? 0) + 1;
+    return acc;
+  }, {});
 
   const total = (clubs?.length ?? 0) + (organizations?.length ?? 0);
 
   return (
-    <div className="p-8 max-w-5xl">
+    <div className="p-8 max-w-6xl">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Clients</h1>
-          <p className="text-sm text-muted mt-1">{total} total · university programs</p>
+          <p className="text-sm text-muted mt-1">{total} colleges</p>
         </div>
         <a
           href="/admin/clubs/new"
-          className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-brand-700 transition-colors"
+          className="text-sm font-medium px-4 py-2 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors"
         >
-          + New client
+          + Add college
         </a>
       </div>
 
-      <div className="bg-white rounded-xl border border-border overflow-hidden">
-        {total === 0 ? (
-          <div className="px-6 py-16 text-center">
-            <p className="text-sm text-muted mb-4">No clients yet. Create your first one to get a join link.</p>
-            <a href="/admin/clubs/new" className="text-sm text-brand-600 font-semibold hover:underline">
-              Create a client →
-            </a>
-          </div>
-        ) : (
-          <table className="w-full text-sm">
-            <thead className="bg-surface border-b border-border">
-              <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-widest">Name</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-widest">Plan</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-widest">Guides</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-widest">Status</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-widest">Join link</th>
-                <th className="px-4 py-3" />
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {/* Clubs (new system) */}
-              {(clubs ?? []).map((club) => (
-                <tr key={`club-${club.id}`} className="hover:bg-surface transition-colors">
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      {club.logo_url && (
-                        <img src={club.logo_url} alt="" className="w-6 h-6 object-contain rounded shrink-0" />
-                      )}
-                      <div>
-                        <span className="font-medium text-foreground">{club.name}</span>
-                        <span className="block text-xs text-muted">{club.slug}</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                      club.plan === "premium"
-                        ? "bg-violet-100 text-violet-700"
-                        : "bg-sky-100 text-sky-700"
-                    }`}>
-                      {club.plan === "premium" ? "Premium" : "Essentials"}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-muted">
-                    {club.seats_used} / {club.seat_limit ?? "∞"}
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
-                      club.active ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-500"
-                    }`}>
-                      {club.active ? "Active" : "Inactive"}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs text-muted font-mono truncate max-w-[140px]">
-                        /join/{club.slug}
-                      </span>
-                      <a
-                        href={`${baseUrl}/join/${club.slug}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs font-medium px-3 py-1.5 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors shrink-0"
-                      >
-                        Open ↗
-                      </a>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <div className="flex items-center justify-end gap-3">
-                      <SendWelcomeEmailButton clubId={club.id} clubName={club.name} />
-                      <a
-                        href={`/admin/clubs/${club.id}/edit`}
-                        className="text-xs font-medium px-3 py-1.5 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors"
-                      >
-                        Edit
-                      </a>
-                      <DeleteClubButton clubId={club.id} clubName={club.name} />
-                    </div>
-                  </td>
-                </tr>
-              ))}
-
-              {/* Organizations (legacy) */}
-              {(organizations ?? []).map((org) => (
-                <tr key={`org-${org.id}`} className="hover:bg-surface transition-colors opacity-70">
-                  <td className="px-4 py-3">
-                    <span className="font-medium text-foreground">{org.name}</span>
-                    {org.country && <span className="block text-xs text-muted">{org.country}</span>}
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 capitalize">
-                      {org.type ?? "Club"}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-muted">
-                    {org.seat_limit ? `— / ${org.seat_limit}` : "—"}
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500">
-                      Legacy
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-muted text-xs">—</td>
-                  <td className="px-4 py-3" />
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+      <ClientsTable clubs={clubs ?? []} organizations={organizations ?? []} baseUrl={baseUrl} coachCountByClub={coachCountByClub} />
     </div>
   );
 }

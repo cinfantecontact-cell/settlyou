@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import DocumentView from "@/app/(admin)/admin/relocations/[id]/_components/DocumentView";
 import PrintButton from "./PrintButton";
 import ReportTracker from "./ReportTracker";
+import { getSportDocTypes } from "@/lib/documents/types";
 
 export default async function AthleteReportPage({ params }) {
   const { token } = await params;
@@ -11,7 +12,7 @@ export default async function AthleteReportPage({ params }) {
 
   const { data: request } = await admin
     .from("requests")
-    .select("*, documents(*), clubs(logo_url, primary_color, plan)")
+    .select("*, documents(*), clubs(logo_url, primary_color, plan, custom_notes, custom_links, club_documents)")
     .eq("athlete_link_token", token)
     .in("status", ["under_review", "delivered", "approved"])
     .single();
@@ -21,11 +22,22 @@ export default async function AthleteReportPage({ params }) {
   const document = request.documents?.[0];
   const isPremium = request.clubs?.plan === "premium";
 
+  // Fetch sport doc config for required docs list
+  const { data: sportConfig } = request.sport && request.club_id ? await admin
+    .from("sport_document_config")
+    .select("disabled_base_docs, custom_docs")
+    .eq("club_id", request.club_id)
+    .eq("sport", request.sport)
+    .single() : { data: null };
+
+  const requiredDocs = getSportDocTypes(sportConfig ?? null);
+  const uploadUrl = request.upload_token ? `/upload/${request.upload_token}` : null;
+
   return (
     <div className="min-h-screen bg-surface">
       <ReportTracker requestId={request.id} clubId={request.club_id} isPremium={isPremium} />
       <nav className="bg-white border-b border-border px-6 py-4 flex items-center justify-between">
-        <img src="/settlyou-logo.png" alt="Settl" className="h-8 rounded-md" />
+        <img src="/settlyou-logo-dark.png" alt="Settl" className="h-7" />
         <div className="flex items-center gap-4">
           <span className="text-sm text-muted">Relocation Guide · {request.athlete_name}</span>
           <PrintButton />
@@ -34,7 +46,7 @@ export default async function AthleteReportPage({ params }) {
 
       {/* Print cover — only visible in PDF */}
       <div className="print-only" style={{ pageBreakAfter: "always", padding: "3cm 0 2cm", textAlign: "center", borderBottom: "2px solid #e4e4e7", marginBottom: "1cm" }}>
-        <img src="/settlyou-logo.png" alt="Settl" style={{ height: "36px", margin: "0 auto 2cm" }} />
+        <img src="/settlyou-logo-dark.png" alt="Settl" style={{ height: "36px", margin: "0 auto 2cm" }} />
         <div style={{ fontSize: "28pt", fontWeight: "700", color: "#09090b", marginBottom: "0.4cm" }}>{request.athlete_name}</div>
         <div style={{ fontSize: "13pt", color: "#52525b", marginBottom: "0.8cm" }}>Relocation Guide</div>
         {request.clubs?.name && <div style={{ fontSize: "11pt", color: "#71717a" }}>{request.clubs.name}</div>}
@@ -51,7 +63,12 @@ export default async function AthleteReportPage({ params }) {
               ...document.content?.meta,
               ...(isPremium && request.clubs?.logo_url && { club_logo_url: request.clubs.logo_url }),
               ...(isPremium && request.clubs?.primary_color && { club_primary_color: request.clubs.primary_color }),
-            }
+            },
+            university_notes: request.clubs?.custom_notes || null,
+            university_links: request.clubs?.custom_links || null,
+            university_documents: request.clubs?.club_documents || null,
+            upload_url: uploadUrl,
+            required_docs: requiredDocs,
           }} />
         ) : (
           <div className="text-center py-20 text-muted text-sm">

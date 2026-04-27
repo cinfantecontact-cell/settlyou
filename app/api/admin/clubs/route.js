@@ -178,7 +178,7 @@ function buildWelcomeEmail({ clubName, planLabel, joinLink, loginLink, pin, emai
       <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;">
         <tr>
           <td style="background:#ffffff;padding:32px 40px;text-align:center;border-bottom:1px solid #f0f0f0;">
-            <img src="${baseUrl}/settlyou-logo.png" alt="Settlyou" height="32" style="display:block;margin:0 auto;">
+            <img src="${baseUrl}/settlyou-logo-dark.png" alt="Settlyou" height="32" style="display:block;margin:0 auto;">
           </td>
         </tr>
         <tr>

@@ -40,13 +40,35 @@ export async function POST(request, { params }) {
   if (relocationRequest.club_id) {
     const { data: club } = await admin
       .from("clubs")
-      .select("custom_notes, logo_url, primary_color, plan, division")
+      .select("custom_notes, custom_links, club_documents, logo_url, primary_color, plan, division")
       .eq("id", relocationRequest.club_id)
       .single();
     if (club?.custom_notes) relocationRequest.club_custom_notes = club.custom_notes;
+    if (club?.custom_links?.length) relocationRequest.club_custom_links = club.custom_links;
+    if (club?.club_documents?.length) relocationRequest.club_documents = club.club_documents;
     if (club?.logo_url) relocationRequest.club_logo_url = club.logo_url;
     if (club?.primary_color) relocationRequest.club_primary_color = club.primary_color;
     if (club?.division) relocationRequest.division = club.division;
+
+    if (relocationRequest.sport) {
+      const { data: coachNotes } = await admin
+        .from("coach_sport_notes")
+        .select("custom_notes, custom_links")
+        .eq("club_id", relocationRequest.club_id)
+        .eq("sport", relocationRequest.sport)
+        .single();
+      if (coachNotes?.custom_notes) {
+        relocationRequest.club_custom_notes =
+          (relocationRequest.club_custom_notes ? relocationRequest.club_custom_notes + "\n\n" : "") +
+          `[${relocationRequest.sport} Coach Notes]\n${coachNotes.custom_notes}`;
+      }
+      if (coachNotes?.custom_links?.length) {
+        relocationRequest.club_custom_links = [
+          ...(relocationRequest.club_custom_links ?? []),
+          ...coachNotes.custom_links,
+        ];
+      }
+    }
   }
 
   // Mark as generating and return immediately — generation runs in background
@@ -72,7 +94,12 @@ export async function POST(request, { params }) {
         }
       }
 
-      const document = await generateRelocationDocument(relocationRequest, baseData);
+      const document = await Promise.race([
+        generateRelocationDocument(relocationRequest, baseData),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Generation timed out after 4 minutes")), 4 * 60 * 1000)
+        ),
+      ]);
       console.log("[generate] background: AI responded, saving document...");
 
       // Override meta with real club data

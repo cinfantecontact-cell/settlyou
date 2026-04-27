@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendAthleteReportReady } from "@/lib/email/send";
+import { sendAthleteUploadLink } from "@/lib/whatsapp/send";
 
 export async function POST(request, { params }) {
   const supabase = await createClient();
@@ -17,7 +18,7 @@ export async function POST(request, { params }) {
 
   const { data: req } = await admin
     .from("requests")
-    .select("athlete_name, athlete_email, athlete_link_token, clubs(name)")
+    .select("athlete_name, athlete_email, athlete_link_token, athlete_phone, upload_token, sport, clubs(name)")
     .eq("id", id)
     .eq("club_id", profile.club_id)
     .single();
@@ -31,6 +32,20 @@ export async function POST(request, { params }) {
     clubName: req.clubs?.name || "",
     reportToken: req.athlete_link_token,
   });
+
+  if (req.athlete_phone && req.upload_token) {
+    try {
+      await sendAthleteUploadLink({
+        athleteName: req.athlete_name || "",
+        athletePhone: req.athlete_phone,
+        uploadToken: req.upload_token,
+        institutionName: req.clubs?.name || "",
+        sport: req.sport || "",
+      });
+    } catch (e) {
+      console.error("Failed to resend WhatsApp:", e.message);
+    }
+  }
 
   return NextResponse.json({ ok: true });
 }

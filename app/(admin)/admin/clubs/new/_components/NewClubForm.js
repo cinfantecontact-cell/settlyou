@@ -31,10 +31,20 @@ export default function NewClubForm() {
   const [secondaryColor, setSecondaryColor] = useState("#ffffff");
   const [logoPreview, setLogoPreview] = useState(null);
   const [tier, setTier] = useState("49");
+  const [seatLimit, setSeatLimit] = useState(50);
+
+  const TIER_LIMITS = { "0": 15, "49": 50, "35": 150, "25": 400 };
+
+  function handleTierChange(e) {
+    const val = e.target.value;
+    setTier(val);
+    if (TIER_LIMITS[val]) setSeatLimit(TIER_LIMITS[val]);
+  }
   const [submitting, setSubmitting] = useState(false);
   const [lookingUp, setLookingUp] = useState(false);
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
+  const [state, setState] = useState("");
   const [country, setCountry] = useState("");
   const fileRef = useRef(null);
   const lookupTimerRef = useRef(null);
@@ -52,9 +62,10 @@ export default function NewClubForm() {
           body: JSON.stringify({ name, type: "college" }),
         });
         const data = await res.json();
-        if (data.address && !address) setAddress(data.address);
-        if (data.city && !city) setCity(data.city);
-        if (data.country && !country) setCountry(data.country);
+        setAddress(data.address || "");
+        setCity(data.city || "");
+        setState(data.state || "");
+        setCountry(data.country || "");
       } catch {}
       setLookingUp(false);
     }, 800);
@@ -138,12 +149,18 @@ export default function NewClubForm() {
           <p className="text-xs text-muted">Lowercase letters, numbers, and hyphens only.</p>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-3 gap-4">
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-foreground">City <span className="text-muted font-normal">(auto-filled)</span></label>
             <input name="city" value={city} onChange={(e) => setCity(e.target.value)}
               className="border border-border rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white"
               placeholder="Boca Raton" />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-foreground">State <span className="text-muted font-normal">(optional)</span></label>
+            <input name="state" value={state} onChange={(e) => setState(e.target.value)}
+              className="border border-border rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white"
+              placeholder="FL" />
           </div>
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-foreground">Country <span className="text-muted font-normal">(auto-filled)</span></label>
@@ -159,6 +176,12 @@ export default function NewClubForm() {
             className="border border-border rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white"
             placeholder="777 Glades Rd, Boca Raton, FL" />
         </div>
+
+        {city && (
+          <p className="text-xs text-brand-600 bg-brand-50 border border-brand-100 rounded-lg px-3 py-2">
+            City base data will be auto-generated for <strong>{city}</strong> once you save.
+          </p>
+        )}
       </div>
 
       {/* Access */}
@@ -167,19 +190,20 @@ export default function NewClubForm() {
 
         <div className="flex flex-col gap-1.5">
           <label className="text-sm font-medium text-foreground">Pricing tier</label>
-          <select name="plan" required value={tier} onChange={(e) => setTier(e.target.value)}
+          <select name="plan" required value={tier} onChange={handleTierChange}
             className="border border-border rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white">
-            <option value="49">$49/guide — up to 50 guides (min $2,450)</option>
-            <option value="35">$35/guide — up to 150 guides (min $5,250)</option>
-            <option value="25">$25/guide — up to 400 guides (min $10,000)</option>
-            <option value="custom">Custom</option>
+            <option value="0">Trial — free, up to 15 guides</option>
+            <option value="49">Starter — $49/guide, up to 50 guides (min $2,450)</option>
+            <option value="35">Growth — $35/guide, up to 150 guides (min $5,250)</option>
+            <option value="25">Scale — $25/guide, up to 400 guides (min $10,000)</option>
+            <option value="custom">Enterprise — custom pricing</option>
           </select>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-foreground">Guide limit <span className="text-muted font-normal">(max)</span></label>
-            <input name="seat_limit" type="number" min={1} defaultValue={100}
+            <input name="seat_limit" type="number" min={1} value={seatLimit} onChange={(e) => setSeatLimit(Number(e.target.value))}
               className="border border-border rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white" />
           </div>
           <div className="flex flex-col gap-1.5">
@@ -256,7 +280,7 @@ export default function NewClubForm() {
 
       <button type="submit" disabled={submitting}
         className="bg-brand-600 text-white px-6 py-3 rounded-lg text-sm font-semibold hover:bg-brand-700 transition-colors disabled:opacity-50">
-        {submitting ? "Creating..." : "Create university & get link →"}
+        {submitting ? "Creating..." : "Create university"}
       </button>
     </form>
   );

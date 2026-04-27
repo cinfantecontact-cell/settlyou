@@ -2,26 +2,21 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function AthleteActions({ requestId, athleteEmail, athleteName, reportToken, status }) {
+export default function AthleteActions({ requestId, athleteName }) {
   const router = useRouter();
-  const [resending, setResending] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [resent, setResent] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-
-  async function handleResend() {
-    if (!athleteEmail || !reportToken) return;
-    setResending(true);
-    await fetch(`/api/club/requests/${requestId}/resend`, { method: "POST" });
-    setResending(false);
-    setResent(true);
-    setTimeout(() => setResent(false), 3000);
-  }
 
   async function handleDelete() {
     setDeleting(true);
-    await fetch(`/api/club/requests/${requestId}`, { method: "DELETE" });
-    router.push("/club/athletes");
+    const res = await fetch(`/api/club/requests/${requestId}`, { method: "DELETE" });
+    if (!res.ok) {
+      setDeleting(false);
+      setShowConfirm(false);
+      alert("Failed to delete. Please try again.");
+      return;
+    }
+    window.location.href = "/club/athletes";
   }
 
   return (
@@ -58,15 +53,6 @@ export default function AthleteActions({ requestId, athleteEmail, athleteName, r
       <div className="bg-white border border-border rounded-xl p-6">
         <h2 className="text-sm font-semibold text-foreground mb-4">Actions</h2>
         <div className="flex flex-col gap-3">
-          {status === "delivered" && athleteEmail && reportToken && (
-            <button
-              onClick={handleResend}
-              disabled={resending}
-              className="w-full py-2.5 rounded-lg text-sm font-semibold border border-border text-foreground hover:bg-surface transition-colors disabled:opacity-50"
-            >
-              {resent ? "Email sent!" : resending ? "Sending..." : "Resend report email"}
-            </button>
-          )}
           <button
             onClick={() => setShowConfirm(true)}
             disabled={deleting}

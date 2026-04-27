@@ -1,47 +1,197 @@
+"use client";
+
+import { useState } from "react";
 import ScrollReveal from "../_components/ScrollReveal";
+
+function QuoteModal({ onClose }) {
+  const [form, setForm] = useState({ institution: "", name: "", email: "", role: "", volume: "", message: "" });
+  const [status, setStatus] = useState("idle");
+
+  function set(field) {
+    return (e) => setForm((f) => ({ ...f, [field]: e.target.value }));
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (res.ok) setStatus("success");
+      else setStatus("error");
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+      <div
+        className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="bg-brand-600 px-8 py-6">
+          <button onClick={onClose} className="absolute top-4 right-5 text-white/60 hover:text-white text-xl font-light">✕</button>
+          <p className="text-xs font-bold uppercase tracking-widest text-brand-200 mb-1">Get a quote</p>
+          <h2 className="text-xl font-bold text-white">Tell us about your program</h2>
+          <p className="text-sm text-brand-100 mt-1">We'll send custom pricing within one business day.</p>
+        </div>
+
+        <div className="px-8 py-6">
+          {status === "success" ? (
+            <div className="text-center py-8">
+              <div className="w-14 h-14 rounded-full bg-brand-50 border border-brand-100 flex items-center justify-center mx-auto mb-4">
+                <svg className="w-6 h-6 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <p className="text-lg font-bold text-foreground mb-2">We got your request!</p>
+              <p className="text-sm text-muted">We'll reach out to {form.email} within one business day with a custom quote.</p>
+              <button onClick={onClose} className="mt-6 px-6 py-2.5 rounded-lg bg-brand-600 text-white text-sm font-semibold hover:bg-brand-700 transition-colors">
+                Close
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-foreground">Institution name *</label>
+                  <input required value={form.institution} onChange={set("institution")} placeholder="Florida Atlantic University"
+                    className="border border-border rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500" />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-foreground">Your name *</label>
+                  <input required value={form.name} onChange={set("name")} placeholder="Alex Johnson"
+                    className="border border-border rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500" />
+                </div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-foreground">Work email *</label>
+                  <input required type="email" value={form.email} onChange={set("email")} placeholder="alex@university.edu"
+                    className="border border-border rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500" />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-foreground">Your role</label>
+                  <input value={form.role} onChange={set("role")} placeholder="Athletics Director, Registrar…"
+                    className="border border-border rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500" />
+                </div>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-foreground">Estimated students per year</label>
+                <select value={form.volume} onChange={set("volume")}
+                  className="border border-border rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white">
+                  <option value="">— Select a range —</option>
+                  <option value="Under 40">Under 40 (Micro)</option>
+                  <option value="40–100">40 – 100 (Starter)</option>
+                  <option value="100–200">100 – 200 (Pro)</option>
+                  <option value="200+">200+ (Institution)</option>
+                </select>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-foreground">Anything else?</label>
+                <textarea value={form.message} onChange={set("message")} rows={3} placeholder="Student types, sports programs, specific questions…"
+                  className="border border-border rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500 resize-none" />
+              </div>
+              {status === "error" && (
+                <p className="text-xs text-red-600">Something went wrong — please try again or email us at hello@settlyou.com.</p>
+              )}
+              <button type="submit" disabled={status === "sending"}
+                className="bg-brand-600 text-white px-6 py-3 rounded-lg text-sm font-semibold hover:bg-brand-700 transition-colors disabled:opacity-50 mt-1">
+                {status === "sending" ? "Sending…" : "Send request →"}
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const TIERS = [
+  {
+    label: "Micro",
+    price: "$2,400",
+    unit: "/ yr",
+    range: "Up to 40 students / yr",
+    note: "Small programs or single-sport pilots.",
+    annual: "~$60 / student",
+  },
+  {
+    label: "Starter",
+    price: "$4,900",
+    unit: "/ yr",
+    range: "Up to 100 students / yr",
+    note: "Mid-size programs across multiple sports.",
+    annual: "~$49 / student",
+  },
+  {
+    label: "Pro",
+    price: "$9,900",
+    unit: "/ yr",
+    range: "Up to 200 students / yr",
+    note: "NCAA D1/D2 and larger universities.",
+    annual: "~$50 / student",
+  },
+  {
+    label: "Institution",
+    price: "Custom",
+    unit: "",
+    range: "200+ students / yr",
+    note: "Large state universities and multi-department programs.",
+    annual: "From $14,000 / yr",
+  },
+];
+
+const FEATURES = [
+  "AI-generated relocation guide for each student",
+  "Delivered within 24 hours",
+  "Available in 18 languages",
+  "Student upload portal & document collection",
+  "Coach portal with per-sport access",
+  "Custom branding — logo & colors on every guide",
+  "Custom coach notes woven into every guide",
+  "Email, WhatsApp & SMS delivery",
+  "Guide open & download tracking",
+  "Engagement analytics dashboard",
+  "Weekly intake digest email",
+  "Bulk resend & CSV export",
+  "NCAA, NAIA & NJCAA eligibility guidance",
+  "F-1 visa, SEVIS & international student support",
+  "Onboarding call + email support",
+];
 
 const STATS = [
   {
-    number: "~$60",
-    label: "per guide with Settlyou Essentials",
-    comparison: "vs. $1,500–$3,000 per athlete at relocation firms",
+    number: "From $49",
+    label: "per student",
+    comparison: "vs. $1,500–$3,000 per student at relocation firms",
   },
   {
     number: "10–15 hrs",
-    label: "of staff time saved per athlete",
-    comparison: "$300–$750 in labor costs eliminated",
+    label: "of staff time saved per student",
+    comparison: "At $50/hr, that's $500–$750 in labor costs eliminated per student",
   },
   {
-    number: "3–6 mo",
-    label: "faster path to peak performance",
-    comparison: "Athletes with proper relocation support adapt significantly faster (Journal of Sports Sciences)",
+    number: "~3 min",
+    label: "to generate a complete guide",
+    comparison: "vs. 2–4 weeks with a traditional relocation firm",
   },
 ];
 
 const COMPARISON_ROWS = [
-  { label: "Cost per athlete",       firm: "$1,500–$3,000",  staff: "$300–$750",    settl: "~$60" },
-  { label: "Time to deliver",        firm: "2–4 weeks",      staff: "10–15 hrs",    settl: "~3 min" },
-  { label: "Athlete-specific guide", firm: "Sometimes",      staff: "Rarely",       settl: "Always" },
-  { label: "Multi-language",         firm: "Extra cost",     staff: "Not included", settl: "Included" },
-  { label: "Available instantly",    firm: "No",             staff: "No",           settl: "Yes" },
-];
-
-// Unified feature rows — null means not included in that plan
-const FEATURE_ROWS = [
-  { essentials: "40 guides per year — all sports",         premium: "100 guides per year — all sports" },
-  { essentials: "12-section personalized guide",           premium: "15-section personalized guide" },
-  { essentials: "College athlete flow",                    premium: "College athlete flow" },
-  { essentials: "F-1 visa & campus life guidance",         premium: "F-1 visa & campus life guidance" },
-  { essentials: "Custom join link with PIN protection",    premium: "Custom join link with PIN protection" },
-  { essentials: "8 language options",                      premium: "8 language options" },
-  { essentials: "Web guide + downloadable PDF",            premium: "Web guide + downloadable PDF" },
-  { essentials: "1 admin login",                           premium: "5 staff login accounts" },
-  { essentials: "Standard generation speed",               premium: "Priority generation" },
-  { essentials: "Email support",                           premium: "Onboarding call + priority support" },
-  { essentials: null,                                      premium: "University logo & colors on every guide" },
-  { essentials: null,                                      premium: "Athlete tracking — see who opened their guide" },
-  { essentials: null,                                      premium: "Custom coach notes inside guides" },
-  { essentials: null,                                      premium: "Analytics dashboard" },
+  { label: "Cost per student",           firm: "$1,500–$3,000", staff: "$500–$750",    settl: "From $49" },
+  { label: "Time to deliver",            firm: "2–4 weeks",     staff: "10–15 hrs",    settl: "~3 min" },
+  { label: "Personalized guide",         firm: "Sometimes",     staff: "Rarely",       settl: "Always" },
+  { label: "Coach portal",               firm: "No",            staff: "No",           settl: "Included" },
+  { label: "Document upload portal",     firm: "Extra cost",    staff: "Manual",       settl: "Included" },
+  { label: "Multi-language",             firm: "Extra cost",    staff: "Not included", settl: "18 languages" },
+  { label: "Eligibility guidance",       firm: "Extra cost",    staff: "Limited",      settl: "Included" },
+  { label: "Custom institution notes",   firm: "Manual",        staff: "Manual",       settl: "Automatic" },
 ];
 
 function CheckIcon() {
@@ -52,119 +202,94 @@ function CheckIcon() {
   );
 }
 
-function DashIcon() {
-  return <span className="w-4 h-4 shrink-0 mt-0.5 flex items-center justify-center text-border text-lg leading-none">—</span>;
-}
-
-function PlanComparison() {
-  return (
-    <div className="overflow-x-auto -mx-6 sm:mx-0 px-6 sm:px-0 pt-5">
-    <div className="min-w-[480px] max-w-3xl mx-auto">
-      {/* Plan headers */}
-      <div className="grid grid-cols-2 gap-x-5">
-        {/* Essentials header */}
-        <div className="rounded-t-2xl border-t border-x border-border bg-surface p-7">
-          <p className="text-xs font-bold uppercase tracking-widest text-brand-600 mb-2">Essentials</p>
-          <p className="text-3xl font-bold text-foreground mb-1">$2,399<span className="text-base font-normal text-muted"> / year</span></p>
-          <p className="text-sm text-muted leading-relaxed mt-2 mb-6">Everything your athletic department needs to onboard international athletes across all sports.</p>
-          <a href="mailto:hello@settlyou.com" className="block text-center px-6 py-3 rounded-lg text-sm font-semibold border border-border bg-white text-foreground hover:border-brand-400 hover:text-brand-600 transition-colors">
-            Get in touch →
-          </a>
-          <a href="/report/sample-college-essentials" target="_blank" rel="noopener noreferrer" className="mt-3 block text-center text-sm text-muted hover:text-brand-600 transition-colors">
-            See sample guide →
-          </a>
-        </div>
-
-        {/* Premium header */}
-        <div className="rounded-t-2xl border-t border-x border-brand-500 bg-brand-50 p-7 relative">
-          <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-            <span className="bg-brand-600 text-white text-xs font-bold px-4 py-1 rounded-full tracking-wide">Most popular</span>
-          </div>
-          <p className="text-xs font-bold uppercase tracking-widest text-brand-600 mb-2">Premium</p>
-          <p className="text-3xl font-bold text-foreground mb-1">$3,599<span className="text-base font-normal text-muted"> / year</span></p>
-          <p className="text-sm text-muted leading-relaxed mt-2 mb-6">Everything in Essentials, plus branding, tracking, and deeper personalization.</p>
-          <a href="mailto:hello@settlyou.com" className="block text-center px-6 py-3 rounded-lg text-sm font-semibold bg-brand-600 text-white hover:bg-brand-700 transition-colors">
-            Get in touch →
-          </a>
-          <a href="/report/sample-college" target="_blank" rel="noopener noreferrer" className="mt-3 block text-center text-sm text-muted hover:text-brand-600 transition-colors">
-            See sample guide →
-          </a>
-        </div>
-      </div>
-
-      {/* Feature rows */}
-      <div className="grid grid-cols-2 gap-x-5">
-        {/* Essentials features column */}
-        <div className="border-x border-b border-border rounded-b-2xl overflow-hidden">
-          {FEATURE_ROWS.map((row, i) => (
-            <div key={i} className={`flex items-start gap-2.5 px-7 py-3.5 text-sm border-t border-border ${row.essentials ? "text-foreground" : "text-muted/40"}`}>
-              {row.essentials ? <CheckIcon /> : <DashIcon />}
-              <span>{row.essentials ?? "Not included"}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Premium features column */}
-        <div className="border-x border-b border-brand-500 rounded-b-2xl overflow-hidden bg-brand-50/30">
-          {FEATURE_ROWS.map((row, i) => (
-            <div key={i} className={`flex items-start gap-2.5 px-7 py-3.5 text-sm border-t border-brand-100 ${row.premium ? "text-foreground" : "text-muted/40"}`}>
-              {row.premium ? <CheckIcon /> : <DashIcon />}
-              <span className={row.essentials === null && row.premium ? "font-medium text-brand-700" : ""}>{row.premium ?? "Not included"}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-    </div>
-  );
-}
-
 export default function PricingPage() {
+  const [showModal, setShowModal] = useState(false);
+
   return (
     <main className="flex flex-col min-h-screen bg-white">
+      {showModal && <QuoteModal onClose={() => setShowModal(false)} />}
 
       {/* Nav */}
       <nav className="flex items-center justify-between px-8 py-5 border-b border-border">
-        <a href="/"><img src="/settlyou-logo.png" alt="Settl" className="h-9" /></a>
+        <a href="/"><img src="/settlyou-logo-dark.png" alt="Settlyou" className="h-8" /></a>
         <div className="flex items-center gap-3">
-          <a href="/pricing" className="text-sm font-medium text-foreground px-4 py-2 rounded-lg border border-brand-400 text-brand-600">Pricing</a>
+          <a href="/pricing" className="text-sm font-medium text-brand-600 px-4 py-2 rounded-lg border border-brand-400">Pricing</a>
           <a href="/login" className="text-sm font-medium bg-brand-600 text-white px-4 py-2 rounded-lg hover:bg-brand-700 transition-colors">Sign in</a>
         </div>
       </nav>
 
       {/* Header */}
-      <section className="text-center px-6 pt-20 pb-12 max-w-3xl mx-auto w-full">
+      <section className="text-center px-6 pt-20 pb-14 max-w-3xl mx-auto w-full">
         <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-4 block">Pricing</span>
         <h1 className="text-5xl font-bold text-foreground leading-tight mb-5 tracking-tight">
-          Simple, annual pricing
+          Simple pricing.<br />Everything included.
         </h1>
         <p className="text-lg text-muted leading-relaxed max-w-xl mx-auto">
-          One flat fee per year. No per-guide fees, no hidden costs. Cancel anytime.
+          Every tier includes the full platform — guides, coach portal, document uploads, analytics, branding. The only difference is how many students you serve.
         </p>
       </section>
 
-      {/* Plans */}
-      <section className="px-6 pb-24 max-w-5xl mx-auto w-full">
-        <PlanComparison />
+      {/* Tiers */}
+      <section className="px-6 pb-20 max-w-5xl mx-auto w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          {TIERS.map((tier) => (
+            <div key={tier.label} className={`rounded-xl border p-6 flex flex-col gap-2 items-center text-center ${tier.label === "Starter" ? "border-brand-300 bg-brand-50" : "border-border bg-white"}`}>
+              <p className="text-xs font-bold uppercase tracking-widest text-brand-600">{tier.label}</p>
+              <div className="flex items-baseline gap-1 mt-1 justify-center">
+                <p className="text-2xl font-bold text-foreground leading-none">{tier.price}</p>
+                {tier.unit && <p className="text-sm text-muted">{tier.unit}</p>}
+              </div>
+              <p className="text-xs text-muted">{tier.range}</p>
+              <p className="text-xs text-muted leading-relaxed mt-1 flex-1">{tier.note}</p>
+              <div className="pt-3 border-t border-border mt-2 w-full">
+                <p className="text-xs font-semibold text-brand-700">{tier.annual}</p>
+                <p className="text-[10px] text-muted mt-0.5">Annual · use-it-or-lose-it</p>
+              </div>
+            </div>
+          ))}
+        </div>
 
-        {/* Value prop */}
-        <div className="mt-14 bg-surface border border-border rounded-2xl px-8 py-8 text-center max-w-2xl mx-auto">
-          <p className="text-sm font-semibold text-foreground mb-2">Built for international student-athletes</p>
-          <p className="text-sm text-muted leading-relaxed">
-            Every guide includes F-1 visa steps, campus life orientation, student health insurance, safety tips, and local recommendations — everything your incoming athletes need to hit the ground running.
-          </p>
+        <div className="bg-white border border-border rounded-xl px-6 py-5 flex flex-col sm:flex-row items-center gap-4 mb-10">
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-foreground">Ready to see what it looks like for your program?</p>
+            <p className="text-xs text-muted mt-1">We'll put together a custom quote and walk you through a live demo.</p>
+          </div>
+          <div className="flex items-center gap-3 shrink-0">
+            <button onClick={() => setShowModal(true)}
+              className="px-6 py-3 rounded-lg bg-brand-600 text-white text-sm font-semibold hover:bg-brand-700 transition-colors">
+              Request a quote →
+            </button>
+            <a href="/report/sample-college" target="_blank" rel="noopener noreferrer"
+              className="px-5 py-3 rounded-lg border border-border text-sm font-medium text-muted hover:text-foreground hover:border-foreground/30 transition-colors">
+              See sample guide
+            </a>
+          </div>
+        </div>
+
+        {/* What's included */}
+        <div className="bg-white border border-border rounded-2xl p-8">
+          <p className="text-sm font-bold text-foreground mb-1">Everything included — on every plan</p>
+          <p className="text-xs text-muted mb-6">No locked features. No upgrade prompts. Every tier gets the full platform.</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {FEATURES.map((f) => (
+              <div key={f} className="flex items-start gap-3">
+                <CheckIcon />
+                <span className="text-sm text-foreground">{f}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* ROI / Stats section */}
+      {/* ROI stats */}
       <section className="bg-surface border-t border-b border-border py-24 px-6">
         <div className="max-w-5xl mx-auto">
           <ScrollReveal>
             <div className="text-center mb-16">
               <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-3 block">The math</span>
-              <h2 className="text-3xl font-bold text-foreground">Why $60/guide is a no-brainer</h2>
+              <h2 className="text-3xl font-bold text-foreground">This isn't a PDF service. It's a platform.</h2>
               <p className="text-muted mt-4 max-w-xl mx-auto text-sm leading-relaxed">
-                Relocation is expensive and slow — whether you outsource it or do it in-house. Settlyou delivers more, faster, at a fraction of the cost.
+                Every student gets a personalized guide, a document upload portal, and ongoing support — all managed by your coaches without any manual work.
               </p>
             </div>
           </ScrollReveal>
@@ -187,7 +312,7 @@ export default function PricingPage() {
               <table className="w-full min-w-[520px] text-sm">
                 <thead>
                   <tr className="border-b border-border">
-                    <th className="text-left px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted bg-surface w-1/4">Per athlete</th>
+                    <th className="text-left px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted bg-surface w-1/4">Per student</th>
                     <th className="text-center px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted bg-surface">Relocation firm</th>
                     <th className="text-center px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted bg-surface">In-house staff</th>
                     <th className="text-center px-5 py-4 text-xs font-bold uppercase tracking-widest text-brand-600 bg-brand-50 border-l border-brand-100">Settlyou</th>
@@ -216,28 +341,28 @@ export default function PricingPage() {
           <div className="flex flex-col gap-8">
             {[
               {
-                q: "What exactly does Settlyou produce?",
-                a: "A fully personalized relocation guide covering neighborhoods, housing, schools, dining, fitness, healthcare, emergency contacts, and more. Essentials includes 12 sections. Premium extends to 15 — adding local life tips, day trips, and a guest accommodation guide for visiting family. Delivered as a private web link and downloadable PDF.",
+                q: "How does annual pricing work?",
+                a: "You pay once per year for your student tier — for example, $4,900/yr for up to 100 students. Students are allocated for the year: use them or lose them. No rollovers, no surprise invoices.",
               },
               {
-                q: "How long does it take to generate a guide?",
-                a: "2–4 minutes from the moment you submit the athlete's profile.",
+                q: "Is every feature included on all plans?",
+                a: "Yes. Every plan — from Micro to Institution — includes the full platform: AI guides, coach portal, document upload portal, custom branding, analytics, notifications, and multi-language support. The only difference between tiers is the number of students.",
               },
               {
-                q: "Can athletes fill in their own profile?",
-                a: "Yes. Each plan includes a unique join link with PIN protection. Your department shares the link and PIN with the athlete, and they fill in their own details directly in under 5 minutes.",
+                q: "What does one student include?",
+                a: "A fully personalized relocation guide (web + PDF), a secure document upload portal, WhatsApp/SMS and email delivery, and access to the coach portal for ongoing tracking. Student-athletes get eligibility guidance. International students get visa and SEVIS support. All in their preferred language.",
               },
               {
-                q: "How many guides can we generate?",
-                a: "Essentials includes 40 guides per year. Premium includes 100. Both cover all sports — no per-sport or per-athlete restrictions. One flat annual fee, no surprises. If you reach your limit, contact us and we'll work something out.",
+                q: "Does Settlyou support NCAA, NAIA, and NJCAA?",
+                a: "Yes. When you set up your institution, you select your athletic division. The AI uses that to generate division-specific eligibility guidance — GPA minimums, enrollment requirements, transfer rules, amateurism compliance, and English test requirements (TOEFL/IELTS).",
               },
               {
                 q: "What languages are supported?",
-                a: "Guides can be generated in English, Spanish, Portuguese, French, German, Italian, Dutch, and Arabic.",
+                a: "18 languages — including Spanish, Portuguese, French, German, Italian, Dutch, Arabic, Korean, Japanese, Chinese (Simplified), and more. The guide is written in the student's language from the start — not translated after the fact.",
               },
               {
-                q: "What's included in Premium that isn't in Essentials?",
-                a: "Premium adds 3 extra guide sections (local life tips, day trips & weekend getaways, and guest accommodation for visiting family), university logo & colors on every guide, athlete tracking (see who opened their guide and when), and custom coach notes — so coaches can add personal messages or team-specific resources directly inside the guide.",
+                q: "How do we get started?",
+                a: "Send us an email at hello@settlyou.com or book a 30-minute call. We'll set up your account, walk you through the portal, and get your first intake ready — usually within one business day.",
               },
             ].map(({ q, a }) => (
               <div key={q} className="border-b border-border pb-8 last:border-0 last:pb-0">
@@ -252,22 +377,18 @@ export default function PricingPage() {
       {/* Bottom CTA */}
       <section className="bg-brand-600 py-20 px-6">
         <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">See it before you commit</h2>
+          <h2 className="text-3xl font-bold text-white mb-4">Ready to get a quote?</h2>
           <p className="text-brand-100 mb-8 leading-relaxed">
-            Browse a real sample guide — every section, every recommendation, exactly what your athlete receives.
+            Tell us your program size and we'll send custom pricing within one business day. No commitment required.
           </p>
           <div className="flex items-center gap-4 flex-wrap justify-center">
-            <a href="/report/sample-college-essentials" target="_blank" rel="noopener noreferrer"
-              className="bg-brand-700 text-white border border-brand-400 px-7 py-4 rounded-lg text-base font-bold hover:bg-brand-800 transition-colors">
-              Essentials sample →
-            </a>
-            <a href="/report/sample-college" target="_blank" rel="noopener noreferrer"
+            <button onClick={() => setShowModal(true)}
               className="bg-white text-brand-600 px-7 py-4 rounded-lg text-base font-bold hover:bg-brand-50 transition-colors">
-              Premium sample →
-            </a>
-            <a href="/contact"
+              Request a quote →
+            </button>
+            <a href="/report/sample-college" target="_blank" rel="noopener noreferrer"
               className="bg-brand-700 text-white border border-brand-400 px-7 py-4 rounded-lg text-base font-bold hover:bg-brand-800 transition-colors">
-              Request access →
+              See sample guide →
             </a>
           </div>
         </div>

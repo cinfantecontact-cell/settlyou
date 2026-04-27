@@ -25,20 +25,34 @@ export async function proxy(request) {
     }
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
   const { pathname } = request.nextUrl;
+
+  // Skip auth entirely for auth pages — prevents loops on stale cookies
+  const authPaths = ["/login", "/signup", "/forgot-password", "/reset-password", "/auth/callback"];
+  if (authPaths.some((p) => pathname.startsWith(p))) {
+    return supabaseResponse;
+  }
+
+  // Always call getUser — this refreshes the session token and sets updated
+  // cookies on supabaseResponse. Skipping this causes sessions to expire
+  // when the user switches tabs or goes idle.
+  const { data: { user } } = await supabase.auth.getUser();
 
   const protectedPaths = ["/dashboard", "/requests", "/admin", "/club"];
   const isProtected = protectedPaths.some((p) => pathname.startsWith(p));
 
   if (isProtected && !user) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    const response = NextResponse.redirect(new URL("/login", request.url));
+    request.cookies.getAll().forEach(({ name }) => {
+      if (name.startsWith("sb-")) {
+        response.cookies.delete(name);
+      }
+    });
+    return response;
   }
 
-  if (user && (pathname === "/login" || pathname === "/signup")) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  }
-
+  // Always return supabaseResponse — it carries the refreshed auth cookies.
+  // Without this, token refresh cookies get lost and the session expires.
   return supabaseResponse;
 }
 

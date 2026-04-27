@@ -17,6 +17,7 @@ export async function DELETE(request, { params }) {
   }
 
   // Delete documents first (foreign key), then the request
+  await admin.from("athlete_documents").delete().eq("request_id", id);
   await admin.from("documents").delete().eq("request_id", id);
   await admin.from("events").delete().eq("request_id", id);
   const { error } = await admin.from("requests").delete().eq("id", id);

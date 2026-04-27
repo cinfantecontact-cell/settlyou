@@ -3,7 +3,14 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import DeleteClubButton from "../clients/_components/DeleteClubButton";
 
-export const metadata = { title: "Clients — Settl Admin" };
+export const metadata = { title: "Universities — Settl Admin" };
+
+function getPlan(seatLimit) {
+  if (!seatLimit) return { label: "Free", color: "bg-gray-100 text-gray-600" };
+  if (seatLimit >= 400) return { label: "$25 / guide", color: "bg-purple-100 text-purple-700" };
+  if (seatLimit >= 150) return { label: "$35 / guide", color: "bg-blue-100 text-blue-700" };
+  return { label: "$49 / guide", color: "bg-brand-100 text-brand-700" };
+}
 
 export default async function AdminClubsPage() {
   const supabase = await createClient();
@@ -25,84 +32,116 @@ export default async function AdminClubsPage() {
     .order("created_at", { ascending: false });
 
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const active = clubs?.filter(c => c.active).length ?? 0;
 
   return (
     <div className="p-8 max-w-5xl">
+
+      {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Clients</h1>
-          <p className="text-sm text-muted mt-1">{clubs?.length ?? 0} total · university programs</p>
+          <h1 className="text-2xl font-bold text-foreground">Universities</h1>
+          <p className="text-sm text-muted mt-1">
+            {clubs?.length ?? 0} total · {active} active
+          </p>
         </div>
         <a
           href="/admin/clubs/new"
-          className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-brand-700 transition-colors"
+          className="bg-brand-600 text-white px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-brand-700 transition-colors"
         >
-          + New client
+          + Add university
         </a>
       </div>
 
       {!clubs?.length ? (
         <div className="bg-white rounded-xl border border-border px-6 py-16 text-center">
-          <p className="text-sm text-muted mb-4">No clients yet. Add your first university to get a join link.</p>
+          <p className="text-sm text-muted mb-4">No universities yet.</p>
           <a href="/admin/clubs/new" className="text-sm text-brand-600 font-semibold hover:underline">
-            Add a university →
+            Add your first university →
           </a>
         </div>
       ) : (
         <div className="flex flex-col gap-3">
-          {clubs.map((club) => (
-            <div key={club.id} className="bg-white rounded-xl border border-border p-5 flex items-center gap-4">
-              {/* Logo */}
-              <div className="w-10 h-10 rounded-lg border border-border bg-surface flex items-center justify-center shrink-0 overflow-hidden">
-                {club.logo_url
-                  ? <img src={club.logo_url} alt="" className="w-full h-full object-contain p-1" />
-                  : <span className="text-xs font-bold text-muted">{club.name?.slice(0, 2).toUpperCase()}</span>
-                }
+          {clubs.map((club) => {
+            const plan = getPlan(club.seat_limit);
+            const usedPct = club.seat_limit ? Math.min(100, Math.round((club.seats_used / club.seat_limit) * 100)) : 0;
+            const accent = club.primary_color || "#16a34a";
+
+            return (
+              <div key={club.id} className="bg-white rounded-xl border border-border overflow-hidden hover:border-brand-200 transition-colors">
+                <div className="p-5 flex items-center gap-4">
+
+                  {/* Logo */}
+                  <div
+                    className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 overflow-hidden border border-border"
+                    style={{ backgroundColor: club.logo_url ? "white" : `${accent}18` }}
+                  >
+                    {club.logo_url
+                      ? <img src={club.logo_url} alt="" className="w-full h-full object-contain p-1.5" />
+                      : <span className="text-sm font-bold" style={{ color: accent }}>{club.name?.slice(0, 2).toUpperCase()}</span>
+                    }
+                  </div>
+
+                  {/* Name + meta */}
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-foreground text-sm leading-tight">{club.name}</p>
+                    <p className="text-xs text-muted mt-0.5">
+                      {[club.city, club.country].filter(Boolean).join(", ")}
+                      {club.division ? ` · ${club.division}` : ""}
+                    </p>
+                  </div>
+
+                  {/* Plan */}
+                  <span className={`text-xs font-semibold px-2.5 py-1 rounded-full shrink-0 ${plan.color}`}>
+                    {plan.label}
+                  </span>
+
+                  {/* Guides used */}
+                  <div className="shrink-0 w-28 hidden sm:block">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs text-muted">Guides</span>
+                      <span className="text-xs font-semibold text-foreground">{club.seats_used ?? 0} / {club.seat_limit ?? "∞"}</span>
+                    </div>
+                    {club.seat_limit ? (
+                      <div className="h-1.5 rounded-full bg-surface overflow-hidden">
+                        <div
+                          className="h-full rounded-full transition-all"
+                          style={{ width: `${usedPct}%`, backgroundColor: usedPct > 80 ? "#dc2626" : accent }}
+                        />
+                      </div>
+                    ) : null}
+                  </div>
+
+                  {/* Status */}
+                  <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold shrink-0 ${
+                    club.active ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"
+                  }`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${club.active ? "bg-green-500" : "bg-gray-400"}`} />
+                    {club.active ? "Active" : "Inactive"}
+                  </span>
+
+                  {/* Actions */}
+                  <div className="flex items-center gap-3 shrink-0">
+                    <a
+                      href={`${baseUrl}/join/${club.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs font-medium text-muted hover:text-foreground transition-colors"
+                    >
+                      Join link ↗
+                    </a>
+                    <a
+                      href={`/admin/clubs/${club.id}/edit`}
+                      className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-border hover:bg-surface transition-colors text-foreground"
+                    >
+                      Edit
+                    </a>
+                    <DeleteClubButton clubId={club.id} clubName={club.name} />
+                  </div>
+                </div>
               </div>
-
-              {/* Name + slug */}
-              <div className="flex-1 min-w-0">
-                <p className="font-semibold text-foreground text-sm">{club.name}</p>
-                <p className="text-xs text-muted">{club.slug}</p>
-              </div>
-
-              {/* Tier */}
-              <span className="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold shrink-0 bg-brand-100 text-brand-700">
-                {(club.seat_limit ?? 0) >= 400 ? "$25/guide" : (club.seat_limit ?? 0) >= 150 ? "$35/guide" : "$49/guide"}
-              </span>
-
-              {/* Guides */}
-              <span className="text-sm text-muted shrink-0 w-16 text-center">
-                {club.seats_used} / {club.seat_limit ?? "∞"}
-              </span>
-
-              {/* Status */}
-              <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold shrink-0 ${
-                club.active ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"
-              }`}>
-                {club.active ? "Active" : "Inactive"}
-              </span>
-
-              {/* Join link */}
-              <a
-                href={`${baseUrl}/join/${club.slug}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-brand-600 hover:underline shrink-0"
-              >
-                Open link ↗
-              </a>
-
-              {/* Actions */}
-              <div className="flex items-center gap-3 shrink-0">
-                <a href={`/admin/clubs/${club.id}/edit`}
-                  className="text-xs font-medium text-brand-600 hover:underline">
-                  Edit
-                </a>
-                <DeleteClubButton clubId={club.id} clubName={club.name} />
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

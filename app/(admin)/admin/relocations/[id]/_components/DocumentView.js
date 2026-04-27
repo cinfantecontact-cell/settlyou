@@ -784,16 +784,16 @@ function V2SectionHeader({ number, title, accent }) {
   );
 }
 
-function V2Block({ children }) {
-  return <div className="bg-white rounded-2xl border border-border shadow-sm mb-8 p-7">{children}</div>;
+function V2Block({ children, id }) {
+  return <div id={id} className="bg-white rounded-2xl border border-border shadow-sm mb-8 px-7 pt-7 pb-8">{children}</div>;
 }
 
 function V2SubLabel({ children }) {
-  return <p className="text-[11px] font-bold text-muted uppercase tracking-[0.12em] mb-3">{children}</p>;
+  return <p className="text-xs font-bold text-foreground uppercase tracking-wider mb-3">{children}</p>;
 }
 
 function V2Divider() {
-  return <div className="h-px bg-border my-5" />;
+  return <div className="h-px bg-border my-7" />;
 }
 
 function V2Steps({ steps, accent }) {
@@ -894,7 +894,7 @@ function DocumentViewV2({ content }) {
     <div className="font-sans">
 
       {/* ── Hero ── */}
-      <div className="rounded-2xl mb-6 overflow-hidden text-white" style={{ backgroundColor: accent }}>
+      <div id="demo-guide-hero" className="rounded-2xl mb-6 overflow-hidden text-white" style={{ backgroundColor: accent }}>
         <div className="px-8 pt-7 pb-6">
           <div className="flex items-start justify-between gap-6">
             <div className="flex-1 min-w-0">
@@ -938,12 +938,16 @@ function DocumentViewV2({ content }) {
 
       {/* ── University Notes ── */}
       {content.university_notes && (
-        <div className="rounded-2xl mb-6 overflow-hidden" style={{ border: `2px solid ${accent}33`, backgroundColor: `${accent}08` }}>
+        <div id="demo-guide-notes" className="rounded-2xl mb-6 overflow-hidden" style={{ border: `2px solid ${accent}33`, backgroundColor: `${accent}08` }}>
           <div className="flex items-center gap-3 px-7 py-4 border-b" style={{ borderColor: `${accent}22`, backgroundColor: `${accent}12` }}>
             <ClubLogo url={meta.club_logo_url} name={meta.club} />
             <div>
-              <p className="text-xs font-bold uppercase tracking-widest" style={{ color: accent }}>Message from your institution</p>
-              <p className="text-sm font-semibold text-foreground mt-0.5">{meta.club}</p>
+              <p className="text-xs font-bold uppercase tracking-widest" style={{ color: accent }}>
+                {meta.coach_sport ? `Message from your ${meta.coach_sport} coach` : "Message from your coach"}
+              </p>
+              <p className="text-sm font-semibold text-foreground mt-0.5">
+                {meta.coach_name ? `Coach ${meta.coach_name}` : meta.club}
+              </p>
             </div>
           </div>
           <div className="px-7 py-6">
@@ -954,8 +958,8 @@ function DocumentViewV2({ content }) {
               <div className="flex flex-wrap gap-2 mt-5">
                 {content.university_links.map((link, i) => (
                   <a key={i} href={link.url} target="_blank" rel="noopener noreferrer"
-                    className="text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-colors"
-                    style={{ borderColor: `${accent}44`, color: accent, backgroundColor: "white" }}>
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-lg transition-opacity hover:opacity-80"
+                    style={{ backgroundColor: accent, color: "white" }}>
                     {link.label} ↗
                   </a>
                 ))}
@@ -965,9 +969,41 @@ function DocumentViewV2({ content }) {
         </div>
       )}
 
+      {/* ── Required Documents ── */}
+      {content.university_documents?.length > 0 && (
+        <div id="demo-guide-documents" className="rounded-2xl mb-6 overflow-hidden" style={{ border: `2px solid ${accent}33`, backgroundColor: `${accent}08` }}>
+          <div className="flex items-center gap-3 px-7 py-4 border-b" style={{ borderColor: `${accent}22`, backgroundColor: `${accent}12` }}>
+            <ClubLogo url={meta.club_logo_url} name={meta.club} />
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest" style={{ color: accent }}>Required Documents</p>
+              <p className="text-sm font-semibold text-foreground mt-0.5">Download and complete before arrival</p>
+            </div>
+          </div>
+          <div className="px-7 py-6 flex flex-col gap-3">
+            {content.university_documents.map((doc) => (
+              <div key={doc.id} className="flex items-center justify-between gap-4 rounded-xl border border-border bg-white px-5 py-4">
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-foreground">{doc.name}</p>
+                  {doc.description && <p className="text-xs text-muted mt-0.5">{doc.description}</p>}
+                </div>
+                <a
+                  href={doc.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="shrink-0 inline-flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-lg transition-opacity hover:opacity-80"
+                  style={{ backgroundColor: accent, color: "white" }}
+                >
+                  Download PDF ↗
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* ── Section 1: Your New City ── */}
       {sections.city_essentials && (
-        <V2Block>
+        <V2Block id="demo-guide-city">
           <V2SectionHeader number="1" title={sections.city_essentials.title || "Your New City"} accent={accent} />
 
           {sections.city_essentials.restaurants?.length > 0 && (
@@ -1111,7 +1147,6 @@ function DocumentViewV2({ content }) {
               <V2Divider />
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-[11px] font-bold text-muted uppercase tracking-[0.12em]">Athletic Facilities</span>
-                <V2AudienceBadge type="athlete" />
               </div>
               <div className="flex flex-col gap-3">
                 {sections.your_university.athletic_facilities.map((f, i) => (
@@ -1168,214 +1203,34 @@ function DocumentViewV2({ content }) {
         </V2Block>
       )}
 
-      {/* ── Section 3: To Do Before Arrival ── */}
-      {sections.your_paperwork && (
-        <V2Block>
-          <V2SectionHeader number="3" title="To Do Before Arrival" accent={accent} />
+      {/* ── Section 3: Upload Your Documents ── */}
+      <V2Block>
+        <V2SectionHeader number="3" title="Upload Your Documents" accent={accent} />
 
-          {sections.your_paperwork.eligibility && (
-            <div className="mb-6">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-[11px] font-bold text-muted uppercase tracking-[0.12em]">Athletic Eligibility</span>
-                <V2AudienceBadge type="athlete" />
-              </div>
-              {sections.your_paperwork.eligibility.intro && (
-                <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 mb-4 text-sm text-amber-800 leading-relaxed">
-                  {sections.your_paperwork.eligibility.intro}
-                </div>
-              )}
-              <V2Steps steps={sections.your_paperwork.eligibility.steps} accent={accent} />
-            </div>
+        {/* Upload instructions */}
+        <div className="rounded-xl border border-border bg-surface px-5 py-4">
+          <p className="font-semibold text-foreground text-sm mb-1">How to upload your documents</p>
+          <p className="text-sm text-muted leading-relaxed mb-3">
+            Your institution uses Settlyou to collect your documents securely. Click your personal upload link below to see exactly what your coach is requesting and submit each file. You can come back anytime — your progress is saved automatically.
+          </p>
+          <p className="text-sm text-muted leading-relaxed mb-4">
+            <span className="font-semibold text-foreground">Save your link somewhere safe</span> — bookmark it or copy it to your notes. You will also receive it via WhatsApp and SMS so you can access it from your phone at any time.
+          </p>
+          {content.upload_url ? (
+            <a
+              href={content.upload_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold px-5 py-2.5 rounded-lg transition-opacity hover:opacity-80"
+              style={{ backgroundColor: accent, color: "white" }}
+            >
+              View &amp; upload my documents ↗
+            </a>
+          ) : (
+            <p className="text-xs text-muted italic">Your upload link will be included when this guide is delivered.</p>
           )}
-
-          {sections.your_paperwork.athletic_forms?.length > 0 && (
-            <div className={sections.your_paperwork.eligibility ? "" : "mb-0"}>
-              {sections.your_paperwork.eligibility && <V2Divider />}
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-[11px] font-bold text-muted uppercase tracking-[0.12em]">Athletic Forms & Compliance</span>
-                <V2AudienceBadge type="athlete" />
-              </div>
-              <div className="flex flex-col gap-2">
-                {sections.your_paperwork.athletic_forms.map((f, i) => (
-                  <V2LinkCard key={i} title={f.title} description={f.description} url={f.url} />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {sections.your_paperwork.health_insurance && (
-            <div>
-              {(sections.your_paperwork.eligibility || sections.your_paperwork.athletic_forms?.length > 0) && <V2Divider />}
-              <V2SubLabel>Health Insurance</V2SubLabel>
-              <V2LinkCard
-                description={sections.your_paperwork.health_insurance.description}
-                meta={sections.your_paperwork.health_insurance.deadline ? `Deadline: ${sections.your_paperwork.health_insurance.deadline}` : null}
-                url={sections.your_paperwork.health_insurance.url}
-              />
-            </div>
-          )}
-
-          {sections.your_paperwork.financial_aid?.length > 0 && (
-            <div>
-              <V2Divider />
-              <V2SubLabel>Financial Aid</V2SubLabel>
-              <div className="flex flex-col gap-2">
-                {sections.your_paperwork.financial_aid.map((f, i) => (
-                  <V2LinkCard key={i} title={f.title} description={f.description} url={f.url} />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {sections.your_paperwork.international_academic && (
-            <div>
-              {(sections.your_paperwork.eligibility || sections.your_paperwork.athletic_forms?.length > 0 || sections.your_paperwork.health_insurance || sections.your_paperwork.financial_aid?.length > 0) && <V2Divider />}
-              {sections.your_paperwork.international_academic.intro && (
-                <p className="text-sm text-muted mb-4 leading-relaxed">{sections.your_paperwork.international_academic.intro}</p>
-              )}
-
-              {sections.your_paperwork.international_academic.transcript_evaluation?.length > 0 && (
-                <div className="mb-5">
-                  <p className="text-xs font-semibold text-foreground mb-3">Transcript Evaluation</p>
-                  <V2Steps steps={sections.your_paperwork.international_academic.transcript_evaluation} accent={accent} />
-                </div>
-              )}
-
-              {sections.your_paperwork.international_academic.gpa_conversion && (
-                <div className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 mb-5 text-sm text-blue-800 leading-relaxed">
-                  <p className="font-semibold mb-1 text-xs uppercase tracking-wide text-blue-600">GPA Conversion</p>
-                  {sections.your_paperwork.international_academic.gpa_conversion}
-                </div>
-              )}
-
-              {sections.your_paperwork.international_academic.required_vaccines?.length > 0 && (
-                <div className="mb-5">
-                  <div className="flex items-center justify-between gap-3 mb-3">
-                    <p className="text-xs font-semibold text-foreground">Required Vaccines</p>
-                    {sections.your_paperwork.international_academic.vaccines_url && (
-                      <a href={sections.your_paperwork.international_academic.vaccines_url} target="_blank" rel="noopener noreferrer"
-                        className="text-xs font-semibold text-brand-600 hover:underline whitespace-nowrap">
-                        View requirements →
-                      </a>
-                    )}
-                  </div>
-                  <V2CheckList items={sections.your_paperwork.international_academic.required_vaccines} />
-                </div>
-              )}
-
-              {sections.your_paperwork.international_academic.pre_arrival_docs?.length > 0 && (
-                <div>
-                  <p className="text-xs font-semibold text-foreground mb-3">Documents Checklist</p>
-                  <V2CheckList items={sections.your_paperwork.international_academic.pre_arrival_docs} />
-                </div>
-              )}
-            </div>
-          )}
-        </V2Block>
-      )}
-
-      {/* ── Section 4: To Do When You Arrive ── */}
-      {sections.your_paperwork?.post_arrival && (
-        <V2Block>
-          <V2SectionHeader number="4" title="To Do When You Arrive" accent={accent} />
-
-          {sections.your_paperwork.post_arrival.intro && (
-            <p className="text-sm text-muted mb-5 leading-relaxed">{sections.your_paperwork.post_arrival.intro}</p>
-          )}
-
-          {sections.your_paperwork.post_arrival.i94_check && (
-            <div className="mb-5">
-              <p className="text-xs font-semibold text-foreground mb-3">I-94 Arrival Record</p>
-              <V2LinkCard description={sections.your_paperwork.post_arrival.i94_check.description} url={sections.your_paperwork.post_arrival.i94_check.url} />
-            </div>
-          )}
-
-          {sections.your_paperwork.post_arrival.social_security?.length > 0 && (
-            <div className="mb-5">
-              <div className="flex items-center justify-between gap-3 mb-3">
-                <p className="text-xs font-semibold text-foreground">Social Security Number</p>
-                {sections.your_paperwork.post_arrival.ssa_office_url && (
-                  <a href={sections.your_paperwork.post_arrival.ssa_office_url} target="_blank" rel="noopener noreferrer"
-                    className="text-xs font-semibold text-brand-600 hover:underline whitespace-nowrap">
-                    Find nearest office →
-                  </a>
-                )}
-              </div>
-              <V2Steps steps={sections.your_paperwork.post_arrival.social_security} accent={accent} />
-            </div>
-          )}
-
-          {sections.your_paperwork.post_arrival.itin && (
-            <div className="mb-5">
-              <p className="text-xs font-semibold text-foreground mb-3">ITIN — Individual Taxpayer ID</p>
-              <V2LinkCard description={sections.your_paperwork.post_arrival.itin.description} url={sections.your_paperwork.post_arrival.itin.url} />
-            </div>
-          )}
-
-          {sections.your_paperwork.post_arrival.bank_account?.length > 0 && (
-            <div className="mb-5">
-              <p className="text-xs font-semibold text-foreground mb-3">Opening a Bank Account</p>
-              <V2Steps steps={sections.your_paperwork.post_arrival.bank_account} accent={accent} />
-            </div>
-          )}
-
-          {sections.your_paperwork.post_arrival.us_taxes && (
-            <div className="mb-5">
-              <p className="text-xs font-semibold text-foreground mb-3">US Tax Filing</p>
-              <V2LinkCard description={sections.your_paperwork.post_arrival.us_taxes.description} url={sections.your_paperwork.post_arrival.us_taxes.url} />
-            </div>
-          )}
-
-          {sections.your_paperwork.post_arrival.opt_cpt && (
-            <div className="rounded-xl border border-border bg-surface px-4 py-4 mb-5">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold text-foreground mb-2 uppercase tracking-wide">OPT & CPT — Work Authorization</p>
-                  <p className="text-sm text-muted leading-relaxed">
-                    {typeof sections.your_paperwork.post_arrival.opt_cpt === "string"
-                      ? sections.your_paperwork.post_arrival.opt_cpt
-                      : sections.your_paperwork.post_arrival.opt_cpt.text}
-                  </p>
-                </div>
-                {typeof sections.your_paperwork.post_arrival.opt_cpt !== "string" && sections.your_paperwork.post_arrival.opt_cpt.url && (
-                  <a href={sections.your_paperwork.post_arrival.opt_cpt.url} target="_blank" rel="noopener noreferrer"
-                    className="shrink-0 text-xs font-semibold px-3 py-1.5 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors whitespace-nowrap">
-                    Open →
-                  </a>
-                )}
-              </div>
-            </div>
-          )}
-
-          {sections.your_paperwork.post_arrival.state_id && (
-            <div className="mb-5">
-              <p className="text-xs font-semibold text-foreground mb-3">State ID / Driver's License</p>
-              <V2LinkCard description={sections.your_paperwork.post_arrival.state_id.description} url={sections.your_paperwork.post_arrival.state_id.url} />
-            </div>
-          )}
-
-          {sections.your_paperwork.post_arrival.cv_tips?.length > 0 && (
-            <div>
-              <p className="text-xs font-semibold text-foreground mb-3">Building Your US Resume</p>
-              <div className="flex flex-col gap-2 mb-3">
-                {sections.your_paperwork.post_arrival.cv_tips.map((tip, i) => (
-                  <div key={i} className="flex items-start gap-2.5 text-sm text-muted">
-                    <span className="font-bold shrink-0 text-xs mt-0.5" style={{ color: accent }}>{i + 1}.</span>
-                    <span className="leading-relaxed">{tip}</span>
-                  </div>
-                ))}
-              </div>
-              {sections.your_paperwork.post_arrival.resume_tools_url && (
-                <V2LinkCard
-                  title="Build your resume on Canva"
-                  description="Free resume builder with clean, one-page US-style templates — no design experience needed."
-                  url={sections.your_paperwork.post_arrival.resume_tools_url}
-                />
-              )}
-            </div>
-          )}
-        </V2Block>
-      )}
+        </div>
+      </V2Block>
     </div>
   );
 }

@@ -21,7 +21,7 @@ export default function SendWelcomeEmailButton({ clubId, clubName }) {
         setSent(true);
         setOpen(false);
         setEmail("");
-        setTimeout(() => setSent(false), 4000);
+        setTimeout(() => setSent(false), 3000);
       } else {
         const data = await res.json().catch(() => ({}));
         alert(`Failed to send email: ${data.error || "Unknown error"}`);
@@ -33,45 +33,54 @@ export default function SendWelcomeEmailButton({ clubId, clubName }) {
     }
   }
 
-  if (sent) {
-    return <span className="text-xs text-green-600 font-medium">Email sent ✓</span>;
-  }
-
-  if (open) {
-    return (
-      <div className="flex items-center gap-2">
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSend()}
-          placeholder="admin@university.edu"
-          autoFocus
-          className="text-xs border border-border rounded px-2 py-1 w-44 focus:outline-none focus:ring-1 focus:ring-brand-500"
-        />
-        <button
-          onClick={handleSend}
-          disabled={loading || !email}
-          className="text-xs font-semibold text-brand-600 hover:text-brand-700 disabled:opacity-40"
-        >
-          {loading ? "Sending..." : "Send"}
-        </button>
-        <button
-          onClick={() => { setOpen(false); setEmail(""); }}
-          className="text-xs text-muted hover:text-foreground"
-        >
-          Cancel
-        </button>
-      </div>
-    );
-  }
-
   return (
-    <button
-      onClick={() => setOpen(true)}
-      className="text-xs font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-brand-600 hover:border-brand-200 transition-colors whitespace-nowrap"
-    >
-      Send email
-    </button>
+    <>
+      <button
+        onClick={() => setOpen(true)}
+        className={`text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors whitespace-nowrap ${
+          sent
+            ? "border-brand-200 text-brand-600 bg-brand-50"
+            : "border-border text-muted hover:text-brand-600 hover:border-brand-200"
+        }`}
+      >
+        {sent ? "Email sent" : "Send email"}
+      </button>
+
+      {open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6">
+            <h3 className="text-base font-bold text-foreground mb-1">Send welcome email</h3>
+            <p className="text-sm text-muted mb-5">{clubName}</p>
+            <label className="block text-xs font-semibold text-foreground uppercase tracking-widest mb-2">
+              Recipient email
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSend()}
+              placeholder="admin@university.edu"
+              autoFocus
+              className="w-full border border-border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-200 mb-5"
+            />
+            <div className="flex gap-3">
+              <button
+                onClick={() => { setOpen(false); setEmail(""); }}
+                className="flex-1 py-2.5 rounded-lg text-sm font-semibold border border-border text-foreground hover:bg-surface transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSend}
+                disabled={loading || !email}
+                className="flex-1 py-2.5 rounded-lg text-sm font-semibold bg-brand-600 text-white hover:bg-brand-700 transition-colors disabled:opacity-50"
+              >
+                {loading ? "Sending..." : "Send"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

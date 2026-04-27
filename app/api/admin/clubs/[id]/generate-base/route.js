@@ -57,7 +57,12 @@ export async function POST(request, { params }) {
   after(async () => {
     console.log(`[generate-base] starting for ${club.name}...`);
     try {
-      const content = await generateBaseData(club);
+      const content = await Promise.race([
+        generateBaseData(club),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Base data generation timed out after 4 minutes")), 4 * 60 * 1000)
+        ),
+      ]);
 
       await admin
         .from("city_base_data")

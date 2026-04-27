@@ -6,7 +6,7 @@ export default function PrivacyPage() {
 
       {/* Nav */}
       <nav className="flex items-center justify-between px-8 py-5 border-b border-border">
-        <a href="/"><img src="/settlyou-logo.png" alt="Settlyou" className="h-9 rounded-md" /></a>
+        <a href="/"><img src="/settlyou-logo-dark.png" alt="Settlyou" className="h-8" /></a>
         <div className="flex items-center gap-6">
           <a href="/pricing" className="text-sm text-muted hover:text-foreground transition-colors">Pricing</a>
           <a href="/login" className="text-sm text-muted hover:text-foreground transition-colors">Sign in</a>
@@ -18,7 +18,7 @@ export default function PrivacyPage() {
         <div className="mb-12">
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-3 block">Legal</span>
           <h1 className="text-4xl font-bold text-foreground mb-4">Privacy Policy</h1>
-          <p className="text-sm text-muted">Last updated: April 17, 2026</p>
+          <p className="text-sm text-muted">Last updated: April 24, 2026</p>
         </div>
 
         <div className="prose prose-sm max-w-none space-y-10 text-foreground">
@@ -149,14 +149,14 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-lg font-bold mb-3">12. Governing law and jurisdiction</h2>
             <p className="text-sm text-muted leading-relaxed mb-3">
-              Settlyou is incorporated and operated in Chile. This Privacy Policy is governed by the laws of Chile, including Law No. 19,628 on the Protection of Private Life (Ley de Protección de Datos Personales).
+              Settlyou operates internationally and is committed to complying with applicable data protection laws in the jurisdictions where it serves customers, including U.S. federal and state privacy laws.
             </p>
             <p className="text-sm text-muted leading-relaxed mb-3">
-              We serve athletes and institutions in the United States. To the extent that U.S. state privacy laws apply — including the California Consumer Privacy Act (CCPA) — California residents have the right to know what personal data we collect, request deletion of their data, and opt out of any sale of personal information. We do not sell personal information. To exercise your rights, contact us at{" "}
+              For U.S.-based institutions and athletes, this Privacy Policy is interpreted in accordance with applicable U.S. law. California residents have rights under the California Consumer Privacy Act (CCPA), including the right to know what personal data we collect, request deletion of their data, and opt out of any sale of personal information. We do not sell personal information. To exercise your rights, contact us at{" "}
               <a href="mailto:hello@settlyou.com" className="text-brand-600 hover:underline">hello@settlyou.com</a>.
             </p>
             <p className="text-sm text-muted leading-relaxed">
-              Any disputes arising from this policy shall be subject to the exclusive jurisdiction of the courts of Santiago, Chile, unless applicable law requires otherwise.
+              We aim to resolve any privacy-related disputes directly and amicably. Please reach out to us at hello@settlyou.com before initiating any formal proceeding.
             </p>
           </section>
 

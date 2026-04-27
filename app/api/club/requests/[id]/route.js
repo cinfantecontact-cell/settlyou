@@ -11,14 +11,16 @@ export async function DELETE(request, { params }) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { data: profile } = await admin
-    .from("profiles").select("role, club_id").eq("id", user.id).single();
-  if (profile?.role !== "club_admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    .from("profiles").select("role, club_id, sport").eq("id", user.id).single();
+  if (!["club_admin", "coach"].includes(profile?.role)) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-  // Verify request belongs to this club
-  const { data: req } = await admin
-    .from("requests").select("id, club_id").eq("id", id).eq("club_id", profile.club_id).single();
+  // Verify request belongs to this club (coaches also scoped to their sport)
+  let query = admin.from("requests").select("id, club_id, sport").eq("id", id).eq("club_id", profile.club_id);
+  if (profile.role === "coach") query = query.eq("sport", profile.sport);
+  const { data: req } = await query.single();
   if (!req) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
+  await admin.from("athlete_documents").delete().eq("request_id", id);
   await admin.from("documents").delete().eq("request_id", id);
   await admin.from("events").delete().eq("request_id", id);
   await admin.from("requests").delete().eq("id", id);

@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import NavigationProgress from "./_components/NavigationProgress";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Settlyou — Athlete Relocation Platform",
-  description: "Settlyou helps sports clubs and agencies relocate athletes seamlessly to any city in the world.",
+  title: "Settlyou — AI Relocation Software",
+  description: "Settlyou gives universities a personalized AI relocation guide for every incoming student.",
 };
 
 export default function RootLayout({ children }) {
@@ -23,6 +24,7 @@ export default function RootLayout({ children }) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
+        <NavigationProgress />
         {children}
       </body>
     </html>

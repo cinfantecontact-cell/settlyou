@@ -40,7 +40,7 @@ export default function AthletesNavItem() {
     <a
       id="tour-nav-athletes"
       href="/club/athletes"
-      className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${pathname.startsWith("/club/athletes") ? "bg-brand-50 text-brand-700" : "text-foreground hover:bg-brand-50 hover:text-brand-700"}`}
+      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${pathname.startsWith("/club/athletes") ? "bg-brand-50 text-brand-700 shadow-sm border border-brand-100" : "text-muted hover:bg-surface hover:text-foreground"}`}
     >
       <div className="relative shrink-0">
         <svg className="w-4 h-4 opacity-60" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -50,7 +50,7 @@ export default function AthletesNavItem() {
           <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-brand-500 rounded-full" />
         )}
       </div>
-      Athletes
+      Students
     </a>
   );
 }

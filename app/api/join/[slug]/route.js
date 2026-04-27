@@ -1,6 +1,6 @@
 import { NextResponse, after } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { sendAdminNewSubmission } from "@/lib/email/send";
+import { sendAdminNewSubmission, sendGenerationFailureAlert } from "@/lib/email/send";
 import { generateRelocationDocument } from "@/lib/ai/generate-document";
 
 export async function POST(request, { params }) {
@@ -25,16 +25,72 @@ export async function POST(request, { params }) {
   // Derive effective limit from plan if seat_limit not explicitly set
   const effectiveLimit = club.seat_limit ?? (club.plan === "premium" ? 100 : 40);
   if ((club.seats_used ?? 0) >= effectiveLimit) {
-    return NextResponse.json({ error: "This club has reached its guide limit for the year. Please contact hello@settlyou.com." }, { status: 403 });
+    return NextResponse.json({ error: "This institution has reached its guide limit for the year. Please contact hello@settlyou.com." }, { status: 403 });
   }
 
   const body = await request.json();
 
+  // Duplicate prevention — check for existing active submission from same student
+  if (body.athlete_email) {
+    const { data: existing } = await admin
+      .from("requests")
+      .select("id, status")
+      .eq("club_id", club.id)
+      .eq("athlete_email", body.athlete_email)
+      .neq("status", "delivered")
+      .limit(1)
+      .single();
+
+    if (existing) {
+      return NextResponse.json(
+        { error: "A guide request for this email already exists. Please contact your institution if you need a new guide." },
+        { status: 409 }
+      );
+    }
+  } else if (body.athlete_name) {
+    const { data: existing } = await admin
+      .from("requests")
+      .select("id, status")
+      .eq("club_id", club.id)
+      .eq("athlete_name", body.athlete_name)
+      .neq("status", "delivered")
+      .limit(1)
+      .single();
+
+    if (existing) {
+      return NextResponse.json(
+        { error: "A guide request for this name already exists. Please contact your institution if you need a new guide." },
+        { status: 409 }
+      );
+    }
+  }
+
+  // Coach sport validation — athlete's sport must have a registered coach
+  if (body.sport) {
+    const { data: coachForSport } = await admin
+      .from("profiles")
+      .select("id")
+      .eq("club_id", club.id)
+      .eq("role", "coach")
+      .eq("sport", body.sport)
+      .limit(1)
+      .single();
+
+    if (!coachForSport) {
+      return NextResponse.json(
+        { error: `${club.name} has not registered a ${body.sport} coach yet. Please contact your institution for assistance.` },
+        { status: 422 }
+      );
+    }
+  }
+
   const token = crypto.randomUUID();
+  const uploadToken = crypto.randomUUID();
 
   const { data: inserted, error: insertError } = await admin.from("requests").insert({
     club_id: club.id,
     athlete_link_token: token,
+    upload_token: uploadToken,
     submitted_by_athlete: true,
     status: "submitted",
     athlete_type: body.athlete_type || "pro",
@@ -113,6 +169,7 @@ export async function POST(request, { params }) {
     service_tier: body.service_tier || "basic",
     athlete_email: body.athlete_email || null,
     additional_notes: body.additional_notes || null,
+    athlete_phone: body.athlete_phone || null,
   }).select("id").single();
 
   if (insertError) {
@@ -122,7 +179,7 @@ export async function POST(request, { params }) {
   // Increment seats_used
   await admin
     .from("clubs")
-    .update({ seats_used: club.seats_used + 1 })
+    .update({ seats_used: (club.seats_used ?? 0) + 1 })
     .eq("id", club.id);
 
   // Notify admin of new submission
@@ -150,10 +207,45 @@ export async function POST(request, { params }) {
         const { data: clubData } = await admin
           .from("clubs").select("custom_notes, logo_url, primary_color, division").eq("id", club.id).single();
 
-        if (clubData?.custom_notes) relocationRequest.club_custom_notes = clubData.custom_notes;
         if (clubData?.logo_url) relocationRequest.club_logo_url = clubData.logo_url;
         if (clubData?.primary_color) relocationRequest.club_primary_color = clubData.primary_color;
         if (clubData?.division) relocationRequest.division = clubData.division;
+
+        // Fetch coach notes for this sport
+        let coachNotes = null;
+        let coachLinks = [];
+        if (relocationRequest.sport) {
+          const { data: sportNotes } = await admin
+            .from("coach_sport_notes")
+            .select("custom_notes, custom_links")
+            .eq("club_id", club.id)
+            .eq("sport", relocationRequest.sport)
+            .single();
+          if (sportNotes?.custom_notes) coachNotes = sportNotes.custom_notes;
+          if (sportNotes?.custom_links?.length) coachLinks = sportNotes.custom_links;
+        }
+
+        // Merge institution notes + coach notes (coach notes take priority — they're sport-specific)
+        const allNotes = [clubData?.custom_notes, coachNotes].filter(Boolean).join("\n\n");
+        if (allNotes) relocationRequest.club_custom_notes = allNotes;
+        if (coachLinks.length) relocationRequest.club_custom_links = coachLinks;
+
+        // Store coach identity for document rendering
+        if (coachNotes && relocationRequest.sport) {
+          relocationRequest.coach_sport = relocationRequest.sport;
+          // Fetch coach name
+          const { data: coachProfile } = await admin
+            .from("profiles")
+            .select("full_name")
+            .eq("club_id", club.id)
+            .eq("role", "coach")
+            .eq("sport", relocationRequest.sport)
+            .single();
+          if (coachProfile?.full_name) {
+            const lastName = coachProfile.full_name.split(" ").pop();
+            relocationRequest.coach_name = lastName;
+          }
+        }
 
         await admin.from("requests").update({ status: "generating" }).eq("id", requestId);
 
@@ -175,6 +267,8 @@ export async function POST(request, { params }) {
 
         if (clubData?.logo_url) document.meta.club_logo_url = clubData.logo_url;
         if (clubData?.primary_color) document.meta.club_primary_color = clubData.primary_color;
+        if (relocationRequest.coach_sport) document.meta.coach_sport = relocationRequest.coach_sport;
+        if (relocationRequest.coach_name) document.meta.coach_name = relocationRequest.coach_name;
 
         const { error: docError } = await admin
           .from("documents").insert({ request_id: requestId, content: document, language: "en" });
@@ -186,6 +280,18 @@ export async function POST(request, { params }) {
       } catch (err) {
         await admin.from("requests").update({ status: "submitted" }).eq("id", requestId);
         console.error("[auto-generate] error:", err);
+        try {
+          const { data: failedRequest } = await admin
+            .from("requests").select("athlete_name").eq("id", requestId).single();
+          await sendGenerationFailureAlert({
+            athleteName: failedRequest?.athlete_name || "Unknown student",
+            clubName: club.name,
+            requestId,
+            errorMessage: err.message,
+          });
+        } catch (alertErr) {
+          console.error("[auto-generate] failed to send alert:", alertErr.message);
+        }
       }
     });
   }

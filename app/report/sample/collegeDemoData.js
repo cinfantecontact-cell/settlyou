@@ -730,6 +730,36 @@ export const collegeDemoDocumentV2 = {
   university_notes: null,
   university_links: null,
   sections: {
+    first_week: {
+      title: "Your First 7 Days",
+      intro: "Your first week sets the tone — tackle these in order and you'll arrive organized and confident.",
+      days: [
+        {
+          label: "Day 1",
+          tasks: [
+            "Check in with FAU International Student Services (Building 96, Room 204) — bring passport, I-20, and F-1 visa. Gets your SEVIS record validated and everything official.",
+            "After ISS, walk down to Red Reef Park beach — 10 minutes from campus. First look at the Atlantic. You've earned it.",
+          ],
+        },
+        {
+          label: "Days 2–3",
+          tasks: [
+            "[ATHLETE] FAU Sports Medicine (Building 97) — complete your pre-participation physical. No physical on file means no practice.",
+            "Open a student checking account at a major US bank near campus — passport, I-20, and I-94 are enough. No SSN needed.",
+            "Explore Mizner Park in the evening — outdoor dining, a coffee, and a feel for what Boca Raton actually looks like on a normal night.",
+          ],
+        },
+        {
+          label: "Days 4–7",
+          tasks: [
+            "[ATHLETE] Sign your athletic compliance forms at the FAU Compliance Office (Building 96) — emergency contacts, travel consent, done in 20 minutes.",
+            "[ATHLETE] Book your free nutrition consultation with the FAU Sports Dietitian — they'll build your meal plan around what's actually available here.",
+            "Find your go-to spot: a coffee shop, a cheap lunch place, somewhere near campus that feels like yours. Every student has one by week two.",
+            "[ATHLETE] If your team has a welcome event this week — go. That's where the season starts.",
+          ],
+        },
+      ],
+    },
     city_essentials: {
       title: "Your New City",
       restaurants: [
@@ -750,12 +780,6 @@ export const collegeDemoDocumentV2 = {
           cuisine: "American / Burgers",
           location: "Federal Hwy, Boca Raton",
           why: "Affordable, filling, popular with FAU students. Excellent post-training burgers.",
-        },
-        {
-          name: "Whole Foods Market",
-          cuisine: "Grocery / Prepared Foods",
-          location: "Glades Rd, Boca Raton (2 miles from FAU)",
-          why: "Best option for performance nutrition shopping — protein, produce, and international foods.",
         },
       ],
       places_to_visit: [

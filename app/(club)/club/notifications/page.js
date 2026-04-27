@@ -2,7 +2,6 @@ export const dynamic = 'force-dynamic';
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
-import TourDriver from "../_components/TourDriver";
 
 export default async function ClubNotificationsPage() {
   const supabase = await createClient();
@@ -12,75 +11,84 @@ export default async function ClubNotificationsPage() {
   if (!user) redirect("/login");
 
   const { data: profile } = await admin
-    .from("profiles").select("role, club_id").eq("id", user.id).single();
-  if (profile?.role !== "club_admin") redirect("/login");
+    .from("profiles").select("role, club_id, sport").eq("id", user.id).single();
+  if (!["club_admin", "coach"].includes(profile?.role)) redirect("/login");
 
-  const { data: club } = await admin
-    .from("clubs").select("plan").eq("id", profile.club_id).single();
-  const isPremium = club?.plan === "premium";
+  const isCoach = profile.role === "coach";
 
-  // Guide delivered events
-  const { data: deliveredEvents } = await admin
+  // Fetch all relevant event types
+  let eventsQuery = admin
     .from("events")
-    .select("id, created_at, metadata")
+    .select("id, request_id, created_at, event_type, metadata")
     .eq("club_id", profile.club_id)
-    .eq("event_type", "guide_delivered")
+    .in("event_type", ["guide_delivered", "guide_opened", "document_uploaded"])
     .order("created_at", { ascending: false });
 
-  // Guide opened events — Premium only, deduplicated to first open per request
-  let openNotifications = [];
-  if (isPremium) {
-    const { data: openEvents } = await admin
-      .from("events")
-      .select("id, request_id, created_at")
+  const { data: rawEvents } = await eventsQuery;
+
+  // For coaches: filter to only their sport via metadata or request lookup
+  let sportRequestIds = null;
+  if (isCoach && profile.sport) {
+    const { data: sportReqs } = await admin
+      .from("requests")
+      .select("id")
       .eq("club_id", profile.club_id)
-      .eq("event_type", "guide_opened")
-      .order("created_at", { ascending: true }); // oldest first to get first open
+      .eq("sport", profile.sport);
+    sportRequestIds = new Set((sportReqs ?? []).map(r => r.id));
+  }
 
-    // Keep only the first open per request
-    const firstOpenMap = {};
-    for (const e of openEvents ?? []) {
-      if (e.request_id && !firstOpenMap[e.request_id]) {
-        firstOpenMap[e.request_id] = e;
-      }
-    }
+  const filtered = (rawEvents ?? []).filter(e => {
+    if (!isCoach) return true;
+    // match via metadata.sport or request_id
+    if (e.metadata?.sport) return e.metadata.sport === profile.sport;
+    if (e.request_id && sportRequestIds) return sportRequestIds.has(e.request_id);
+    return false;
+  });
 
-    // Fetch athlete names for those requests
-    const requestIds = Object.keys(firstOpenMap);
-    if (requestIds.length) {
-      const { data: requests } = await admin
-        .from("requests")
-        .select("id, athlete_name, athlete_link_token")
-        .in("id", requestIds);
-
-      const reqMap = Object.fromEntries((requests ?? []).map((r) => [r.id, r]));
-      openNotifications = Object.values(firstOpenMap).map((e) => ({
-        ...e,
-        event_type: "guide_opened",
-        athlete_name: reqMap[e.request_id]?.athlete_name || null,
-        report_token: reqMap[e.request_id]?.athlete_link_token || null,
-      }));
+  // Deduplicate guide_opened to first open per request
+  const firstOpenMap = {};
+  const nonOpenEvents = [];
+  for (const e of filtered) {
+    if (e.event_type === "guide_opened") {
+      if (!firstOpenMap[e.request_id]) firstOpenMap[e.request_id] = e;
+    } else {
+      nonOpenEvents.push(e);
     }
   }
 
-  // Merge and sort all notifications newest first
+  // Fetch athlete names for open events
+  const openRequestIds = Object.keys(firstOpenMap);
+  let reqMap = {};
+  if (openRequestIds.length) {
+    const { data: reqs } = await admin
+      .from("requests").select("id, athlete_name, athlete_link_token").in("id", openRequestIds);
+    reqMap = Object.fromEntries((reqs ?? []).map(r => [r.id, r]));
+  }
+
   const allNotifications = [
-    ...(deliveredEvents ?? []).map((e) => ({
+    ...nonOpenEvents.map(e => ({
       ...e,
-      event_type: "guide_delivered",
       athlete_name: e.metadata?.athlete_name || null,
       athlete_email: e.metadata?.athlete_email || null,
       report_token: e.metadata?.report_token || null,
+      document_type: e.metadata?.document_type || null,
+      file_name: e.metadata?.file_name || null,
     })),
-    ...openNotifications,
+    ...Object.values(firstOpenMap).map(e => ({
+      ...e,
+      athlete_name: reqMap[e.request_id]?.athlete_name || null,
+      report_token: reqMap[e.request_id]?.athlete_link_token || null,
+    })),
   ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
   return (
-    <div className="p-8 max-w-3xl mx-auto">
-      <TourDriver page="notifications" />
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground">Notifications</h1>
-        <p className="text-sm text-muted mt-1">Guide delivery and athlete activity updates</p>
+    <div className="p-8 max-w-5xl mx-auto flex flex-col gap-6">
+      <div className="flex items-start justify-between gap-6">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground mb-1">Notifications</h1>
+          <p className="text-sm text-muted max-w-lg">A log of every guide delivered and every student who has opened their guide. You also receive a weekly email summary every Monday.</p>
+        </div>
+        <p className="text-sm text-muted shrink-0 mt-1">{allNotifications.length} total</p>
       </div>
 
       <div id="tour-notifications-list" className="bg-white border border-border rounded-xl overflow-hidden">
@@ -94,13 +102,17 @@ export default async function ClubNotificationsPage() {
               <li key={e.id} className="flex items-center justify-between px-6 py-4 hover:bg-surface transition-colors">
                 <div className="flex items-center gap-4">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-                    e.event_type === "guide_delivered"
-                      ? "bg-brand-50 border border-brand-100"
-                      : "bg-blue-50 border border-blue-100"
+                    e.event_type === "guide_delivered" ? "bg-brand-50 border border-brand-100"
+                    : e.event_type === "document_uploaded" ? "bg-orange-50 border border-orange-100"
+                    : "bg-blue-50 border border-blue-100"
                   }`}>
                     {e.event_type === "guide_delivered" ? (
                       <svg className="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    ) : e.event_type === "document_uploaded" ? (
+                      <svg className="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
                     ) : (
                       <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -112,13 +124,18 @@ export default async function ClubNotificationsPage() {
                   <div>
                     <p className="text-sm font-medium text-foreground">
                       {e.event_type === "guide_delivered" ? (
-                        <>Guide delivered — <span className="text-brand-600">{e.athlete_name || "Athlete"}</span></>
+                        <>Guide delivered — <span className="text-brand-600">{e.athlete_name || "Student"}</span></>
+                      ) : e.event_type === "document_uploaded" ? (
+                        <>Document uploaded — <span className="text-orange-600">{e.athlete_name || "Student"}</span>{e.document_type ? <span className="text-muted font-normal"> · {e.document_type.replace(/_/g, " ")}</span> : ""}</>
                       ) : (
-                        <>Guide opened — <span className="text-blue-600">{e.athlete_name || "Athlete"}</span></>
+                        <>Guide opened — <span className="text-blue-600">{e.athlete_name || "Student"}</span></>
                       )}
                     </p>
                     {e.athlete_email && (
                       <p className="text-xs text-muted mt-0.5">{e.athlete_email}</p>
+                    )}
+                    {e.event_type === "document_uploaded" && e.file_name && (
+                      <p className="text-xs text-muted mt-0.5">{e.file_name}</p>
                     )}
                   </div>
                 </div>

@@ -17,7 +17,7 @@ function Row({ label, value }) {
 function Group({ title, children }) {
   return (
     <div className="mb-6">
-      <h3 className="text-xs font-bold uppercase tracking-widest text-muted mb-3">{title}</h3>
+      <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">{title}</h3>
       <div className="bg-white rounded-xl border border-border px-5 py-1">
         {children}
       </div>
@@ -32,9 +32,9 @@ export default function FormAnswers({ request: r }) {
     <div className="mt-6">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="text-sm text-brand-600 hover:underline font-medium"
+        className="text-sm font-medium px-4 py-2 rounded-lg border border-border text-muted hover:text-foreground hover:border-foreground/30 transition-colors"
       >
-        {open ? "Hide form answers ↑" : "View form answers ↓"}
+        {open ? "Hide form answers" : "View form answers"}
       </button>
 
       {open && (
@@ -50,7 +50,7 @@ export default function FormAnswers({ request: r }) {
             <Row label="Report language" value={r.report_language} />
           </Group>
 
-          <Group title="Club & Destination">
+          <Group title="Institution & Destination">
             <Row label="Club joining" value={r.club_joining} />
             <Row label="Training ground" value={r.training_ground_address} />
             <Row label="Destination" value={r.destination_city ? `${r.destination_city}, ${r.destination_country}` : null} />
