@@ -393,8 +393,8 @@ function ROISection({ client }) {
 const TIERS = [
   { label: "Micro",       price: "$2,400", unit: "/ yr", range: "Up to 40 students / yr",  note: "Small programs or single-sport pilots.",        per: "~$60 / student" },
   { label: "Starter",     price: "$4,900", unit: "/ yr", range: "Up to 100 students / yr", note: "Mid-size programs across multiple sports.",      per: "~$49 / student" },
-  { label: "Pro",         price: "$9,900", unit: "/ yr", range: "Up to 200 students / yr", note: "NCAA D1/D2 and larger universities.",             per: "~$50 / student" },
-  { label: "Institution", price: "Custom", unit: "",     range: "200+ students / yr",       note: "Large state universities — contact us.",         per: "From $14,000 / yr" },
+  { label: "Pro",         price: "$7,900", unit: "/ yr", range: "Up to 200 students / yr", note: "NCAA D1/D2 and larger universities.",             per: "~$40 / student" },
+  { label: "Institution", price: "Custom", unit: "",     range: "200+ students / yr",       note: "Large state universities — contact us.",         per: "Annual · use-it-or-lose-it" },
 ];
 
 function PricingSection() {

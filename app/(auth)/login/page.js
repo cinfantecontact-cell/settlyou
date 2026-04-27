@@ -17,10 +17,11 @@ export default async function LoginPage({ searchParams }) {
           <p className="text-white/50 text-xs font-bold uppercase tracking-widest mb-4">What you get</p>
           <div className="flex flex-col gap-4">
             {[
-              "Personalized guide for every incoming student",
+              "Personalized relocation guide for every athlete",
+              "Coach portal — track intake, guides & documents",
+              "Document collection with per-sport requirements",
+              "Guide delivery via WhatsApp & email",
               "NCAA, NAIA & NJCAA eligibility guidance",
-              "F-1 visa, SEVIS & banking covered",
-              "18 language options — written from scratch",
               "Your institution's notes in every guide",
             ].map((item) => (
               <div key={item} className="flex items-start gap-3">

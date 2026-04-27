@@ -43,7 +43,7 @@ You manage the institution account. You invite coaches and assign them to sports
 
 ### Plan & Usage (/club/billing)
 - Shows students used vs. student limit for the current year
-- Current pricing tiers: Micro (up to 40 students, $2,400/yr), Starter (up to 100, $4,900/yr), Pro (up to 200, $9,900/yr), Institution (200+, custom from $14,000/yr)
+- Current pricing tiers: Micro (up to 40 students, $2,400/yr), Starter (up to 100, $4,900/yr), Pro (up to 200, $7,900/yr), Institution (200+, custom pricing)
 - All tiers include the full platform — guides, coach portal, document uploads, branding, analytics. No locked features.
 - Annual plan: use-it-or-lose-it, students do not roll over to the next year
 - To upgrade or add capacity, email hello@settlyou.com

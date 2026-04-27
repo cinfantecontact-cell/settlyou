@@ -29,7 +29,7 @@ function CheckIcon() {
 const TIERS = [
   { label: "Micro",       range: "Up to 40 students / yr",  price: "$2,400 / yr" },
   { label: "Starter",     range: "Up to 100 students / yr", price: "$4,900 / yr" },
-  { label: "Pro",         range: "Up to 200 students / yr", price: "$9,900 / yr" },
+  { label: "Pro",         range: "Up to 200 students / yr", price: "$7,900 / yr" },
   { label: "Institution", range: "200+ students / yr",      price: "Custom" },
 ];
 

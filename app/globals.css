@@ -45,6 +45,27 @@ body {
   66%        { transform: translate(-18px,  14px) scale(0.97); }
 }
 
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%;   }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%;   }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+@keyframes marquee {
+  0%   { transform: translateX(0);    }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes statFadeIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
 /* Hero load sequence */
 .hero-animate {
   opacity: 0;
@@ -55,10 +76,64 @@ body {
 .hero-d3 { animation-delay: 0.30s; }
 .hero-d4 { animation-delay: 0.44s; }
 .hero-d5 { animation-delay: 0.58s; }
+.hero-d6 { animation-delay: 0.72s; }
 
 /* Background blobs */
 .hero-blob     { animation: blobFloat 14s ease-in-out infinite; }
 .hero-blob-alt { animation: blobFloat 18s ease-in-out infinite reverse; }
+
+/* Animated gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #2f7d2f 0%, #5bb45b 40%, #3e9b3e 60%, #276327 100%);
+  background-size: 300% 300%;
+  animation: gradientShift 5s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Badge shimmer */
+.badge-shimmer {
+  background: linear-gradient(90deg,
+    var(--color-brand-50) 0%,
+    var(--color-brand-50) 35%,
+    var(--color-brand-100) 50%,
+    var(--color-brand-50) 65%,
+    var(--color-brand-50) 100%);
+  background-size: 200% auto;
+  animation: shimmer 3.5s linear infinite;
+}
+
+/* Scrolling marquee */
+.marquee-track {
+  display: flex;
+  animation: marquee 30s linear infinite;
+  will-change: transform;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* Feature card hover lift */
+.feature-card {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.22s ease;
+}
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(47, 125, 47, 0.12);
+  border-color: var(--color-brand-200);
+}
+
+/* CTA button pulse glow */
+@keyframes ctaGlow {
+  0%,  100% { box-shadow: 0 0 0 0   rgba(47, 125, 47, 0);    }
+  50%        { box-shadow: 0 0 24px 4px rgba(47, 125, 47, 0.3); }
+}
+.cta-primary {
+  animation: ctaGlow 3s ease-in-out infinite;
+}
 
 /* Scroll-reveal */
 .reveal-on-scroll {

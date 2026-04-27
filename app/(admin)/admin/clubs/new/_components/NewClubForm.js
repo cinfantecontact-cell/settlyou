@@ -192,11 +192,11 @@ export default function NewClubForm() {
           <label className="text-sm font-medium text-foreground">Pricing tier</label>
           <select name="plan" required value={tier} onChange={handleTierChange}
             className="border border-border rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white">
-            <option value="0">Trial — free, up to 15 guides</option>
-            <option value="49">Starter — $49/guide, up to 50 guides (min $2,450)</option>
-            <option value="35">Growth — $35/guide, up to 150 guides (min $5,250)</option>
-            <option value="25">Scale — $25/guide, up to 400 guides (min $10,000)</option>
-            <option value="custom">Enterprise — custom pricing</option>
+            <option value="trial">Trial — free, up to 15 athletes</option>
+            <option value="micro">Micro — $2,400/yr, up to 40 athletes</option>
+            <option value="starter">Starter — $4,900/yr, up to 100 athletes</option>
+            <option value="pro">Pro — $7,900/yr, up to 200 athletes</option>
+            <option value="institution">Institution — custom pricing, 200+ athletes</option>
           </select>
         </div>
 

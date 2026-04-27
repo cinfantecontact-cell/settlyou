@@ -5,11 +5,17 @@ import DeleteClubButton from "../clients/_components/DeleteClubButton";
 
 export const metadata = { title: "Universities — Settl Admin" };
 
-function getPlan(seatLimit) {
-  if (!seatLimit) return { label: "Free", color: "bg-gray-100 text-gray-600" };
-  if (seatLimit >= 400) return { label: "$25 / guide", color: "bg-purple-100 text-purple-700" };
-  if (seatLimit >= 150) return { label: "$35 / guide", color: "bg-blue-100 text-blue-700" };
-  return { label: "$49 / guide", color: "bg-brand-100 text-brand-700" };
+function getPlan(plan, seatLimit) {
+  if (plan === "institution") return { label: "Institution", color: "bg-purple-100 text-purple-700" };
+  if (plan === "pro") return { label: "Pro", color: "bg-blue-100 text-blue-700" };
+  if (plan === "starter") return { label: "Starter", color: "bg-brand-100 text-brand-700" };
+  if (plan === "micro") return { label: "Micro", color: "bg-green-100 text-green-700" };
+  if (plan === "trial" || !seatLimit) return { label: "Trial", color: "bg-gray-100 text-gray-600" };
+  // legacy fallback
+  if (seatLimit >= 200) return { label: "Institution", color: "bg-purple-100 text-purple-700" };
+  if (seatLimit >= 100) return { label: "Pro", color: "bg-blue-100 text-blue-700" };
+  if (seatLimit >= 40) return { label: "Starter", color: "bg-brand-100 text-brand-700" };
+  return { label: "Micro", color: "bg-green-100 text-green-700" };
 }
 
 export default async function AdminClubsPage() {
@@ -63,7 +69,7 @@ export default async function AdminClubsPage() {
       ) : (
         <div className="flex flex-col gap-3">
           {clubs.map((club) => {
-            const plan = getPlan(club.seat_limit);
+            const plan = getPlan(club.plan, club.seat_limit);
             const usedPct = club.seat_limit ? Math.min(100, Math.round((club.seats_used / club.seat_limit) * 100)) : 0;
             const accent = club.primary_color || "#16a34a";
 

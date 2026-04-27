@@ -1,13 +1,62 @@
 import ScrollReveal from "./_components/ScrollReveal";
+import QuoteButton from "./_components/QuoteButton";
 
 
 const PLATFORM_FEATURES = [
-  { title: "Coach portals", desc: "Each coach manages their sport independently — notes, links, and required documents. No AD bottleneck." },
-  { title: "Document collection", desc: "Athletes upload documents through a personal link. Coaches see real-time submission status." },
-  { title: "WhatsApp delivery", desc: "Upload link sent by WhatsApp on delivery. Athletes always have it on hand." },
-  { title: "Sport-specific guides", desc: "A soccer player's guide is different from a swimmer's. Coach notes make the difference." },
-  { title: "Email delivery", desc: "Full personalized guide delivered to the athlete's inbox the moment you approve it." },
-  { title: "Multilingual", desc: "Guides written in the athlete's native language from the start — 18 languages supported." },
+  {
+    title: "Coach portals",
+    desc: "Each coach manages their sport independently — notes, links, and required documents. No AD bottleneck.",
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+    ),
+  },
+  {
+    title: "Document collection",
+    desc: "Athletes upload documents through a personal link. Coaches see real-time submission status.",
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+    ),
+  },
+  {
+    title: "WhatsApp delivery",
+    desc: "Upload link sent by WhatsApp on delivery. Athletes always have it on hand.",
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+      </svg>
+    ),
+  },
+  {
+    title: "Sport-specific guides",
+    desc: "A soccer player's guide is different from a swimmer's. Coach notes make the difference.",
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+      </svg>
+    ),
+  },
+  {
+    title: "Email delivery",
+    desc: "Full personalized guide delivered to the athlete's inbox the moment you approve it.",
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+      </svg>
+    ),
+  },
+  {
+    title: "Multilingual",
+    desc: "Guides written in the athlete's native language from the start — 18 languages supported.",
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+      </svg>
+    ),
+  },
 ];
 
 const STEPS = [
@@ -83,44 +132,129 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero */}
-      <section className="relative overflow-hidden border-b border-border">
+      <section className="relative overflow-hidden border-b border-border bg-white">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="hero-blob absolute -top-40 -right-24 w-[580px] h-[580px] rounded-full bg-brand-200 opacity-25 blur-[100px]" />
-          <div className="hero-blob-alt absolute -bottom-32 -left-24 w-[420px] h-[420px] rounded-full bg-brand-100 opacity-35 blur-[80px]" />
+          <div className="hero-blob absolute -top-40 -right-24 w-[600px] h-[600px] rounded-full bg-brand-200 opacity-30 blur-[100px]" />
+          <div className="hero-blob-alt absolute -bottom-32 -left-24 w-[400px] h-[400px] rounded-full bg-brand-100 opacity-40 blur-[80px]" />
         </div>
-        <div className="relative flex flex-col items-center text-center px-6 py-32 max-w-4xl mx-auto w-full">
-          <span className="hero-animate hero-d1 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-5 bg-brand-50 border border-brand-100 px-4 py-2 rounded-full">
-            The complete relocation platform for college athletics
-          </span>
-          <h1 className="hero-animate hero-d2 text-6xl font-bold text-foreground leading-[1.1] mb-6 tracking-tight">
-            Every athlete arrives<br />
-            <span className="text-brand-600">ready.</span>
-          </h1>
-          <p className="hero-animate hero-d3 text-xl text-muted max-w-2xl mb-10 leading-relaxed">
-            Settlyou gives every coach a portal to set up their sport, every athlete a personalized guide and document upload link, and every AD a dashboard to oversee it all.
-          </p>
-          <div className="hero-animate hero-d4 flex items-center gap-4 flex-wrap justify-center">
-            <a href="/report/sample-college"
-              className="bg-brand-600 text-white px-8 py-4 rounded-lg text-base font-semibold hover:bg-brand-700 transition-colors shadow-sm hover:shadow-md">
-              See a sample guide →
-            </a>
-            <a href="/contact"
-              className="bg-white text-brand-600 border border-brand-200 px-8 py-4 rounded-lg text-base font-semibold hover:bg-brand-50 hover:border-brand-300 transition-colors">
-              Request a demo →
-            </a>
+        <div className="relative max-w-6xl mx-auto px-6 py-20 lg:py-28 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+          {/* Left — copy */}
+          <div className="flex flex-col items-start">
+            <span className="hero-animate hero-d1 badge-shimmer inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-6 border border-brand-200 px-4 py-2 rounded-full">
+              Built for college athletics
+            </span>
+            <h1 className="hero-animate hero-d2 text-5xl lg:text-6xl font-black text-foreground leading-[1.08] mb-5 tracking-tight">
+              Every athlete<br />arrives <span className="gradient-text">ready.</span>
+            </h1>
+            <p className="hero-animate hero-d3 text-lg text-muted mb-8 leading-relaxed max-w-lg">
+              AI-powered relocation guides, coach portals, and document collection — one platform for your entire athletics department.
+            </p>
+            <div className="hero-animate hero-d4 flex items-center gap-3 flex-wrap mb-10">
+              <a href="/report/sample-college"
+                className="cta-primary bg-brand-600 text-white px-7 py-3.5 rounded-lg text-sm font-bold hover:bg-brand-700 transition-colors shadow-md">
+                See a sample guide
+              </a>
+              <QuoteButton className="bg-white text-foreground border border-border px-7 py-3.5 rounded-lg text-sm font-bold hover:border-brand-300 hover:text-brand-600 transition-colors">
+                Request a quote
+              </QuoteButton>
+            </div>
+            <div className="hero-animate hero-d5 flex items-center gap-7 flex-wrap">
+              {[
+                { value: "18", label: "languages" },
+                { value: "< 5 min", label: "generation" },
+                { value: "30+", label: "countries" },
+              ].map((s) => (
+                <div key={s.label} className="flex flex-col gap-0.5">
+                  <span className="text-2xl font-black text-brand-600 leading-none">{s.value}</span>
+                  <span className="text-xs text-muted font-medium uppercase tracking-wider">{s.label}</span>
+                </div>
+              ))}
+            </div>
           </div>
+
+          {/* Right — product mockup */}
+          <div className="hero-animate hero-d4 hidden lg:flex items-center justify-center">
+            <div className="relative w-full max-w-sm">
+              <div className="absolute -inset-4 bg-brand-400 opacity-15 blur-3xl rounded-3xl pointer-events-none" />
+              <div className="relative bg-white rounded-2xl border border-border shadow-2xl overflow-hidden">
+                {/* Window chrome */}
+                <div className="bg-foreground px-5 py-3.5 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="flex gap-1.5">
+                      <div className="w-2.5 h-2.5 rounded-full bg-red-400/70" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-yellow-400/70" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-green-400/70" />
+                    </div>
+                    <span className="text-white/40 text-xs ml-2 font-mono">settlyou.com/coach</span>
+                  </div>
+                </div>
+                {/* Portal header */}
+                <div className="bg-brand-600 px-5 py-4">
+                  <p className="text-brand-200 text-xs font-bold uppercase tracking-widest mb-0.5">Coach Portal</p>
+                  <p className="text-white font-bold text-base">Men's Soccer</p>
+                </div>
+                {/* Athlete rows */}
+                <div className="px-5 pt-4 pb-2">
+                  <div className="flex items-center justify-between mb-3">
+                    <p className="text-xs font-bold text-foreground uppercase tracking-wider">Athletes</p>
+                    <span className="text-xs font-semibold text-brand-600 bg-brand-50 border border-brand-100 px-2 py-0.5 rounded-full">4 active</span>
+                  </div>
+                  {[
+                    { name: "Marcus Rodriguez", country: "Colombia", guide: true, docs: "3/4", dot: "bg-brand-500" },
+                    { name: "Jaime López",       country: "Mexico",   guide: true, docs: "4/4", dot: "bg-brand-500" },
+                    { name: "Paulo Silva",        country: "Brazil",   guide: true, docs: "1/4", dot: "bg-yellow-400" },
+                    { name: "Alex Müller",        country: "Germany",  guide: false, docs: "—",  dot: "bg-gray-300" },
+                  ].map((a) => (
+                    <div key={a.name} className="flex items-center gap-3 py-2.5 border-b border-border last:border-0">
+                      <div className={`w-2 h-2 rounded-full shrink-0 ${a.dot}`} />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-semibold text-foreground truncate">{a.name}</p>
+                        <p className="text-xs text-muted">{a.country}</p>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        {a.guide
+                          ? <span className="text-xs bg-brand-50 text-brand-600 border border-brand-100 px-2 py-0.5 rounded-full font-medium">Guide ✓</span>
+                          : <span className="text-xs bg-gray-50 text-gray-400 border border-gray-200 px-2 py-0.5 rounded-full font-medium">Pending</span>
+                        }
+                        <span className="text-xs text-muted font-mono w-6 text-right">{a.docs}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                {/* Footer */}
+                <div className="px-5 py-3 bg-surface border-t border-border flex items-center justify-between">
+                  <p className="text-xs text-muted">Docs pending</p>
+                  <span className="text-xs font-bold text-brand-600">2 athletes</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
+
+
       {/* Platform features strip */}
-      <section className="border-b border-border py-14 px-6 bg-surface">
-        <div className="max-w-6xl mx-auto">
+      <section className="border-b border-border py-20 px-6 bg-surface">
+        <div className="max-w-5xl mx-auto">
           <ScrollReveal>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
+            <div className="text-center mb-12">
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-3 block">Everything included</span>
+              <h2 className="text-2xl font-bold text-foreground">Built for athletic programs</h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {PLATFORM_FEATURES.map((f) => (
-                <div key={f.title} className="flex flex-col gap-2">
-                  <p className="text-xs font-bold text-foreground">{f.title}</p>
-                  <p className="text-xs text-muted leading-relaxed">{f.desc}</p>
+                <div key={f.title} className="feature-card bg-white rounded-xl border border-border p-6 flex flex-col gap-4 relative overflow-hidden">
+                  <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-brand-400 to-brand-600" />
+                  <div className="w-10 h-10 rounded-full bg-brand-600 text-white flex items-center justify-center shrink-0 shadow-md">
+                    {f.icon}
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-foreground mb-1">{f.title}</p>
+                    <p className="text-sm text-muted leading-relaxed">{f.desc}</p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -138,70 +272,188 @@ export default function LandingPage() {
             </div>
           </ScrollReveal>
 
-          <div className="flex flex-col gap-0">
-            {STEPS.map((s, i) => (
-              <ScrollReveal key={s.number} delay={i * 100}>
-                <div className={`flex flex-col sm:flex-row items-start gap-8 py-10 ${i < STEPS.length - 1 ? "border-b border-border" : ""}`}>
-                  <div className="shrink-0 flex flex-col items-center sm:items-start gap-3 sm:w-24">
-                    <span className="text-5xl font-black text-brand-600 leading-none">{s.number}</span>
-                  </div>
-                  <div className="flex-1 pt-1">
-                    <h3 className="text-xl font-bold text-foreground mb-2">{s.title}</h3>
-                    <p className="text-sm text-muted leading-relaxed max-w-lg">{s.desc}</p>
-                  </div>
-                  <div className="hidden sm:flex shrink-0 items-center justify-center w-28 h-28 rounded-2xl border border-border bg-surface self-center">
-                    {i === 0 && (
-                      <div className="flex flex-col gap-1.5 px-3 w-full">
-                        {["Notes", "Links", "Docs"].map(l => (
-                          <div key={l} className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-brand-400 shrink-0" />
-                            <div className="flex-1 h-1.5 bg-brand-100 rounded-full" />
-                            <span className="text-[9px] text-muted font-medium">{l}</span>
+          <div className="flex flex-col gap-16">
+
+            {/* Step 01 */}
+            <ScrollReveal>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                <div>
+                  <span className="text-7xl font-black text-brand-100 leading-none block mb-4">01</span>
+                  <h3 className="text-2xl font-bold text-foreground mb-3">Coaches set up their sport</h3>
+                  <p className="text-muted leading-relaxed">Each coach adds their welcome message, sport-specific notes, helpful links, and the documents they need athletes to submit. Takes under 10 minutes, once.</p>
+                </div>
+                <div className="relative">
+                  <div className="absolute -inset-3 bg-brand-100 opacity-40 blur-2xl rounded-3xl pointer-events-none" />
+                  <div className="relative bg-white rounded-2xl border border-border shadow-xl overflow-hidden">
+                    <div className="bg-brand-600 px-5 py-3 flex items-center justify-between">
+                      <div>
+                        <p className="text-brand-200 text-xs font-bold uppercase tracking-widest">Coach Setup</p>
+                        <p className="text-white font-bold text-sm">Men's Soccer</p>
+                      </div>
+                      <span className="text-xs bg-white/20 text-white px-2.5 py-1 rounded-full font-medium">Step 1 of 1</span>
+                    </div>
+                    <div className="p-5 flex flex-col gap-4">
+                      <div className="flex flex-col gap-1.5">
+                        <p className="text-xs font-bold text-foreground uppercase tracking-wider">Welcome note</p>
+                        <div className="bg-surface border border-border rounded-lg px-3 py-2.5 text-xs text-muted italic leading-relaxed">"Practice is 3–6pm daily. NCAA eligibility clearance must be done before your first session..."</div>
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <p className="text-xs font-bold text-foreground uppercase tracking-wider">Links added</p>
+                        {["NCAA Eligibility Center", "Team Handbook", "Athletic Trainer"].map(l => (
+                          <div key={l} className="flex items-center gap-2 bg-brand-50 border border-brand-100 rounded-lg px-3 py-2">
+                            <span className="text-brand-500 text-xs">→</span>
+                            <span className="text-xs font-medium text-brand-700">{l}</span>
                           </div>
                         ))}
                       </div>
-                    )}
-                    {i === 1 && (
-                      <div className="flex flex-col gap-1.5 px-3 w-full">
-                        {["Name", "Sport", "Origin"].map(l => (
-                          <div key={l} className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-brand-300 shrink-0" />
-                            <div className="flex-1 h-1.5 bg-brand-100 rounded-full" />
-                            <span className="text-[9px] text-muted font-medium">{l}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                    {i === 2 && (
-                      <div className="flex flex-col gap-2 items-center">
-                        <div className="w-8 h-8 rounded-full bg-brand-600 flex items-center justify-center">
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-                        </div>
-                        <div className="flex flex-col gap-1 w-16">
-                          <div className="h-1.5 bg-brand-200 rounded-full w-full" />
-                          <div className="h-1.5 bg-brand-100 rounded-full w-4/5" />
-                          <div className="h-1.5 bg-brand-100 rounded-full w-3/5" />
+                      <div className="flex flex-col gap-2">
+                        <p className="text-xs font-bold text-foreground uppercase tracking-wider">Docs required</p>
+                        <div className="flex gap-2 flex-wrap">
+                          {["Passport", "NCAA Form", "Medical Clearance"].map(d => (
+                            <span key={d} className="text-xs bg-surface border border-border px-2.5 py-1 rounded-full text-foreground font-medium">{d}</span>
+                          ))}
                         </div>
                       </div>
-                    )}
-                    {i === 3 && (
-                      <div className="flex flex-col gap-1.5 items-center">
-                        <div className="w-8 h-10 rounded-md bg-brand-600 flex items-center justify-center shadow-sm">
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                        </div>
-                        <span className="text-[9px] text-brand-600 font-bold uppercase tracking-wide">Delivered</span>
-                      </div>
-                    )}
+                    </div>
                   </div>
                 </div>
-              </ScrollReveal>
-            ))}
+              </div>
+            </ScrollReveal>
+
+            {/* Step 02 */}
+            <ScrollReveal>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                <div className="relative lg:order-1 order-2">
+                  <div className="absolute -inset-3 bg-brand-100 opacity-40 blur-2xl rounded-3xl pointer-events-none" />
+                  <div className="relative bg-white rounded-2xl border border-border shadow-xl overflow-hidden">
+                    <div className="bg-foreground px-5 py-3">
+                      <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-0.5">Athlete Intake</p>
+                      <p className="text-white font-bold text-sm">Your relocation form</p>
+                    </div>
+                    <div className="p-5 flex flex-col gap-3.5">
+                      {[
+                        { label: "Full name", value: "Marcus Rodriguez" },
+                        { label: "Where are you from?", value: "Bogotá, Colombia" },
+                        { label: "Your sport", value: "Men's Soccer" },
+                        { label: "Housing preference", value: "On-campus dorm" },
+                      ].map(f => (
+                        <div key={f.label} className="flex flex-col gap-1">
+                          <p className="text-xs font-semibold text-foreground">{f.label}</p>
+                          <div className="bg-surface border border-border rounded-lg px-3 py-2 text-xs text-foreground">{f.value}</div>
+                        </div>
+                      ))}
+                      <button className="w-full mt-1 bg-brand-600 text-white text-xs font-bold py-2.5 rounded-lg">Generate my guide →</button>
+                    </div>
+                  </div>
+                </div>
+                <div className="lg:order-2 order-1">
+                  <span className="text-7xl font-black text-brand-100 leading-none block mb-4">02</span>
+                  <h3 className="text-2xl font-bold text-foreground mb-3">Athlete fills out a quick form</h3>
+                  <p className="text-muted leading-relaxed">A guided 5-minute form — name, origin, sport, housing needs, lifestyle. Athletes access it through a PIN-protected link shared by their coach.</p>
+                </div>
+              </div>
+            </ScrollReveal>
+
+            {/* Step 03 */}
+            <ScrollReveal>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                <div>
+                  <span className="text-7xl font-black text-brand-100 leading-none block mb-4">03</span>
+                  <h3 className="text-2xl font-bold text-foreground mb-3">AI builds the guide with the coach's voice inside</h3>
+                  <p className="text-muted leading-relaxed">Settlyou generates a full personalized city guide. The coach's notes, links, and document requests are woven in automatically — tailored to that athlete's sport and background.</p>
+                </div>
+                <div className="relative">
+                  <div className="absolute -inset-3 bg-brand-100 opacity-40 blur-2xl rounded-3xl pointer-events-none" />
+                  <div className="relative bg-white rounded-2xl border border-border shadow-xl overflow-hidden">
+                    <div className="bg-foreground px-5 py-3 flex items-center justify-between">
+                      <div>
+                        <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-0.5">Settlyou AI</p>
+                        <p className="text-white font-bold text-sm">Building Marcus's guide</p>
+                      </div>
+                      <span className="text-xs text-brand-400 font-bold animate-pulse">Generating...</span>
+                    </div>
+                    <div className="p-5 flex flex-col gap-2.5">
+                      {[
+                        { label: "Message from your coach", done: true },
+                        { label: "Housing in Kansas City", done: true },
+                        { label: "Healthcare & insurance", done: true },
+                        { label: "Banking & money transfers", done: true },
+                        { label: "Transportation", done: false },
+                        { label: "NCAA eligibility steps", done: false },
+                        { label: "Cultural tips for the US", done: false },
+                      ].map(s => (
+                        <div key={s.label} className="flex items-center gap-3">
+                          <div className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 ${s.done ? "bg-brand-500" : "bg-border"}`}>
+                            {s.done && <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
+                          </div>
+                          <span className={`text-xs ${s.done ? "text-foreground font-medium" : "text-muted"}`}>{s.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ScrollReveal>
+
+            {/* Step 04 */}
+            <ScrollReveal>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                <div className="relative lg:order-1 order-2">
+                  <div className="absolute -inset-3 bg-brand-100 opacity-40 blur-2xl rounded-3xl pointer-events-none" />
+                  <div className="relative bg-white rounded-2xl border border-border shadow-xl overflow-hidden">
+                    <div className="bg-brand-600 px-5 py-3">
+                      <p className="text-brand-200 text-xs font-bold uppercase tracking-widest mb-0.5">Delivery Status</p>
+                      <p className="text-white font-bold text-sm">Marcus Rodriguez</p>
+                    </div>
+                    <div className="p-5 flex flex-col gap-4">
+                      <div className="flex items-center gap-3 bg-brand-50 border border-brand-100 rounded-xl px-4 py-3">
+                        <div className="w-8 h-8 rounded-full bg-brand-600 flex items-center justify-center shrink-0">
+                          <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold text-brand-700">Guide sent via email</p>
+                          <p className="text-xs text-brand-600">marcus@gmail.com · just now</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 bg-green-50 border border-green-100 rounded-xl px-4 py-3">
+                        <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center shrink-0">
+                          <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold text-green-700">Upload link sent via WhatsApp</p>
+                          <p className="text-xs text-green-600">+57 310 000 0000 · just now</p>
+                        </div>
+                      </div>
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <p className="text-xs font-bold text-foreground">Document submissions</p>
+                          <span className="text-xs text-muted">0 / 3</span>
+                        </div>
+                        {["Passport", "NCAA Form", "Medical Clearance"].map(d => (
+                          <div key={d} className="flex items-center gap-2 py-1.5 border-b border-border last:border-0">
+                            <div className="w-3 h-3 rounded-full border-2 border-border shrink-0" />
+                            <span className="text-xs text-muted">{d}</span>
+                            <span className="ml-auto text-xs text-muted">Pending</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="lg:order-2 order-1">
+                  <span className="text-7xl font-black text-brand-100 leading-none block mb-4">04</span>
+                  <h3 className="text-2xl font-bold text-foreground mb-3">Guide delivered. Documents collected.</h3>
+                  <p className="text-muted leading-relaxed">The guide lands in the athlete's email. Their personal upload link arrives by WhatsApp. Coaches track document submissions in real time from their portal.</p>
+                </div>
+              </div>
+            </ScrollReveal>
+
           </div>
         </div>
       </section>
 
       {/* Two portals */}
-      <section className="py-24 px-6 border-b border-border">
+      <section className="py-24 px-6 border-b border-border bg-surface">
         <div className="max-w-5xl mx-auto">
           <ScrollReveal>
             <div className="text-center mb-16">
@@ -213,38 +465,99 @@ export default function LandingPage() {
             </div>
           </ScrollReveal>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            {/* AD portal */}
             <ScrollReveal delay={60}>
-              <div className="border border-border rounded-2xl overflow-hidden h-full">
-                <div className="bg-foreground px-6 py-5">
-                  <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Athletics Director</p>
-                  <p className="text-white font-bold text-lg">Full institution overview</p>
-                </div>
-                <div className="p-6 flex flex-col gap-2.5">
-                  {AD_FEATURES.map((s) => (
-                    <div key={s} className="flex items-center gap-3">
-                      <CheckIcon />
-                      <span className="text-sm text-foreground">{s}</span>
+              <div className="relative">
+                <div className="absolute -inset-2 bg-gray-900 opacity-5 blur-2xl rounded-3xl pointer-events-none" />
+                <div className="relative border border-border rounded-2xl overflow-hidden bg-white shadow-lg h-full flex flex-col">
+                  <div className="bg-foreground px-6 py-5">
+                    <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Athletics Director</p>
+                    <p className="text-white font-bold text-lg">Full institution overview</p>
+                  </div>
+                  {/* Mini AD dashboard */}
+                  <div className="px-6 pt-5 pb-2 border-b border-border">
+                    <div className="grid grid-cols-3 gap-3 mb-1">
+                      {[{ v: "8", l: "Sports" }, { v: "47", l: "Athletes" }, { v: "12", l: "Docs pending" }].map(s => (
+                        <div key={s.l} className="bg-surface rounded-xl border border-border px-3 py-2.5 text-center">
+                          <p className="text-lg font-black text-foreground">{s.v}</p>
+                          <p className="text-xs text-muted">{s.l}</p>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  </div>
+                  <div className="px-6 py-4 flex flex-col gap-2 border-b border-border">
+                    {[
+                      { sport: "Men's Soccer", coach: "Coach Rivera", athletes: 12, color: "bg-brand-500" },
+                      { sport: "Swimming", coach: "Coach Park", athletes: 8, color: "bg-blue-400" },
+                      { sport: "Track & Field", coach: "Coach James", athletes: 15, color: "bg-yellow-400" },
+                    ].map(r => (
+                      <div key={r.sport} className="flex items-center gap-3">
+                        <div className={`w-2 h-2 rounded-full shrink-0 ${r.color}`} />
+                        <span className="text-xs font-semibold text-foreground flex-1">{r.sport}</span>
+                        <span className="text-xs text-muted">{r.coach}</span>
+                        <span className="text-xs font-bold text-foreground ml-2">{r.athletes}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="p-6 flex flex-col gap-2.5">
+                    {AD_FEATURES.map((s) => (
+                      <div key={s} className="flex items-center gap-3">
+                        <CheckIcon />
+                        <span className="text-sm text-foreground">{s}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </ScrollReveal>
+
+            {/* Coach portal */}
             <ScrollReveal delay={120}>
-              <div className="border border-border rounded-2xl overflow-hidden h-full">
-                <div className="bg-brand-600 px-6 py-5">
-                  <p className="text-xs font-bold uppercase tracking-widest text-brand-100 mb-1">Coach</p>
-                  <p className="text-white font-bold text-lg">Own your sport, end to end</p>
-                </div>
-                <div className="p-6 flex flex-col gap-2.5">
-                  {COACH_FEATURES.map((s) => (
-                    <div key={s} className="flex items-center gap-3">
-                      <CheckIcon />
-                      <span className="text-sm text-foreground">{s}</span>
+              <div className="relative">
+                <div className="absolute -inset-2 bg-brand-500 opacity-10 blur-2xl rounded-3xl pointer-events-none" />
+                <div className="relative border border-brand-200 rounded-2xl overflow-hidden bg-white shadow-lg h-full flex flex-col">
+                  <div className="bg-brand-600 px-6 py-5">
+                    <p className="text-xs font-bold uppercase tracking-widest text-brand-100 mb-1">Coach</p>
+                    <p className="text-white font-bold text-lg">Own your sport, end to end</p>
+                  </div>
+                  {/* Mini coach view */}
+                  <div className="px-6 pt-5 pb-2 border-b border-border">
+                    <div className="grid grid-cols-3 gap-3">
+                      {[{ v: "12", l: "Athletes" }, { v: "11", l: "Guides sent" }, { v: "3/4", l: "Docs avg" }].map(s => (
+                        <div key={s.l} className="bg-brand-50 rounded-xl border border-brand-100 px-3 py-2.5 text-center">
+                          <p className="text-lg font-black text-brand-700">{s.v}</p>
+                          <p className="text-xs text-brand-500">{s.l}</p>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  </div>
+                  <div className="px-6 py-4 flex flex-col gap-2 border-b border-border">
+                    {[
+                      { name: "Marcus R.", country: "Colombia", docs: "3/3", status: "bg-brand-500" },
+                      { name: "Jaime L.",  country: "Mexico",   docs: "2/3", status: "bg-yellow-400" },
+                      { name: "Paulo S.",  country: "Brazil",   docs: "1/3", status: "bg-yellow-400" },
+                    ].map(a => (
+                      <div key={a.name} className="flex items-center gap-3">
+                        <div className={`w-2 h-2 rounded-full shrink-0 ${a.status}`} />
+                        <span className="text-xs font-semibold text-foreground flex-1">{a.name}</span>
+                        <span className="text-xs text-muted">{a.country}</span>
+                        <span className="text-xs font-bold text-foreground ml-2">{a.docs}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="p-6 flex flex-col gap-2.5">
+                    {COACH_FEATURES.map((s) => (
+                      <div key={s} className="flex items-center gap-3">
+                        <CheckIcon />
+                        <span className="text-sm text-foreground">{s}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </ScrollReveal>
+
           </div>
         </div>
       </section>
@@ -268,45 +581,66 @@ export default function LandingPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-6 gap-4">
             <ScrollReveal delay={0} className="sm:col-span-3">
-              <div className="h-full bg-white/15 border border-white/25 rounded-2xl p-7 flex flex-col gap-4 hover:bg-white/20 transition-colors">
-                <div className="flex items-center justify-between">
-                  <span className="text-[2.5rem] font-black text-white/20 leading-none">01</span>
+              <div className="h-full bg-white/10 border border-white/20 rounded-2xl overflow-hidden hover:bg-white/15 transition-colors">
+                <div className="p-7 pb-4">
                   <span className="text-xs font-bold text-brand-200 uppercase tracking-widest">Personal link</span>
+                  <p className="text-lg font-bold text-white mt-2 mb-1">One link per athlete</p>
+                  <p className="text-sm text-brand-100 leading-relaxed">Each athlete gets a unique upload link via WhatsApp — no login, no app. They return anytime, progress auto-saves.</p>
                 </div>
-                <div>
-                  <p className="text-lg font-bold text-white mb-2">One link per athlete</p>
-                  <p className="text-sm text-brand-100 leading-relaxed">Each athlete receives a unique, private upload link — delivered by WhatsApp and included in their guide. They can return to it anytime. Progress is saved automatically.</p>
-                </div>
-                <div className="flex gap-2 flex-wrap mt-auto pt-2">
-                  {["WhatsApp", "Email", "Anytime access", "Auto-saved"].map(t => (
-                    <span key={t} className="text-xs bg-white/10 border border-white/20 text-white/80 px-2.5 py-0.5 rounded-full">{t}</span>
-                  ))}
+                <div className="mx-5 mb-5 bg-white/10 border border-white/20 rounded-xl overflow-hidden">
+                  <div className="bg-white/10 px-4 py-2.5 flex items-center gap-2 border-b border-white/10">
+                    <div className="w-2 h-2 rounded-full bg-green-400" />
+                    <span className="text-xs text-white/60 font-mono">settlyou.com/upload/marcus-r</span>
+                  </div>
+                  <div className="p-4 flex flex-col gap-3">
+                    <p className="text-xs font-bold text-white uppercase tracking-wider">Your documents — Men's Soccer</p>
+                    {[
+                      { doc: "Passport", done: true },
+                      { doc: "NCAA Eligibility Form", done: true },
+                      { doc: "Medical Clearance", done: false },
+                    ].map(d => (
+                      <div key={d.doc} className="flex items-center gap-3">
+                        <div className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 ${d.done ? "bg-green-400" : "border-2 border-white/30"}`}>
+                          {d.done && <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
+                        </div>
+                        <span className={`text-xs ${d.done ? "text-white/80 line-through" : "text-white font-medium"}`}>{d.doc}</span>
+                        {!d.done && <span className="ml-auto text-xs bg-white/15 text-white/70 px-2 py-0.5 rounded-full">Upload</span>}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </ScrollReveal>
 
             <ScrollReveal delay={60} className="sm:col-span-3">
-              <div className="h-full bg-white/10 border border-white/20 rounded-2xl p-7 flex flex-col gap-4 hover:bg-white/15 transition-colors">
-                <div className="flex items-center justify-between">
-                  <span className="text-[2.5rem] font-black text-white/20 leading-none">02</span>
+              <div className="h-full bg-white/10 border border-white/20 rounded-2xl overflow-hidden hover:bg-white/15 transition-colors">
+                <div className="p-7 pb-4">
                   <span className="text-xs font-bold text-brand-200 uppercase tracking-widest">Coach dashboard</span>
+                  <p className="text-lg font-bold text-white mt-2 mb-1">Real-time submission tracking</p>
+                  <p className="text-sm text-brand-100 leading-relaxed">See exactly who submitted what. Download files 1-click. No AD, no IT, no email chains.</p>
                 </div>
-                <div>
-                  <p className="text-lg font-bold text-white mb-2">Real-time submission tracking</p>
-                  <p className="text-sm text-brand-100 leading-relaxed">Coaches see which athletes have submitted each document, which are still pending, and can download files one by one — without involving the AD or IT.</p>
-                </div>
-                <div className="flex gap-3 mt-auto pt-2">
-                  <div className="bg-white/10 rounded-xl px-4 py-2 text-center">
-                    <p className="text-xs text-brand-200 font-medium">Submitted</p>
-                    <p className="text-sm font-bold text-white">Live</p>
+                <div className="mx-5 mb-5 bg-white/10 border border-white/20 rounded-xl overflow-hidden">
+                  <div className="bg-white/10 px-4 py-2.5 border-b border-white/10 flex items-center justify-between">
+                    <span className="text-xs font-bold text-white">Men's Soccer — Documents</span>
+                    <span className="text-xs text-brand-200">8/12 complete</span>
                   </div>
-                  <div className="bg-white/10 rounded-xl px-4 py-2 text-center">
-                    <p className="text-xs text-brand-200 font-medium">Missing</p>
-                    <p className="text-sm font-bold text-white">Flagged</p>
-                  </div>
-                  <div className="bg-white/10 rounded-xl px-4 py-2 text-center">
-                    <p className="text-xs text-brand-200 font-medium">Download</p>
-                    <p className="text-sm font-bold text-white">1-click</p>
+                  <div className="divide-y divide-white/10">
+                    {[
+                      { name: "Marcus R.", passport: true,  ncaa: true,  medical: false },
+                      { name: "Jaime L.",  passport: true,  ncaa: true,  medical: true  },
+                      { name: "Paulo S.",  passport: true,  ncaa: false, medical: false },
+                    ].map(a => (
+                      <div key={a.name} className="px-4 py-2.5 flex items-center gap-3">
+                        <span className="text-xs font-semibold text-white w-16 shrink-0">{a.name}</span>
+                        {[a.passport, a.ncaa, a.medical].map((v, i) => (
+                          <div key={i} className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${v ? "bg-green-400" : "bg-white/15"}`}>
+                            {v ? <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+                               : <svg className="w-2.5 h-2.5 text-white/40" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>}
+                          </div>
+                        ))}
+                        <span className="ml-auto text-xs text-white/40 cursor-pointer hover:text-white transition-colors">↓</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -354,70 +688,125 @@ export default function LandingPage() {
             </div>
           </ScrollReveal>
           <ScrollReveal delay={80}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
-              <div className="flex flex-col gap-5">
-                <p className="text-sm font-semibold text-foreground">What the coach adds once:</p>
-                <div className="bg-surface border border-border rounded-xl p-5 flex flex-col gap-3">
-                  <div className="bg-white border border-border rounded-lg px-4 py-3">
-                    <p className="text-xs text-muted mb-1 uppercase tracking-wider font-medium">Coach notes</p>
-                    <p className="text-sm text-foreground leading-relaxed">
-                      "Practice is every afternoon 3–6pm — schedule your morning classes only. NCAA eligibility clearance must be completed before your first official practice. Film sessions every Sunday at 10am."
-                    </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+
+              {/* Left — coach input UI */}
+              <div className="relative">
+                <div className="absolute -inset-2 bg-brand-100 opacity-50 blur-2xl rounded-3xl pointer-events-none" />
+                <div className="relative bg-white rounded-2xl border border-border shadow-xl overflow-hidden">
+                  <div className="bg-foreground px-5 py-3.5 flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mb-0.5">Coach Setup</p>
+                      <p className="text-white font-bold text-sm">Men's Soccer · Notes & Links</p>
+                    </div>
+                    <span className="text-xs bg-brand-600 text-white px-2.5 py-1 rounded-full font-bold">Saved</span>
                   </div>
-                  <div className="bg-white border border-border rounded-lg px-4 py-3">
-                    <p className="text-xs text-muted mb-1 uppercase tracking-wider font-medium">Coach links</p>
-                    <div className="flex flex-col gap-1.5">
-                      {["NCAA Eligibility Center", "Team Handbook", "Athletic Trainer Contacts"].map((l) => (
-                        <div key={l} className="flex items-center gap-2 text-sm">
-                          <span className="text-brand-500">→</span>
-                          <span className="text-brand-600 font-medium">{l}</span>
+                  <div className="p-5 flex flex-col gap-4">
+                    <div className="flex flex-col gap-2">
+                      <p className="text-xs font-bold text-foreground uppercase tracking-wider">Your welcome note</p>
+                      <div className="bg-surface border border-border rounded-xl px-4 py-3 text-sm text-foreground leading-relaxed italic">
+                        "Practice is 3–6pm daily — schedule morning classes only. NCAA clearance must be done before your first session. Film Sundays at 10am."
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <p className="text-xs font-bold text-foreground uppercase tracking-wider">Links you added</p>
+                      {["NCAA Eligibility Center", "Team Handbook", "Athletic Trainer"].map(l => (
+                        <div key={l} className="flex items-center gap-2.5 bg-brand-50 border border-brand-100 rounded-lg px-3 py-2">
+                          <div className="w-1.5 h-1.5 rounded-full bg-brand-500 shrink-0" />
+                          <span className="text-xs font-semibold text-brand-700">{l}</span>
+                          <span className="ml-auto text-xs text-brand-400">→</span>
                         </div>
                       ))}
                     </div>
+                    <div className="bg-brand-600 rounded-xl px-4 py-3 flex items-center justify-between">
+                      <div>
+                        <p className="text-xs font-bold text-white">Used in every guide</p>
+                        <p className="text-xs text-brand-200">12 athletes · Men's Soccer</p>
+                      </div>
+                      <div className="flex -space-x-1.5">
+                        {["M","J","P","A"].map(i => (
+                          <div key={i} className="w-6 h-6 rounded-full bg-brand-400 border-2 border-brand-600 flex items-center justify-center">
+                            <span className="text-[8px] font-bold text-white">{i}</span>
+                          </div>
+                        ))}
+                        <div className="w-6 h-6 rounded-full bg-white/20 border-2 border-brand-600 flex items-center justify-center">
+                          <span className="text-[8px] font-bold text-white">+8</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col gap-5">
-                <p className="text-sm font-semibold text-foreground">How it shows up in the guide:</p>
-                <div className="flex flex-col gap-3">
-                  {[
-                    { label: "Message from your Men's Soccer coach", note: "Warm intro written in the athlete's native language with the coach's notes woven in." },
-                    { label: "Practice schedule in the paperwork section", note: "Referenced naturally when discussing housing proximity and commute." },
-                    { label: "NCAA eligibility link in the paperwork section", note: "Included with step-by-step context specific to that athlete's division." },
-                    { label: "Athletic trainer contacts in the healthcare section", note: "Appears alongside local sports medicine recommendations." },
-                  ].map((ex) => (
-                    <div key={ex.label} className="flex items-start gap-3 bg-surface border border-border rounded-xl px-4 py-3">
-                      <CheckIcon />
-                      <div>
-                        <p className="text-sm font-medium text-foreground">{ex.label}</p>
-                        <p className="text-xs text-muted mt-0.5">{ex.note}</p>
-                      </div>
+
+              {/* Right — guide output */}
+              <div className="relative">
+                <div className="absolute -inset-2 bg-gray-100 opacity-60 blur-2xl rounded-3xl pointer-events-none" />
+                <div className="relative bg-white rounded-2xl border border-border shadow-xl overflow-hidden">
+                  <div className="bg-surface border-b border-border px-5 py-3.5 flex items-center gap-3">
+                    <div className="w-7 h-7 rounded-full bg-brand-600 flex items-center justify-center shrink-0">
+                      <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
                     </div>
-                  ))}
+                    <div>
+                      <p className="text-xs font-bold text-foreground">Marcus's Relocation Guide</p>
+                      <p className="text-xs text-muted">Kansas City · Men's Soccer</p>
+                    </div>
+                  </div>
+                  <div className="p-5 flex flex-col gap-4">
+                    <div className="border border-brand-100 bg-brand-50 rounded-xl px-4 py-3">
+                      <p className="text-xs font-bold text-brand-600 uppercase tracking-wider mb-1.5">Message from your coach</p>
+                      <p className="text-sm text-foreground leading-relaxed">"Welcome to the team, Marcus. Practice runs 3–6pm — your mornings are yours for class. Make sure you complete your <span className="font-semibold text-brand-600">NCAA clearance</span> before arriving..."</p>
+                    </div>
+                    {[
+                      { section: "Paperwork", highlight: "NCAA Eligibility steps included", color: "bg-blue-50 border-blue-100 text-blue-700" },
+                      { section: "Healthcare", highlight: "Athletic trainer contacts added", color: "bg-purple-50 border-purple-100 text-purple-700" },
+                      { section: "Housing", highlight: "Practice schedule referenced", color: "bg-yellow-50 border-yellow-100 text-yellow-700" },
+                    ].map(s => (
+                      <div key={s.section} className="flex items-center gap-3">
+                        <div className="flex-1 h-px bg-border" />
+                        <span className="text-xs text-muted font-medium shrink-0">{s.section}</span>
+                        <div className="flex-1 h-px bg-border" />
+                      </div>
+                    ))}
+                    {[
+                      { section: "Paperwork", highlight: "NCAA Eligibility steps included", color: "bg-blue-50 border-blue-100 text-blue-700" },
+                      { section: "Healthcare", highlight: "Athletic trainer contacts added", color: "bg-purple-50 border-purple-100 text-purple-700" },
+                      { section: "Housing", highlight: "Practice schedule referenced", color: "bg-yellow-50 border-yellow-100 text-yellow-700" },
+                    ].map(s => (
+                      <div key={s.highlight} className={`flex items-center gap-2 border rounded-lg px-3 py-2 ${s.color}`}>
+                        <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>
+                        <span className="text-xs font-semibold">{s.highlight}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
+
             </div>
           </ScrollReveal>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-24 px-6">
+      <section className="relative overflow-hidden py-28 px-6 bg-brand-600">
+        <div className="absolute inset-0 pointer-events-none opacity-10"
+          style={{ backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+        <div className="hero-blob absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full bg-brand-400 opacity-30 blur-[100px] pointer-events-none" />
+        <div className="hero-blob-alt absolute -bottom-24 -left-24 w-[350px] h-[350px] rounded-full bg-brand-800 opacity-40 blur-[80px] pointer-events-none" />
         <ScrollReveal>
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl font-bold text-foreground mb-4">See it for yourself</h2>
-            <p className="text-muted mb-10 text-lg leading-relaxed">
+          <div className="relative max-w-3xl mx-auto text-center">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-100 mb-4 block">Ready to get started?</span>
+            <h2 className="text-4xl font-bold text-white mb-4 leading-tight">See it for yourself</h2>
+            <p className="text-brand-100 mb-10 text-lg leading-relaxed">
               Browse a real sample guide — every section, every recommendation, exactly what your athletes receive.
             </p>
             <div className="flex items-center gap-4 flex-wrap justify-center">
               <a href="/report/sample-college"
-                className="bg-brand-600 text-white px-8 py-4 rounded-lg text-base font-bold hover:bg-brand-700 transition-colors shadow-sm hover:shadow-md">
-                See a sample guide →
+                className="bg-white text-brand-700 px-8 py-4 rounded-lg text-base font-bold hover:bg-brand-50 transition-colors shadow-lg">
+                See a sample guide
               </a>
-              <a href="/contact"
-                className="bg-white text-brand-600 border border-brand-200 px-8 py-4 rounded-lg text-base font-bold hover:bg-brand-50 hover:border-brand-300 transition-colors">
-                Request a demo →
-              </a>
+              <QuoteButton className="bg-white/15 text-white border border-white/30 px-8 py-4 rounded-lg text-base font-bold hover:bg-white/25 transition-colors">
+                Request a quote
+              </QuoteButton>
             </div>
           </div>
         </ScrollReveal>
