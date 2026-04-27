@@ -7,7 +7,7 @@ export async function generateMetadata({ params }) {
   if (!client) return {};
   return {
     title: `${client.name} × Settlyou`,
-    description: `A personalized relocation guide for every incoming ${client.type === "athletics" ? "student-athlete" : "student"} at ${client.name}.`,
+    description: `See how Settlyou gives every incoming student-athlete at ${client.name} a personalized relocation guide — from day one.`,
     robots: { index: false, follow: false },
   };
 }
@@ -18,13 +18,15 @@ export default async function PitchPage({ params }) {
   if (!client) notFound();
 
   return (
-    <main className="flex flex-col min-h-screen bg-white">
+    <main className="flex flex-col min-h-screen bg-white font-sans">
       <PitchNav client={client} />
       <HeroSection client={client} />
-      <FreePilotCallout client={client} />
-      <HowItWorks />
-      <AdminDashboard client={client} />
-      <WhatStudentsReceive client={client} />
+      <ProblemSection />
+      <HowItWorksSection client={client} />
+      <PortalsSection client={client} />
+      <GuideInsideSection client={client} />
+      <DocumentSection />
+      <GuideNotesSection />
       <ROISection client={client} />
       <PricingSection />
       <FinalCTA client={client} />
@@ -33,20 +35,20 @@ export default async function PitchPage({ params }) {
   );
 }
 
-// ─── Nav ────────────────────────────────────────────────────────────────────
+// ─── Nav ─────────────────────────────────────────────────────────────────────
 
 function PitchNav({ client }) {
   return (
     <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-border flex items-center justify-between px-8 py-4">
       <div className="flex items-center gap-3">
         {client.logoUrl ? (
-          <img src={client.logoUrl} alt={client.name} className="h-9 w-9 object-contain rounded-lg bg-white p-1 border border-border" />
+          <img src={client.logoUrl} alt={client.name} className="h-8 w-8 object-contain rounded-lg bg-white p-1 border border-border" />
         ) : (
-          <div className="h-9 w-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: client.primaryColor }}>
-            <span className="text-white text-xs font-bold">{client.shortName.slice(0, 2)}</span>
+          <div className="h-8 w-8 rounded-lg flex items-center justify-center shrink-0 text-white text-xs font-bold" style={{ background: client.primaryColor }}>
+            {client.shortName.slice(0, 2)}
           </div>
         )}
-        <span className="text-muted text-sm font-medium">×</span>
+        <span className="text-muted text-sm">×</span>
         <img src="/settlyou-logo-dark.png" alt="Settlyou" className="h-6" />
       </div>
       <a
@@ -61,118 +63,156 @@ function PitchNav({ client }) {
   );
 }
 
-// ─── Hero ────────────────────────────────────────────────────────────────────
+// ─── Hero ─────────────────────────────────────────────────────────────────────
 
 function HeroSection({ client }) {
-  const subline =
-    client.type === "athletics"
-      ? `Built for ${client.shortName}'s coaching staff — help every incoming ${client.sport ? `${client.sport} recruit` : "recruit"} land, settle, and stay focused${client.city ? ` in ${client.city}` : ""}.`
-      : client.type === "admissions"
-      ? `Give ${client.shortName}'s admissions office a scalable way to support every student from acceptance to arrival${client.city ? ` in ${client.city}` : ""}.`
-      : `Settlyou generates a personalized guide for each incoming student — built around who they are and where they're going${client.city ? ` in ${client.city}` : ""}.`;
+  const isAthletics = client.type === "athletics";
+  const headline = isAthletics
+    ? "Every incoming athlete arrives ready."
+    : "Every incoming student arrives ready.";
+
+  const subline = isAthletics
+    ? `${client.shortName} coaches write a short note. Settlyou builds a complete, personalized relocation guide for every recruit — in under 5 minutes.`
+    : `${client.shortName} sends a link. Settlyou builds a complete, personalized relocation guide for every student — in under 5 minutes.`;
 
   return (
-    <section className="relative overflow-hidden py-24 px-6" style={{ background: client.primaryColor }}>
-      {/* Dot grid texture */}
-      <div
-        className="absolute inset-0 opacity-10 pointer-events-none"
-        style={{ backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)", backgroundSize: "28px 28px" }}
-      />
-      <div className="relative max-w-3xl mx-auto flex flex-col items-center text-center gap-7">
-        <span className="text-xs font-bold uppercase tracking-[0.2em] px-4 py-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.25)", color: "white" }}>
-          {client.shortName} × Settlyou
-        </span>
-        <h1 className="text-4xl md:text-5xl font-bold text-white leading-tight tracking-tight">
-          A personalized relocation guide for every incoming student
-        </h1>
-        <p className="text-base md:text-lg leading-relaxed max-w-xl" style={{ color: "rgba(255,255,255,0.8)" }}>
-          {subline}
-        </p>
-        <div className="flex flex-wrap items-center justify-center gap-3 mt-2">
-          <a
-            href="https://calendar.app.google/6fVjZ9wJ9r8LUXDv8"
-        target="_blank"
-        rel="noopener noreferrer"
-            className="bg-white font-semibold px-7 py-3.5 rounded-lg text-sm hover:opacity-90 transition-opacity"
-            style={{ color: client.primaryColor }}
-          >
-            Book a 30-min call
-          </a>
-          <a
-            href={client.slug !== "sample" ? `/report/demo/${client.slug}` : "/report/sample-college"}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-semibold px-7 py-3.5 rounded-lg text-sm text-white transition-colors"
-            style={{ border: "1px solid rgba(255,255,255,0.35)", background: "rgba(255,255,255,0.08)" }}
-          >
-            See a sample guide
-          </a>
+    <section className="relative overflow-hidden border-b border-border" style={{ background: client.primaryColor }}>
+      <div className="absolute inset-0 opacity-10 pointer-events-none"
+        style={{ backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+      <div className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full opacity-10 blur-[80px] pointer-events-none bg-white" />
+      <div className="absolute -bottom-24 -left-20 w-[350px] h-[350px] rounded-full opacity-10 blur-[60px] pointer-events-none bg-white" />
+
+      <div className="relative max-w-5xl mx-auto px-6 py-24 lg:py-32 grid lg:grid-cols-2 gap-16 items-center">
+        {/* Left */}
+        <div className="flex flex-col items-start">
+          <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] px-4 py-1.5 rounded-full mb-8"
+            style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.25)", color: "rgba(255,255,255,0.9)" }}>
+            {client.shortName} × Settlyou
+          </span>
+          <h1 className="text-4xl lg:text-5xl font-black text-white leading-[1.08] mb-5 tracking-tight">
+            {headline}
+          </h1>
+          <p className="text-base lg:text-lg leading-relaxed mb-8 max-w-lg" style={{ color: "rgba(255,255,255,0.75)" }}>
+            {subline}
+          </p>
+          <div className="flex flex-wrap items-center gap-3 mb-12">
+            <a href="https://calendar.app.google/6fVjZ9wJ9r8LUXDv8" target="_blank" rel="noopener noreferrer"
+              className="bg-white font-bold px-7 py-3.5 rounded-lg text-sm hover:opacity-90 transition-opacity shadow-lg"
+              style={{ color: client.primaryColor }}>
+              Book a 30-min call
+            </a>
+            <a href={client.slug !== "sample" ? `/report/demo/${client.slug}` : "/report/sample-college"}
+              target="_blank" rel="noopener noreferrer"
+              className="font-semibold px-7 py-3.5 rounded-lg text-sm text-white transition-colors"
+              style={{ border: "1px solid rgba(255,255,255,0.3)", background: "rgba(255,255,255,0.1)" }}>
+              See a sample guide
+            </a>
+          </div>
+          <div className="flex items-center gap-8 flex-wrap">
+            {[
+              { v: "24 hrs", l: "guide delivery" },
+              { v: "18", l: "languages" },
+              { v: "5 min", l: "athlete form" },
+            ].map(s => (
+              <div key={s.l} className="flex flex-col gap-0.5">
+                <span className="text-2xl font-black text-white leading-none">{s.v}</span>
+                <span className="text-[11px] font-medium uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.5)" }}>{s.l}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Right — Pipeline mockup */}
+        <div className="hidden lg:block">
+          <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-white/20">
+            <div className="px-5 py-4 border-b border-border flex items-center justify-between">
+              <span className="text-xs font-bold text-foreground">Athlete Pipeline</span>
+              <span className="text-[10px] font-semibold text-brand-600 bg-brand-50 px-2.5 py-1 rounded-full">Live</span>
+            </div>
+            <div className="px-5 py-4 flex flex-col gap-3">
+              {[
+                { name: "Carlos Mendez",      sport: "Soccer",      status: "Delivered",     color: "bg-green-100 text-green-700" },
+                { name: "Aisha Johnson",      sport: "Basketball",  status: "Approved",      color: "bg-blue-100 text-blue-700" },
+                { name: "Marco Rossi",        sport: "Soccer",      status: "Quality Check", color: "bg-orange-100 text-orange-700" },
+                { name: "Priya Patel",        sport: "Tennis",      status: "Generating",    color: "bg-yellow-100 text-yellow-700" },
+                { name: "Lucas Fernandez",    sport: "Baseball",    status: "Submitted",     color: "bg-gray-100 text-gray-600" },
+              ].map((a) => (
+                <div key={a.name} className="flex items-center justify-between py-2 border-b border-border last:border-0">
+                  <div className="flex items-center gap-3">
+                    <div className="w-7 h-7 rounded-full bg-brand-100 flex items-center justify-center text-brand-700 text-[10px] font-bold shrink-0">
+                      {a.name.split(" ").map(n => n[0]).join("")}
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-foreground leading-none">{a.name}</p>
+                      <p className="text-[10px] text-muted mt-0.5">{a.sport}</p>
+                    </div>
+                  </div>
+                  <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-full ${a.color}`}>{a.status}</span>
+                </div>
+              ))}
+            </div>
+            <div className="px-5 py-3 bg-brand-50 flex items-center justify-between">
+              <span className="text-[10px] text-brand-600 font-medium">3 guides ready to send</span>
+              <span className="text-[10px] text-muted">Updated just now</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-// ─── Free pilot callout ──────────────────────────────────────────────────────
+// ─── Problem ──────────────────────────────────────────────────────────────────
 
-function FreePilotCallout({ client }) {
-  return (
-    <section className="bg-surface border-y border-border py-6 px-6">
-      <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div>
-          <p className="text-base font-bold text-foreground">Start with 15 free guides. No contract, no credit card.</p>
-          <p className="text-sm text-muted mt-0.5">Try Settlyou with your next intake — we'll set everything up for you.</p>
-        </div>
-        <a
-          href="https://calendar.app.google/6fVjZ9wJ9r8LUXDv8"
-        target="_blank"
-        rel="noopener noreferrer"
-          className="shrink-0 text-white font-semibold px-6 py-3 rounded-lg text-sm hover:opacity-90 transition-opacity whitespace-nowrap"
-          style={{ background: client.primaryColor }}
-        >
-          Book a 30-min call
-        </a>
-      </div>
-    </section>
-  );
-}
-
-// ─── How it works ────────────────────────────────────────────────────────────
-
-function HowItWorks() {
-  const steps = [
+function ProblemSection() {
+  const pains = [
     {
-      n: "01",
-      title: "Share your join link with students",
-      body: "Each institution gets a unique link and optional PIN. Share it however you like — email, team chat, orientation packet.",
+      icon: (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      ),
+      title: "Same questions. Every intake.",
+      body: "\"Where should I live?\" \"How do I open a bank account?\" \"What's the nearest hospital?\" Your staff answers these for every single student. Every year.",
     },
     {
-      n: "02",
-      title: "Students fill a 5-minute form",
-      body: "On any device, in their language. They tell us about their background, housing needs, family, and lifestyle. Athletes add sport and training schedule.",
+      icon: (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+      ),
+      title: "Generic guides that help no one.",
+      body: "A PDF with links to Google Maps and a list of apartments. International students, domestic athletes, families with kids — everyone gets the same thing.",
     },
     {
-      n: "03",
-      title: "Guide delivered to their inbox within 24 hours",
-      body: "A web link and downloadable PDF — neighborhoods, banking, eligibility, paperwork, and everything they need before they land.",
+      icon: (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+        </svg>
+      ),
+      title: "Relocation firms cost a fortune.",
+      body: "$1,500 to $3,000 per student. Most programs can't scale that. And you still end up answering half the questions yourself anyway.",
     },
   ];
 
   return (
-    <section className="py-24 px-6">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-16">
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-3 block">How it works</span>
-          <h2 className="text-3xl font-bold text-foreground">Three steps. Zero staff time.</h2>
+    <section className="py-20 px-6 border-b border-border">
+      <div className="max-w-5xl mx-auto">
+        <div className="text-center mb-12">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-3 block">The problem</span>
+          <h2 className="text-3xl font-bold text-foreground tracking-tight">Your staff shouldn't be a relocation agency.</h2>
+          <p className="text-sm text-muted mt-4 max-w-lg mx-auto leading-relaxed">
+            Between answering emails, building resource packets, and chasing down missing documents — intake season drains 10–15 hours of staff time per athlete.
+          </p>
         </div>
-        <div className="flex flex-col">
-          {steps.map((s, i) => (
-            <div key={s.n} className={`flex items-start gap-8 py-10 ${i < steps.length - 1 ? "border-b border-border" : ""}`}>
-              <p className="text-5xl font-bold text-brand-600 leading-none shrink-0 w-16">{s.n}</p>
-              <div>
-                <p className="text-lg font-bold text-foreground mb-2">{s.title}</p>
-                <p className="text-sm text-muted leading-relaxed">{s.body}</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {pains.map((p) => (
+            <div key={p.title} className="bg-surface border border-border rounded-xl p-6 flex flex-col gap-4">
+              <div className="w-9 h-9 rounded-lg bg-red-50 border border-red-100 flex items-center justify-center text-red-500 shrink-0">
+                {p.icon}
               </div>
+              <p className="font-semibold text-foreground text-sm leading-snug">{p.title}</p>
+              <p className="text-xs text-muted leading-relaxed">{p.body}</p>
             </div>
           ))}
         </div>
@@ -181,63 +221,480 @@ function HowItWorks() {
   );
 }
 
-// ─── Admin dashboard ─────────────────────────────────────────────────────────
+// ─── How It Works ────────────────────────────────────────────────────────────
 
-function AdminDashboard({ client }) {
-  const features = [
+function HowItWorksSection({ client }) {
+  return (
+    <section className="py-24 px-6">
+      <div className="max-w-5xl mx-auto">
+        <div className="text-center mb-20">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-3 block">How it works</span>
+          <h2 className="text-3xl lg:text-4xl font-black text-foreground tracking-tight">
+            From form submission to guide delivered<br className="hidden lg:block" /> — in 24 hours.
+          </h2>
+        </div>
+
+        {/* Step 1 */}
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-24">
+          <div>
+            <div className="flex items-center gap-4 mb-5">
+              <div className="w-9 h-9 rounded-lg bg-brand-600 text-white text-sm font-black flex items-center justify-center shrink-0">1</div>
+              <span className="text-xs font-bold uppercase tracking-[0.18em] text-brand-600">Share your join link</span>
+            </div>
+            <h3 className="text-2xl font-bold text-foreground mb-4 leading-tight">Your athletes get a link. They fill a 5-minute form.</h3>
+            <p className="text-sm text-muted leading-relaxed mb-6">
+              Every institution gets a unique join link — you can protect it with a PIN. Share it in an email, your team chat, or your orientation packet. Athletes open it on their phone, fill it out in their language, and submit.
+            </p>
+            <div className="flex flex-col gap-2.5">
+              {[
+                "Works on any device — phone, tablet, laptop",
+                "Available in 18 languages — Spanish, Portuguese, Arabic, French, and more",
+                "Auto-saves every step — athletes can pause and resume",
+                "Optional PIN so only your recruits can access it",
+              ].map(item => (
+                <div key={item} className="flex items-start gap-3">
+                  <svg className="w-4 h-4 text-brand-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span className="text-sm text-foreground">{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* Mockup: Mobile form */}
+          <div className="bg-surface rounded-2xl border border-border p-6 flex flex-col gap-4">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center shrink-0">
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-xs font-bold text-foreground">Your Athlete Intake Form</p>
+                <p className="text-[10px] text-muted">Step 2 of 6 — Destination & Housing</p>
+              </div>
+            </div>
+            <div className="w-full bg-brand-100 rounded-full h-1.5">
+              <div className="bg-brand-600 h-1.5 rounded-full" style={{ width: "33%" }} />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-semibold text-foreground">Destination city *</label>
+                <div className="border border-border rounded-lg px-3 py-2 text-xs text-foreground bg-white">Boca Raton, FL</div>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-semibold text-foreground">Move date *</label>
+                <div className="border border-border rounded-lg px-3 py-2 text-xs text-foreground bg-white">Aug 15, 2025</div>
+              </div>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[10px] font-semibold text-foreground">Monthly housing budget (USD) *</label>
+              <div className="border border-border rounded-lg px-3 py-2 text-xs text-foreground bg-white">$1,200 / month</div>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[10px] font-semibold text-foreground">Housing type preference</label>
+              <div className="flex flex-wrap gap-2">
+                {["Apartment", "House", "Studio"].map((t, i) => (
+                  <span key={t} className={`text-[10px] font-semibold px-3 py-1.5 rounded-full border ${i === 0 ? "bg-brand-600 text-white border-brand-600" : "bg-white text-muted border-border"}`}>{t}</span>
+                ))}
+              </div>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[10px] font-semibold text-foreground">Must-haves</label>
+              <div className="flex flex-wrap gap-2">
+                {["Gym", "Parking", "Pool", "Pet-friendly"].map((t, i) => (
+                  <span key={t} className={`text-[10px] font-semibold px-3 py-1.5 rounded-full border ${i < 2 ? "bg-brand-600 text-white border-brand-600" : "bg-white text-muted border-border"}`}>{t}</span>
+                ))}
+              </div>
+            </div>
+            <button className="w-full bg-brand-600 text-white text-xs font-bold py-2.5 rounded-lg mt-1 hover:bg-brand-700 transition-colors">Continue</button>
+          </div>
+        </div>
+
+        {/* Step 2 */}
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-24">
+          {/* Mockup: Guide generation status */}
+          <div className="order-2 lg:order-1">
+            <div className="bg-white border border-border rounded-2xl overflow-hidden shadow-sm">
+              <div className="px-5 py-4 border-b border-border flex items-center gap-3">
+                <div className="w-2 h-2 rounded-full bg-brand-500 animate-pulse" />
+                <span className="text-xs font-bold text-foreground">Guide Generation</span>
+              </div>
+              <div className="px-5 py-5 flex flex-col gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center text-brand-700 text-xs font-bold shrink-0">CM</div>
+                  <div>
+                    <p className="text-sm font-bold text-foreground">Carlos Mendez</p>
+                    <p className="text-xs text-muted">Soccer · Caracas, Venezuela → Boca Raton, FL</p>
+                  </div>
+                </div>
+
+                {/* Status steps */}
+                <div className="flex items-center gap-0 mt-2">
+                  {[
+                    { label: "Submitted", done: true },
+                    { label: "Generating", done: true, active: true },
+                    { label: "Review", done: false },
+                    { label: "Approved", done: false },
+                    { label: "Delivered", done: false },
+                  ].map((s, i, arr) => (
+                    <div key={s.label} className="flex items-center">
+                      <div className="flex flex-col items-center gap-1.5">
+                        <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold ${s.done ? "bg-brand-600 text-white" : "bg-surface border-2 border-border text-muted"} ${s.active ? "ring-2 ring-brand-200" : ""}`}>
+                          {s.done ? (
+                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                          ) : i + 1}
+                        </div>
+                        <span className={`text-[9px] font-semibold leading-none ${s.done ? "text-brand-600" : "text-muted"}`}>{s.label}</span>
+                      </div>
+                      {i < arr.length - 1 && (
+                        <div className={`h-0.5 w-8 mb-3.5 ${s.done && !s.active ? "bg-brand-600" : "bg-border"}`} />
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="bg-brand-50 border border-brand-100 rounded-xl p-4 mt-1">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-2 h-2 rounded-full bg-brand-500 animate-pulse" />
+                    <span className="text-xs font-bold text-brand-700">Building guide...</span>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    {[
+                      { label: "Neighborhoods near FAU campus", done: true },
+                      { label: "Banking & financial setup", done: true },
+                      { label: "Healthcare & sports medicine", done: false },
+                      { label: "Halal dining & grocery stores", done: false },
+                      { label: "NCAA eligibility paperwork", done: false },
+                    ].map(item => (
+                      <div key={item.label} className="flex items-center gap-2">
+                        <div className={`w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0 ${item.done ? "bg-brand-600" : "bg-brand-100"}`}>
+                          {item.done && (
+                            <svg className="w-2 h-2 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                        </div>
+                        <span className={`text-[10px] ${item.done ? "text-brand-700 font-medium" : "text-muted"}`}>{item.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <p className="text-[10px] text-muted text-center">~3 minutes to complete · Carlos will receive an email when it's ready</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="order-1 lg:order-2">
+            <div className="flex items-center gap-4 mb-5">
+              <div className="w-9 h-9 rounded-lg bg-brand-600 text-white text-sm font-black flex items-center justify-center shrink-0">2</div>
+              <span className="text-xs font-bold uppercase tracking-[0.18em] text-brand-600">Settlyou generates the guide</span>
+            </div>
+            <h3 className="text-2xl font-bold text-foreground mb-4 leading-tight">AI builds a complete, personalized guide in under 3 minutes.</h3>
+            <p className="text-sm text-muted leading-relaxed mb-6">
+              Our AI reads the athlete's background, destination, sport, diet, family situation, and housing preferences — then builds a guide that's specific to them. Not a template. Not a generic packet. Their guide.
+            </p>
+            <div className="flex flex-col gap-2.5">
+              {[
+                "Neighborhoods matched to their budget and commute time",
+                "Halal, vegan, or kosher dining if they need it",
+                "Sports medicine and recovery centers near campus",
+                "NCAA eligibility paperwork with exact steps and links",
+                "In Spanish, Portuguese, Arabic — whatever language they chose",
+              ].map(item => (
+                <div key={item} className="flex items-start gap-3">
+                  <svg className="w-4 h-4 text-brand-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span className="text-sm text-foreground">{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Step 3 */}
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          <div>
+            <div className="flex items-center gap-4 mb-5">
+              <div className="w-9 h-9 rounded-lg bg-brand-600 text-white text-sm font-black flex items-center justify-center shrink-0">3</div>
+              <span className="text-xs font-bold uppercase tracking-[0.18em] text-brand-600">Athlete receives the guide</span>
+            </div>
+            <h3 className="text-2xl font-bold text-foreground mb-4 leading-tight">Delivered to their inbox and WhatsApp within 24 hours.</h3>
+            <p className="text-sm text-muted leading-relaxed mb-6">
+              Each athlete gets a personal link to their guide — accessible on any device, any time. A PDF version is always available to download. Your coach gets notified the moment it's opened.
+            </p>
+            <div className="flex flex-col gap-2.5">
+              {[
+                "Delivered by email — with a one-click PDF download",
+                "WhatsApp delivery so the link is always on their phone",
+                "Coach gets an open notification the first time they view it",
+                "Guide stays live — athletes can return to it anytime",
+                "Branded with your institution's logo and colors",
+              ].map(item => (
+                <div key={item} className="flex items-start gap-3">
+                  <svg className="w-4 h-4 text-brand-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span className="text-sm text-foreground">{item}</span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-8">
+              <a href={client.slug !== "sample" ? `/report/demo/${client.slug}` : "/report/sample-college"}
+                target="_blank" rel="noopener noreferrer"
+                className="inline-block px-6 py-3 rounded-lg border border-brand-200 bg-brand-50 text-brand-700 text-sm font-semibold hover:bg-brand-100 transition-colors">
+                See a sample guide
+              </a>
+            </div>
+          </div>
+          {/* Mockup: Delivery email */}
+          <div className="bg-surface rounded-2xl border border-border overflow-hidden">
+            <div className="bg-white border-b border-border px-5 py-3 flex items-center gap-2">
+              <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
+              <div className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
+              <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
+              <span className="text-[10px] text-muted ml-3">Your Relocation Guide is ready</span>
+            </div>
+            <div className="p-5">
+              <div className="bg-white rounded-xl border border-border overflow-hidden">
+                <div className="bg-brand-600 px-5 py-5">
+                  <img src="/settlyou-logo-white.png" alt="Settlyou" className="h-5 mb-4" />
+                  <p className="text-white font-bold text-base">Your relocation guide is ready, Carlos.</p>
+                  <p className="text-white/70 text-xs mt-1">Everything you need to land confidently in Boca Raton.</p>
+                </div>
+                <div className="px-5 py-4 flex flex-col gap-4">
+                  <p className="text-xs text-muted leading-relaxed">
+                    We've built a personalized guide just for you — neighborhoods near FAU, banking setup, halal food spots, sports medicine, NCAA paperwork, and more.
+                  </p>
+                  <div className="flex flex-col gap-2">
+                    <a className="block w-full text-center bg-brand-600 text-white text-xs font-bold py-3 rounded-lg">
+                      View my guide
+                    </a>
+                    <a className="block w-full text-center border border-border text-xs font-semibold py-2.5 rounded-lg text-foreground">
+                      Download PDF
+                    </a>
+                  </div>
+                  <div className="border-t border-border pt-3">
+                    <p className="text-[10px] text-muted text-center">Sent by Florida Atlantic University via Settlyou</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── Portals Section ─────────────────────────────────────────────────────────
+
+function PortalsSection({ client }) {
+  return (
+    <section className="bg-surface border-t border-b border-border py-24 px-6">
+      <div className="max-w-5xl mx-auto">
+        <div className="text-center mb-16">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-3 block">Your portals</span>
+          <h2 className="text-3xl lg:text-4xl font-black text-foreground tracking-tight">
+            A portal for every role. No overlap.
+          </h2>
+          <p className="text-sm text-muted mt-4 max-w-xl mx-auto leading-relaxed">
+            The Athletic Director sees every sport. Each coach sees only their athletes. No one gets information they shouldn't have.
+          </p>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-8">
+          {/* Coach Portal */}
+          <div className="bg-white rounded-2xl border border-border overflow-hidden">
+            <div className="px-6 py-5 border-b border-border">
+              <div className="flex items-center gap-3 mb-1">
+                <div className="w-8 h-8 rounded-lg bg-brand-50 border border-brand-100 flex items-center justify-center">
+                  <svg className="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-foreground">Coach Portal</p>
+                  <p className="text-[10px] text-muted">Soccer — Coach Rivera</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Stats strip */}
+            <div className="grid grid-cols-3 divide-x divide-border border-b border-border">
+              {[{ v: "12", l: "Athletes" }, { v: "9", l: "Guides Sent" }, { v: "3", l: "In Progress" }].map(s => (
+                <div key={s.l} className="px-4 py-3 text-center">
+                  <p className="text-lg font-black text-foreground leading-none">{s.v}</p>
+                  <p className="text-[10px] text-muted mt-0.5">{s.l}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Athletes list */}
+            <div className="px-5 py-4 flex flex-col gap-3">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted">Your Athletes</p>
+              {[
+                { name: "Carlos Mendez",   from: "Venezuela",   status: "Delivered",  color: "bg-green-100 text-green-700" },
+                { name: "Marco Rossi",     from: "Italy",       status: "Review",     color: "bg-orange-100 text-orange-700" },
+                { name: "Luis Gonzalez",   from: "Colombia",    status: "Generating", color: "bg-yellow-100 text-yellow-700" },
+                { name: "Ahmad Hassan",    from: "Egypt",       status: "Submitted",  color: "bg-gray-100 text-gray-600" },
+              ].map(a => (
+                <div key={a.name} className="flex items-center justify-between py-2 border-b border-border last:border-0">
+                  <div className="flex items-center gap-3">
+                    <div className="w-7 h-7 rounded-full bg-brand-100 flex items-center justify-center text-brand-700 text-[10px] font-bold shrink-0">
+                      {a.name.split(" ").map(n => n[0]).join("")}
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-foreground">{a.name}</p>
+                      <p className="text-[10px] text-muted">From {a.from}</p>
+                    </div>
+                  </div>
+                  <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-full ${a.color}`}>{a.status}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="px-5 pb-5">
+              <div className="bg-brand-50 border border-brand-100 rounded-xl p-4 flex items-start gap-3">
+                <svg className="w-4 h-4 text-brand-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+                <div>
+                  <p className="text-xs font-bold text-brand-700">Ahmad Hassan's guide is ready to send</p>
+                  <p className="text-[10px] text-brand-600 mt-0.5">Approved · click to deliver</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* AD Dashboard */}
+          <div className="bg-white rounded-2xl border border-border overflow-hidden">
+            <div className="px-6 py-5 border-b border-border">
+              <div className="flex items-center gap-3 mb-1">
+                <div className="w-8 h-8 rounded-lg bg-brand-50 border border-brand-100 flex items-center justify-center">
+                  <svg className="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-foreground">AD Dashboard</p>
+                  <p className="text-[10px] text-muted">{client.shortName} · All Sports</p>
+                </div>
+              </div>
+            </div>
+
+            {/* KPI strip */}
+            <div className="grid grid-cols-4 divide-x divide-border border-b border-border">
+              {[
+                { v: "47", l: "Total" },
+                { v: "38", l: "Delivered" },
+                { v: "6", l: "In Progress" },
+                { v: "3", l: "Coaches" },
+              ].map(s => (
+                <div key={s.l} className="px-3 py-3 text-center">
+                  <p className="text-lg font-black text-foreground leading-none">{s.v}</p>
+                  <p className="text-[10px] text-muted mt-0.5">{s.l}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* By sport */}
+            <div className="px-5 py-4">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted mb-3">By Sport</p>
+              <div className="flex flex-col gap-2.5">
+                {[
+                  { sport: "Soccer",     coach: "Coach Rivera",   sent: 12, total: 12, pct: 100 },
+                  { sport: "Basketball", coach: "Coach Thompson",  sent: 8,  total: 10, pct: 80 },
+                  { sport: "Tennis",     coach: "Coach Morales",   sent: 5,  total: 8,  pct: 62 },
+                  { sport: "Baseball",   coach: "Coach Williams",  sent: 13, total: 17, pct: 76 },
+                ].map(s => (
+                  <div key={s.sport} className="flex items-center gap-3">
+                    <div className="w-16 shrink-0">
+                      <p className="text-xs font-semibold text-foreground leading-none">{s.sport}</p>
+                      <p className="text-[9px] text-muted mt-0.5">{s.coach}</p>
+                    </div>
+                    <div className="flex-1 bg-surface rounded-full h-2 overflow-hidden">
+                      <div className="bg-brand-500 h-2 rounded-full transition-all" style={{ width: `${s.pct}%` }} />
+                    </div>
+                    <span className="text-[10px] font-semibold text-muted shrink-0 w-10 text-right">{s.sent}/{s.total}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="px-5 pb-5">
+              <div className="grid grid-cols-2 gap-2">
+                <button className="bg-brand-50 border border-brand-100 rounded-lg px-3 py-2.5 text-xs font-semibold text-brand-700 hover:bg-brand-100 transition-colors text-left">
+                  Export CSV
+                </button>
+                <button className="bg-brand-50 border border-brand-100 rounded-lg px-3 py-2.5 text-xs font-semibold text-brand-700 hover:bg-brand-100 transition-colors text-left">
+                  Bulk resend
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Role labels */}
+        <div className="grid lg:grid-cols-2 gap-8 mt-4">
+          <div className="text-center">
+            <p className="text-xs text-muted font-medium">Coaches see only their sport's athletes</p>
+          </div>
+          <div className="text-center">
+            <p className="text-xs text-muted font-medium">Athletic Directors see everything — all sports, all coaches</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── Guide Inside ─────────────────────────────────────────────────────────────
+
+function GuideInsideSection({ client }) {
+  const sections = [
     {
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-        </svg>
-      ),
-      title: "Real-time student tracker",
-      body: "See every student's guide status at a glance — Received, Generating, Quality Check, or Sent. Filter by name, status, sport, or date. Know exactly where each intake stands.",
+      icon: "🏠",
+      title: "Housing & Neighborhoods",
+      items: ["3–5 neighborhoods ranked by fit score", "Average rent by bedroom count", "Commute time to campus", "Pros/cons for their lifestyle"],
     },
     {
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-        </svg>
-      ),
-      title: "Guide Notes — your voice in every guide",
-      body: "Write a welcome message, add compliance deadlines, health center contacts, or anything your students need to know. The AI weaves your notes naturally into every guide — your words, automatically.",
+      icon: "📋",
+      title: "Paperwork & Compliance",
+      items: ["F-1 visa & SEVIS check-in steps", "NCAA / NAIA eligibility checklist", "FAFSA & financial aid guide", "Driver's license & state ID"],
     },
     {
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
-        </svg>
-      ),
-      title: "Document uploads",
-      body: "Attach any PDF — housing forms, eligibility waivers, student handbooks, insurance info. Every guide automatically includes your institution's documents, ready to download.",
+      icon: "🏦",
+      title: "Banking & Finance",
+      items: ["Best banks for international students", "How to build a US credit score", "ITIN application if needed", "Wire transfer & remittance tips"],
     },
     {
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-        </svg>
-      ),
-      title: "Delivery & open notifications",
-      body: "Get notified when each guide is delivered and when the student opens it for the first time. A weekly email digest summarizes your full intake — delivered every Monday.",
+      icon: "🏥",
+      title: "Healthcare",
+      items: ["Health insurance options explained", "Sports medicine centers nearby", "Specialist clinics (their needs)", "Urgent care & emergency contacts"],
     },
     {
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-        </svg>
-      ),
-      title: "Bulk resend & CSV export",
-      body: "Need to resend a guide? One click. Managing a large intake? Select multiple students and resend in bulk. Export your full roster as a CSV anytime.",
+      icon: "🍽️",
+      title: "Food & Dining",
+      items: ["Grocery stores with their diet items", "Diet-specific restaurants (halal, vegan…)", "Performance nutrition spots", "Food delivery platforms"],
     },
     {
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-        </svg>
-      ),
-      title: "Your branding, on every guide",
-      body: "Upload your logo and set your institution's colors. Every guide — web and PDF — carries your brand from the header down. Students see your name, not ours.",
+      icon: "💪",
+      title: "Fitness & Recovery",
+      items: ["Gyms near campus", "Recovery & physio centers", "Sport-specific training facilities", "Mental performance resources"],
+    },
+    {
+      icon: "🌍",
+      title: "Community & Culture",
+      items: ["Expat and international communities", "Religious centers (if needed)", "Cultural events calendar", "Language exchange resources"],
+    },
+    {
+      icon: "📅",
+      title: "First 7 Days Checklist",
+      items: ["Ordered task list for arrival week", "Day-by-day priority actions", "Campus orientation quick hits", "Emergency contacts and resources"],
     },
   ];
 
@@ -245,195 +702,419 @@ function AdminDashboard({ client }) {
     <section className="py-24 px-6">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-14">
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-3 block">Your dashboard</span>
-          <h2 className="text-3xl font-bold text-foreground">Everything managed in one place</h2>
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-3 block">What's inside</span>
+          <h2 className="text-3xl lg:text-4xl font-black text-foreground tracking-tight">
+            Every section. Specific to them.
+          </h2>
           <p className="text-sm text-muted mt-4 max-w-xl mx-auto leading-relaxed">
-            Your admin portal gives {client.shortName} full visibility and control — without any of the manual work.
+            Each guide is generated from scratch — not a template. The athlete's sport, nationality, diet, budget, and family situation all shape the content.
           </p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {features.map((f) => (
-            <div key={f.title} className="bg-white border border-border rounded-xl p-6 flex flex-col gap-3 hover:border-brand-200 hover:shadow-sm transition-all">
-              <div className="w-9 h-9 rounded-lg bg-brand-50 border border-brand-100 flex items-center justify-center text-brand-600 shrink-0">
-                {f.icon}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {sections.map((s) => (
+            <div key={s.title} className="bg-white border border-border rounded-xl p-5 flex flex-col gap-3 hover:border-brand-200 hover:shadow-sm transition-all group">
+              <div className="w-9 h-9 rounded-lg bg-brand-50 border border-brand-100 flex items-center justify-center text-lg group-hover:bg-brand-100 transition-colors">
+                {s.icon}
               </div>
-              <p className="font-semibold text-foreground text-sm leading-snug">{f.title}</p>
-              <p className="text-xs text-muted leading-relaxed">{f.body}</p>
+              <p className="font-bold text-foreground text-sm leading-snug">{s.title}</p>
+              <div className="flex flex-col gap-1.5 mt-auto">
+                {s.items.map(item => (
+                  <div key={item} className="flex items-start gap-2">
+                    <svg className="w-3 h-3 text-brand-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-[11px] text-muted leading-snug">{item}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           ))}
+        </div>
+
+        <div className="mt-10 text-center">
+          <a href={client.slug !== "sample" ? `/report/demo/${client.slug}` : "/report/sample-college"}
+            target="_blank" rel="noopener noreferrer"
+            className="inline-block px-8 py-3.5 rounded-lg border border-border text-sm font-semibold text-foreground hover:bg-surface hover:border-brand-200 transition-colors">
+            See a full sample guide for {client.shortName}
+          </a>
         </div>
       </div>
     </section>
   );
 }
 
-// ─── What students receive ────────────────────────────────────────────────────
+// ─── Document Upload Section ──────────────────────────────────────────────────
 
-function Check() {
+function DocumentSection() {
   return (
-    <svg className="w-4 h-4 text-brand-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-    </svg>
+    <section className="bg-surface border-t border-b border-border py-24 px-6">
+      <div className="max-w-5xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+        {/* Left — Copy */}
+        <div>
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-5 block">Document collection</span>
+          <h2 className="text-3xl font-bold text-foreground mb-5 leading-tight tracking-tight">
+            Athletes upload their documents. You see it in real time.
+          </h2>
+          <p className="text-sm text-muted leading-relaxed mb-6">
+            Every athlete receives a personal upload link the moment their guide is delivered. They upload their passport, eligibility forms, transcripts, and anything your coaches require — on their own time, from anywhere.
+          </p>
+          <div className="flex flex-col gap-3">
+            {[
+              "Coaches set which documents are required per sport",
+              "Athletes see a clear checklist — no confusion about what's needed",
+              "Coaches get notified when each document is uploaded",
+              "Download all documents from the athlete's profile page",
+              "Document status shown in real time across the dashboard",
+            ].map(item => (
+              <div key={item} className="flex items-start gap-3">
+                <svg className="w-4 h-4 text-brand-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                </svg>
+                <span className="text-sm text-foreground">{item}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Right — Upload portal mockup */}
+        <div className="bg-white rounded-2xl border border-border overflow-hidden shadow-sm">
+          <div className="px-5 py-4 border-b border-border">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center shrink-0">
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-xs font-bold text-foreground">Document Upload</p>
+                <p className="text-[10px] text-muted">Carlos Mendez · Soccer</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Progress */}
+          <div className="px-5 pt-4 pb-3 border-b border-border">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[10px] font-semibold text-foreground">Progress</span>
+              <span className="text-[10px] font-bold text-brand-600">3 / 5 uploaded</span>
+            </div>
+            <div className="w-full bg-surface rounded-full h-1.5 overflow-hidden">
+              <div className="bg-brand-500 h-1.5 rounded-full" style={{ width: "60%" }} />
+            </div>
+          </div>
+
+          {/* Document list */}
+          <div className="px-5 py-4 flex flex-col gap-3">
+            {[
+              { name: "Passport Copy",          required: true,  status: "uploaded", file: "passport_mendez.pdf" },
+              { name: "NCAA Eligibility Form",  required: true,  status: "uploaded", file: "ncaa_eligibility.pdf" },
+              { name: "Medical Form",           required: true,  status: "uploaded", file: "medical_form.pdf" },
+              { name: "Official Transcript",    required: true,  status: "pending",  file: null },
+              { name: "English Test (TOEFL)",   required: false, status: "pending",  file: null },
+            ].map(doc => (
+              <div key={doc.name} className="flex items-center justify-between py-2 border-b border-border last:border-0">
+                <div className="flex items-center gap-3">
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${doc.status === "uploaded" ? "bg-brand-100" : "bg-surface border border-border"}`}>
+                    {doc.status === "uploaded" ? (
+                      <svg className="w-3.5 h-3.5 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                      </svg>
+                    ) : (
+                      <svg className="w-3 h-3 text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                      </svg>
+                    )}
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-foreground">{doc.name}</p>
+                    {doc.file
+                      ? <p className="text-[10px] text-brand-600 mt-0.5">{doc.file}</p>
+                      : <p className="text-[10px] text-muted mt-0.5">{doc.required ? "Required" : "Optional"}</p>
+                    }
+                  </div>
+                </div>
+                {doc.status === "uploaded" ? (
+                  <button className="text-[10px] font-semibold text-brand-600 hover:underline">Download</button>
+                ) : (
+                  <button className="text-[10px] font-semibold px-3 py-1.5 rounded-lg border border-brand-200 text-brand-600 bg-brand-50 hover:bg-brand-100 transition-colors">Upload</button>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
-function WhatStudentsReceive({ client }) {
-  const left = [
-    "Housing search — neighborhoods, budget, commute",
-    "Banking & financial setup",
-    "Health insurance options",
-    "F-1 visa & SEVIS check-ins (international students)",
-    "NIL compliance & eligibility (student-athletes)",
-    "FAFSA & financial aid guidance",
-    "Driver's license & state ID",
-    "18 language options — guide written in their language",
-  ];
-  const right = [
-    "Neighborhoods near campus",
-    "Getting around — transit, rideshare, cars",
-    "Restaurants & food scene",
-    "Health & wellness spots",
-    "Student organizations & social life",
-    "Key campus resources & contacts",
-    "First 7 days checklist",
-    "Downloadable PDF + web guide",
+// ─── Guide Notes Section ──────────────────────────────────────────────────────
+
+function GuideNotesSection() {
+  return (
+    <section className="py-24 px-6">
+      <div className="max-w-5xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+        {/* Left — mockup */}
+        <div className="bg-white rounded-2xl border border-border overflow-hidden shadow-sm">
+          <div className="px-5 py-4 border-b border-border flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-brand-50 border border-brand-100 flex items-center justify-center">
+              <svg className="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-xs font-bold text-foreground">Coach Guide Notes</p>
+              <p className="text-[10px] text-muted">Soccer · Coach Rivera</p>
+            </div>
+          </div>
+
+          <div className="px-5 py-5">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted mb-2">Your message to athletes (woven into every guide)</p>
+            <div className="bg-surface border border-border rounded-xl p-4 text-xs text-foreground leading-relaxed mb-4">
+              Welcome to the FAU Soccer program! Before your first practice, make sure you've completed your pre-participation physical with our Sports Medicine team (Bldg 96). Your eligibility paperwork must be submitted by July 31st. If you have any questions, reach out to me directly at coach.rivera@fau.edu.
+            </div>
+
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted mb-2">Key links for your athletes</p>
+            <div className="flex flex-col gap-2 mb-4">
+              {[
+                { label: "FAU Soccer Team Portal", url: "fausports.com/soccer" },
+                { label: "Sports Medicine Scheduling", url: "fau.edu/sportsmedicine" },
+                { label: "NCAA Eligibility Center", url: "ncaa.org/eligibility" },
+              ].map(link => (
+                <div key={link.label} className="flex items-center gap-3 bg-white border border-border rounded-lg px-3 py-2">
+                  <svg className="w-3 h-3 text-brand-500 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                  <div>
+                    <p className="text-[10px] font-semibold text-foreground">{link.label}</p>
+                    <p className="text-[9px] text-brand-600">{link.url}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <button className="w-full bg-brand-600 text-white text-xs font-bold py-2.5 rounded-lg hover:bg-brand-700 transition-colors">
+              Save notes — updates all future guides
+            </button>
+          </div>
+        </div>
+
+        {/* Right — copy */}
+        <div>
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-5 block">Guide Notes</span>
+          <h2 className="text-3xl font-bold text-foreground mb-5 leading-tight tracking-tight">
+            Your voice. In every guide.
+          </h2>
+          <p className="text-sm text-muted leading-relaxed mb-6">
+            Coaches write a short welcome note, add compliance deadlines, and link their key resources. Settlyou weaves those words naturally into every athlete's guide — so each student feels personally welcomed, with the right information from their coach.
+          </p>
+          <div className="flex flex-col gap-4">
+            {[
+              {
+                title: "Write it once. It's in every guide.",
+                body: "Set your notes once and every athlete in your sport gets them — automatically. Update anytime.",
+              },
+              {
+                title: "Per-sport, per-coach.",
+                body: "Soccer gets soccer notes. Basketball gets basketball notes. Each coach customizes their sport independently.",
+              },
+              {
+                title: "Documents, too.",
+                body: "Coaches upload PDFs — handbooks, eligibility forms, training schedules — and every guide auto-includes a download link.",
+              },
+            ].map(item => (
+              <div key={item.title} className="flex items-start gap-4 p-4 rounded-xl border border-border bg-surface hover:border-brand-200 transition-colors">
+                <div className="w-1 h-full min-h-8 rounded-full bg-brand-500 shrink-0" />
+                <div>
+                  <p className="text-sm font-bold text-foreground mb-1">{item.title}</p>
+                  <p className="text-xs text-muted leading-relaxed">{item.body}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── ROI Section ──────────────────────────────────────────────────────────────
+
+function ROISection({ client }) {
+  const stats = [
+    {
+      value: "From $40",
+      label: "per athlete / yr",
+      sub: "vs. $1,500–$3,000 per athlete at relocation firms",
+      color: "brand",
+    },
+    {
+      value: "10–15 hrs",
+      label: "staff time saved per athlete",
+      sub: "At $50/hr, that's $500–$750 in labor cost eliminated per student",
+      color: "brand",
+    },
+    {
+      value: "~3 min",
+      label: "guide generation time",
+      sub: "vs. 2–4 weeks with a traditional firm. Guides ready before orientation.",
+      color: "brand",
+    },
   ];
 
   return (
     <section className="bg-surface border-t border-b border-border py-24 px-6">
       <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-12">
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-3 block">What's inside</span>
-          <h2 className="text-3xl font-bold text-foreground">Everything a student needs to land and settle in</h2>
-          <p className="text-sm text-muted mt-4 max-w-xl mx-auto leading-relaxed">Each guide is built from scratch for that specific student — their city, their background, their sport, their family situation.</p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-white border border-border rounded-xl p-6">
-            <p className="text-xs font-bold uppercase tracking-widest text-muted mb-5">Paperwork & Admin</p>
-            <div className="flex flex-col gap-3">
-              {left.map((item) => (
-                <div key={item} className="flex items-start gap-3">
-                  <Check />
-                  <span className="text-sm text-foreground">{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="bg-white border border-border rounded-xl p-6">
-            <p className="text-xs font-bold uppercase tracking-widest text-muted mb-5">City & Local Life</p>
-            <div className="flex flex-col gap-3">
-              {right.map((item) => (
-                <div key={item} className="flex items-start gap-3">
-                  <Check />
-                  <span className="text-sm text-foreground">{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {client?.slug && client.slug !== "sample" && (
-          <div className="mt-10 text-center">
-            <p className="text-sm text-muted mb-4">
-              See what a guide looks like for {client.name} students.
-            </p>
-            <a
-              href={`/report/demo/${client.slug}`}
-              className="inline-block px-8 py-3 rounded-lg border border-border text-sm font-semibold text-foreground hover:bg-surface transition-colors"
-            >
-              Preview a sample guide →
-            </a>
-          </div>
-        )}
-      </div>
-    </section>
-  );
-}
-
-// ─── ROI section ─────────────────────────────────────────────────────────────
-
-function ROISection({ client }) {
-  const stats = [
-    { number: "From $49", label: "per student", sub: "vs. $1,500–$3,000 per student at relocation firms" },
-    { number: "10–15 hrs", label: "of staff time saved per student", sub: "At $50/hr, that's $500–$750 in labor costs eliminated per student" },
-    { number: "~3 min", label: "to generate a complete guide", sub: "vs. 2–4 weeks with a traditional relocation firm" },
-  ];
-
-  return (
-    <section className="py-24 px-6">
-      <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-12">
+        <div className="text-center mb-14">
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-3 block">The math</span>
-          <h2 className="text-3xl font-bold text-foreground">A fraction of the cost. A fraction of the time.</h2>
+          <h2 className="text-3xl lg:text-4xl font-black text-foreground tracking-tight">
+            A fraction of the cost. Zero staff time.
+          </h2>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
           {stats.map((s) => (
-            <div key={s.number} className="bg-white border border-border rounded-2xl p-8 flex flex-col gap-3">
-              <div className="w-8 h-1 rounded-full bg-brand-500 mb-2" />
-              <p className="text-4xl font-bold text-brand-600 leading-none tracking-tight">{s.number}</p>
-              <p className="text-base font-semibold text-foreground leading-snug">{s.label}</p>
-              <p className="text-xs text-muted leading-relaxed mt-auto pt-3 border-t border-border">{s.sub}</p>
+            <div key={s.value} className="bg-white border border-border rounded-2xl overflow-hidden">
+              <div className="h-1 w-full bg-brand-500" />
+              <div className="p-7 flex flex-col gap-3">
+                <p className="text-4xl font-black text-brand-600 leading-none tracking-tight">{s.value}</p>
+                <p className="text-base font-bold text-foreground leading-snug">{s.label}</p>
+                <p className="text-xs text-muted leading-relaxed pt-3 border-t border-border">{s.sub}</p>
+              </div>
             </div>
           ))}
         </div>
+
         {client.estimatedStudents && (
-          <p className="text-sm text-muted text-center mt-8 max-w-xl mx-auto">
-            For a program serving{" "}
-            <strong className="text-foreground">{client.estimatedStudents} students/yr</strong>, that's up to{" "}
-            <strong className="text-foreground">{(client.estimatedStudents * 15).toLocaleString()} hours</strong> of staff time saved annually — before a single guide is billed.
-          </p>
+          <div className="mt-8 bg-brand-50 border border-brand-100 rounded-2xl p-7 text-center">
+            <p className="text-sm text-brand-800 leading-relaxed">
+              For a program serving{" "}
+              <strong>{client.estimatedStudents} athletes/yr</strong> like {client.shortName}, Settlyou eliminates up to{" "}
+              <strong>{(client.estimatedStudents * 15).toLocaleString()} hours</strong> of staff time annually — and costs{" "}
+              <strong>less than one hour at a relocation firm</strong> per athlete.
+            </p>
+          </div>
         )}
       </div>
     </section>
   );
 }
 
-// ─── Pricing ─────────────────────────────────────────────────────────────────
+// ─── Pricing ──────────────────────────────────────────────────────────────────
 
 const TIERS = [
-  { label: "Micro",       price: "$2,400", unit: "/ yr", range: "Up to 40 students / yr",  note: "Small programs or single-sport pilots.",        per: "~$60 / student" },
-  { label: "Starter",     price: "$4,900", unit: "/ yr", range: "Up to 100 students / yr", note: "Mid-size programs across multiple sports.",      per: "~$49 / student" },
-  { label: "Pro",         price: "$7,900", unit: "/ yr", range: "Up to 200 students / yr", note: "NCAA D1/D2 and larger universities.",             per: "~$40 / student" },
-  { label: "Institution", price: "Custom", unit: "",     range: "200+ students / yr",       note: "Large state universities — contact us.",         per: "Annual · use-it-or-lose-it" },
+  {
+    label: "Micro",
+    price: "$2,400",
+    unit: "/ yr",
+    range: "Up to 40 athletes / yr",
+    note: "Small programs or single-sport pilots.",
+    per: "~$60 / athlete",
+    popular: false,
+  },
+  {
+    label: "Starter",
+    price: "$4,900",
+    unit: "/ yr",
+    range: "Up to 100 athletes / yr",
+    note: "Mid-size programs across multiple sports.",
+    per: "~$49 / athlete",
+    popular: true,
+  },
+  {
+    label: "Pro",
+    price: "$7,900",
+    unit: "/ yr",
+    range: "Up to 200 athletes / yr",
+    note: "NCAA D1/D2 and larger universities.",
+    per: "~$40 / athlete",
+    popular: false,
+  },
+  {
+    label: "Institution",
+    price: "Custom",
+    unit: "",
+    range: "200+ athletes / yr",
+    note: "Large state universities and multi-department programs.",
+    per: "Annual · contact us",
+    popular: false,
+  },
+];
+
+const ALL_FEATURES = [
+  "AI-generated relocation guide per athlete",
+  "Delivery within 24 hours",
+  "18 language options",
+  "Athlete document upload portal",
+  "Coach portal (per-sport access)",
+  "AD dashboard — full program visibility",
+  "Guide Notes & custom links per sport",
+  "Email + WhatsApp delivery",
+  "Custom branding (logo + colors)",
+  "Open & delivery notifications",
+  "Weekly intake digest email",
+  "Bulk resend & CSV export",
 ];
 
 function PricingSection() {
   return (
-    <section className="bg-surface border-t border-b border-border py-24 px-6">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-10">
+    <section className="py-24 px-6">
+      <div className="max-w-5xl mx-auto">
+        <div className="text-center mb-12">
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-3 block">Pricing</span>
-          <h2 className="text-3xl font-bold text-foreground">Simple pricing. Everything included.</h2>
+          <h2 className="text-3xl font-bold text-foreground tracking-tight">Simple. Everything included.</h2>
           <p className="text-sm text-muted mt-3 max-w-lg mx-auto leading-relaxed">
-            Every tier includes the full platform — guides, coach portal, document uploads, analytics, branding. The only difference is how many students you serve.
+            Every tier includes the full platform — guides, portals, document uploads, branding, analytics. The only difference is volume.
           </p>
-          <div className="inline-block mt-5 px-5 py-2 rounded-full bg-brand-50 border border-brand-100">
-            <p className="text-sm font-bold text-brand-700">Start free — 1 sport, 1 term, up to 15 students. No contract, no credit card.</p>
+          <div className="inline-block mt-5 px-5 py-2.5 rounded-full bg-brand-50 border border-brand-100">
+            <p className="text-sm font-bold text-brand-700">Start free — 15 athletes, 1 sport, no contract, no credit card.</p>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-brand-200 bg-brand-50 overflow-hidden">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-brand-100">
-            {TIERS.map((tier) => (
-              <div key={tier.label} className="px-6 py-7 flex flex-col gap-2">
-                <p className="text-xs font-bold uppercase tracking-widest text-brand-500">{tier.label}</p>
+        {/* Tier cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+          {TIERS.map((tier) => (
+            <div key={tier.label} className={`relative bg-white rounded-2xl overflow-hidden border ${tier.popular ? "border-brand-400 shadow-lg" : "border-border"}`}>
+              {tier.popular && (
+                <div className="bg-brand-600 text-white text-[10px] font-black uppercase tracking-widest text-center py-1.5">
+                  Most popular
+                </div>
+              )}
+              {!tier.popular && <div className="h-1 bg-brand-100" />}
+              <div className="p-5 flex flex-col gap-2">
+                <p className="text-[10px] font-black uppercase tracking-widest text-brand-500">{tier.label}</p>
                 <div className="flex items-baseline gap-1 mt-1">
-                  <p className="text-3xl font-bold text-foreground leading-none">{tier.price}</p>
+                  <p className="text-3xl font-black text-foreground leading-none">{tier.price}</p>
                   {tier.unit && <p className="text-sm text-muted">{tier.unit}</p>}
                 </div>
-                <p className="text-xs text-muted">{tier.range}</p>
-                <p className="text-xs text-muted leading-relaxed mt-1">{tier.note}</p>
-                <div className="mt-auto pt-3 border-t border-brand-100">
-                  <p className="text-xs font-semibold text-brand-700">{tier.per}</p>
+                <p className="text-[11px] text-muted">{tier.range}</p>
+                <p className="text-[11px] text-muted leading-relaxed">{tier.note}</p>
+                <div className="mt-3 pt-3 border-t border-border">
+                  <p className="text-xs font-bold text-brand-700">{tier.per}</p>
                   <p className="text-[10px] text-muted mt-0.5">Annual · use-it-or-lose-it</p>
                 </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Features */}
+        <div className="bg-surface border border-border rounded-2xl p-6 lg:p-8">
+          <p className="text-xs font-bold uppercase tracking-widest text-muted mb-5">Everything included on every plan</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {ALL_FEATURES.map(f => (
+              <div key={f} className="flex items-start gap-3">
+                <svg className="w-4 h-4 text-brand-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                </svg>
+                <span className="text-sm text-foreground">{f}</span>
               </div>
             ))}
           </div>
         </div>
 
         <p className="text-xs text-muted text-center mt-5 leading-relaxed">
-          Pay once per year. Students are allocated for your intake — no rollovers, no surprise invoices.
+          Pay once per year. Athletes are allocated for your intake — no rollovers, no surprise invoices.
         </p>
       </div>
     </section>
@@ -444,22 +1125,26 @@ function PricingSection() {
 
 function FinalCTA({ client }) {
   return (
-    <section className="py-24 px-6 text-center" style={{ background: client.primaryColor }}>
-      <div
-        className="absolute inset-0 opacity-10 pointer-events-none"
-        style={{ backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)", backgroundSize: "28px 28px" }}
-      />
-      <div className="relative max-w-2xl mx-auto flex flex-col items-center gap-6">
-        <h2 className="text-3xl font-bold text-white">Ready to try it?</h2>
-        <p className="leading-relaxed" style={{ color: "rgba(255,255,255,0.8)" }}>
-          Start with 15 free guides — no contract, no credit card. We'll set up your account and walk you through it.
+    <section className="relative overflow-hidden py-24 px-6" style={{ background: client.primaryColor }}>
+      <div className="absolute inset-0 opacity-10 pointer-events-none"
+        style={{ backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+      <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full opacity-15 blur-3xl pointer-events-none bg-white" />
+      <div className="relative max-w-2xl mx-auto flex flex-col items-center text-center gap-6">
+        <p className="text-xs font-bold uppercase tracking-[0.2em]" style={{ color: "rgba(255,255,255,0.6)" }}>
+          Ready to get started
         </p>
-        <div className="flex flex-wrap items-center justify-center gap-3">
+        <h2 className="text-3xl lg:text-4xl font-black text-white leading-tight">
+          Start with 15 free guides.<br />No commitment.
+        </h2>
+        <p className="leading-relaxed text-sm max-w-lg" style={{ color: "rgba(255,255,255,0.75)" }}>
+          We'll set up your account, configure your join link, and walk you through everything. If it works for your program, we'll talk about the right plan. No pressure.
+        </p>
+        <div className="flex flex-wrap items-center justify-center gap-3 mt-2">
           <a
             href="https://calendar.app.google/6fVjZ9wJ9r8LUXDv8"
-        target="_blank"
-        rel="noopener noreferrer"
-            className="bg-white font-semibold px-7 py-3.5 rounded-lg text-sm hover:opacity-90 transition-opacity"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-white font-bold px-7 py-3.5 rounded-lg text-sm hover:opacity-90 transition-opacity shadow-lg"
             style={{ color: client.primaryColor }}
           >
             Book a 30-min call
@@ -469,11 +1154,17 @@ function FinalCTA({ client }) {
             target="_blank"
             rel="noopener noreferrer"
             className="font-semibold px-7 py-3.5 rounded-lg text-sm text-white transition-colors"
-            style={{ border: "1px solid rgba(255,255,255,0.35)", background: "rgba(255,255,255,0.08)" }}
+            style={{ border: "1px solid rgba(255,255,255,0.3)", background: "rgba(255,255,255,0.1)" }}
           >
             See a sample guide
           </a>
         </div>
+        <p className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>
+          Or email us directly at{" "}
+          <a href="mailto:hello@settlyou.com" className="underline hover:opacity-80 transition-opacity" style={{ color: "rgba(255,255,255,0.7)" }}>
+            hello@settlyou.com
+          </a>
+        </p>
       </div>
     </section>
   );
@@ -486,9 +1177,7 @@ function PitchFooter() {
     <footer className="border-t border-border px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted">
       <p>© {new Date().getFullYear()} Settlyou. All rights reserved.</p>
       <div className="flex items-center gap-4">
-        <a href="https://calendar.app.google/6fVjZ9wJ9r8LUXDv8"
-        target="_blank"
-        rel="noopener noreferrer" className="hover:text-foreground transition-colors">hello@settlyou.com</a>
+        <a href="mailto:hello@settlyou.com" className="hover:text-foreground transition-colors">hello@settlyou.com</a>
         <a href="/privacy" className="hover:text-foreground transition-colors">Privacy</a>
         <a href="/terms" className="hover:text-foreground transition-colors">Terms</a>
       </div>
