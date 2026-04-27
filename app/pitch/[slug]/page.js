@@ -23,9 +23,9 @@ export default async function PitchPage({ params }) {
       <HeroSection client={client} />
       <ProblemSection />
       <HowItWorksSection client={client} />
+      <DocumentSection />
       <PortalsSection client={client} />
       <GuideInsideSection client={client} />
-      <DocumentSection />
       <GuideNotesSection />
       <ROISection client={client} />
       <PricingSection />
@@ -657,42 +657,42 @@ function PortalsSection({ client }) {
 function GuideInsideSection({ client }) {
   const sections = [
     {
-      icon: "🏠",
+      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>,
       title: "Housing & Neighborhoods",
       items: ["3–5 neighborhoods ranked by fit score", "Average rent by bedroom count", "Commute time to campus", "Pros/cons for their lifestyle"],
     },
     {
-      icon: "📋",
+      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>,
       title: "Paperwork & Compliance",
       items: ["F-1 visa & SEVIS check-in steps", "NCAA / NAIA eligibility checklist", "FAFSA & financial aid guide", "Driver's license & state ID"],
     },
     {
-      icon: "🏦",
+      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>,
       title: "Banking & Finance",
       items: ["Best banks for international students", "How to build a US credit score", "ITIN application if needed", "Wire transfer & remittance tips"],
     },
     {
-      icon: "🏥",
+      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>,
       title: "Healthcare",
       items: ["Health insurance options explained", "Sports medicine centers nearby", "Specialist clinics (their needs)", "Urgent care & emergency contacts"],
     },
     {
-      icon: "🍽️",
+      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>,
       title: "Food & Dining",
       items: ["Grocery stores with their diet items", "Diet-specific restaurants (halal, vegan…)", "Performance nutrition spots", "Food delivery platforms"],
     },
     {
-      icon: "💪",
+      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>,
       title: "Fitness & Recovery",
       items: ["Gyms near campus", "Recovery & physio centers", "Sport-specific training facilities", "Mental performance resources"],
     },
     {
-      icon: "🌍",
+      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg>,
       title: "Community & Culture",
       items: ["Expat and international communities", "Religious centers (if needed)", "Cultural events calendar", "Language exchange resources"],
     },
     {
-      icon: "📅",
+      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>,
       title: "First 7 Days Checklist",
       items: ["Ordered task list for arrival week", "Day-by-day priority actions", "Campus orientation quick hits", "Emergency contacts and resources"],
     },
@@ -714,7 +714,7 @@ function GuideInsideSection({ client }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {sections.map((s) => (
             <div key={s.title} className="bg-white border border-border rounded-xl p-5 flex flex-col gap-3 hover:border-brand-200 hover:shadow-sm transition-all group">
-              <div className="w-9 h-9 rounded-lg bg-brand-50 border border-brand-100 flex items-center justify-center text-lg group-hover:bg-brand-100 transition-colors">
+              <div className="w-9 h-9 rounded-lg bg-brand-50 border border-brand-100 flex items-center justify-center text-brand-600 group-hover:bg-brand-100 transition-colors">
                 {s.icon}
               </div>
               <p className="font-bold text-foreground text-sm leading-snug">{s.title}</p>
