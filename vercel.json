@@ -11,6 +11,10 @@
     {
       "path": "/api/cron/club-weekly",
       "schedule": "0 9 * * 1"
+    },
+    {
+      "path": "/api/cron/doc-reminders",
+      "schedule": "0 10 * * *"
     }
   ]
 }
