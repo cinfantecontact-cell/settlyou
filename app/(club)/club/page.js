@@ -3,8 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import JoinLinkCard from "./_components/JoinLinkCard";
-import dynamic from "next/dynamic";
-const OnboardingTutorial = dynamic(() => import("./_components/OnboardingTutorial"), { ssr: false });
+import OnboardingTutorial from "./_components/OnboardingTutorial";
 import StatusBadge from "./_components/StatusBadge";
 
 const TWELVE_HOURS = 12 * 60 * 60 * 1000;
