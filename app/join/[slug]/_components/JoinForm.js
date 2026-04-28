@@ -203,7 +203,7 @@ export default function JoinForm({ club }) {
     guest_visit_frequency: "",
     guest_hotel_budget: "",
     destination_city: club.city || "",
-    destination_state: club.state || "",
+    destination_state: "",
     destination_country: club.country || "",
     move_date: "",
     budget_usd: "",

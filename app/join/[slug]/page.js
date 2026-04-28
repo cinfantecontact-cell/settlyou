@@ -9,7 +9,7 @@ export default async function JoinPage({ params }) {
 
   const { data: club } = await admin
     .from("clubs")
-    .select("id, name, slug, type, logo_url, primary_color, secondary_color, active, seat_limit, seats_used, pin, plan, city, state, country")
+    .select("id, name, slug, type, logo_url, primary_color, secondary_color, active, seat_limit, seats_used, pin, plan, city, country")
     .eq("slug", slug)
     .single();
 
