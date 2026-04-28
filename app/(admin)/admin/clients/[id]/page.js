@@ -31,7 +31,7 @@ export default async function AdminClientDetailPage({ params }) {
     <div className="p-8 max-w-3xl flex flex-col gap-6">
       <div className="flex items-center gap-3 mb-2">
         <a href="/admin/clients" className="text-xs font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground transition-colors">
-          ← Clients
+          Clients
         </a>
       </div>
 

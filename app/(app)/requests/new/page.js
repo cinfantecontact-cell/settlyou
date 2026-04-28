@@ -295,20 +295,18 @@ export default function NewRequestPage() {
     return (
       <div className="p-8 max-w-2xl">
         <div className="mb-6">
-          <a href="/dashboard" className="text-sm text-muted hover:text-foreground transition-colors">← Back</a>
+          <a href="/dashboard" className="text-sm text-muted hover:text-foreground transition-colors">Back</a>
           <h1 className="text-2xl font-bold text-foreground mt-4">New relocation request</h1>
           <p className="text-sm text-muted mt-1">Who is this guide for?</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <button type="button" onClick={() => selectType("professional")}
             className="text-left p-6 rounded-xl border-2 border-border hover:border-brand-500 transition-colors bg-white group">
-            <div className="text-3xl mb-3">⚽</div>
             <div className="font-bold text-foreground text-lg mb-1">Professional Athlete</div>
             <div className="text-sm text-muted">Signing with a club, relocating with family, full relocation package.</div>
           </button>
           <button type="button" onClick={() => selectType("college")}
             className="text-left p-6 rounded-xl border-2 border-border hover:border-brand-500 transition-colors bg-white group">
-            <div className="text-3xl mb-3">🎓</div>
             <div className="font-bold text-foreground text-lg mb-1">College Student</div>
             <div className="text-sm text-muted">Arriving at a US university — athlete or general student, domestic or international.</div>
           </button>
@@ -321,7 +319,7 @@ export default function NewRequestPage() {
     <div className="p-8 max-w-2xl">
       <div className="mb-6">
         <button onClick={() => { setAthleteType(null); setStep(0); }}
-          className="text-sm text-muted hover:text-foreground transition-colors">← Back</button>
+          className="text-sm text-muted hover:text-foreground transition-colors">Back</button>
         <h1 className="text-2xl font-bold text-foreground mt-4">New relocation request</h1>
         <p className="text-xs text-muted mt-1 uppercase tracking-widest font-medium">
           {athleteType === "college" ? "College Athlete" : "Professional Athlete"}
@@ -1141,18 +1139,18 @@ export default function NewRequestPage() {
         <div className="flex justify-between mt-8 pt-6 border-t border-border">
           <button type="button" onClick={() => setStep((s) => s - 1)}
             className={`text-sm text-muted hover:text-foreground transition-colors ${step === 0 ? "invisible" : ""}`}>
-            ← Back
+            Back
           </button>
 
           {!isLastStep ? (
             <button type="button" onClick={() => setStep((s) => s + 1)}
               disabled={!canAdvance()}
-              className="bg-brand-600 text-white text-sm font-semibold px-5 py-2 rounded-md hover:bg-brand-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
-              Continue →
+              className="bg-brand-600 text-white text-sm font-semibold px-5 py-2 rounded-lg hover:bg-brand-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+              Continue
             </button>
           ) : (
             <button type="button" onClick={handleSubmit} disabled={submitting}
-              className="bg-brand-600 text-white text-sm font-semibold px-5 py-2 rounded-md hover:bg-brand-700 transition-colors disabled:opacity-60">
+              className="bg-brand-600 text-white text-sm font-semibold px-5 py-2 rounded-lg hover:bg-brand-700 transition-colors disabled:opacity-60">
               {submitting ? "Submitting..." : "Submit request"}
             </button>
           )}

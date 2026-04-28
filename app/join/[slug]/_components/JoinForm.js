@@ -9,11 +9,49 @@ const LANGUAGES = [
 ];
 
 const COUNTRIES = [
-  "United States", "Chile", "Mexico", "Argentina", "Brazil", "Colombia",
-  "Uruguay", "Paraguay", "Peru", "Ecuador", "Venezuela", "Bolivia",
-  "Spain", "England", "Germany", "France", "Italy", "Portugal",
-  "Netherlands", "Belgium", "Scotland", "Turkey", "Saudi Arabia",
-  "UAE", "Japan", "South Korea", "Australia", "Other",
+  "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda",
+  "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan",
+  "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium",
+  "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana",
+  "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi",
+  "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic",
+  "Chad", "Chile", "China", "Colombia", "Comoros", "Congo (Brazzaville)",
+  "Congo (Kinshasa)", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic",
+  "Denmark", "Djibouti", "Dominica", "Dominican Republic",
+  "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia",
+  "Eswatini", "Ethiopia",
+  "Fiji", "Finland", "France",
+  "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada",
+  "Guatemala", "Guinea", "Guinea-Bissau", "Guyana",
+  "Haiti", "Honduras", "Hungary",
+  "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy",
+  "Jamaica", "Japan", "Jordan",
+  "Kazakhstan", "Kenya", "Kiribati", "Kuwait", "Kyrgyzstan",
+  "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein",
+  "Lithuania", "Luxembourg",
+  "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands",
+  "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco",
+  "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar",
+  "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua",
+  "Niger", "Nigeria", "North Korea", "North Macedonia", "Norway",
+  "Oman",
+  "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay",
+  "Peru", "Philippines", "Poland", "Portugal",
+  "Qatar",
+  "Romania", "Russia", "Rwanda",
+  "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines",
+  "Samoa", "San Marino", "São Tomé and Príncipe", "Saudi Arabia", "Senegal",
+  "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia",
+  "Solomon Islands", "Somalia", "South Africa", "South Korea", "South Sudan",
+  "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria",
+  "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo",
+  "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu",
+  "UAE", "Uganda", "Ukraine", "United Kingdom", "United States", "Uruguay",
+  "Uzbekistan",
+  "Vanuatu", "Vatican City", "Venezuela", "Vietnam",
+  "Yemen",
+  "Zambia", "Zimbabwe",
+  "Other",
 ];
 
 const SPORTS = [
@@ -377,7 +415,7 @@ export default function JoinForm({ club }) {
           <div>
             <Label>{t("Student level")}</Label>
             <div className="flex flex-wrap gap-2">
-              {["Freshman", "Sophomore", "Junior", "Senior", "Graduate", "Transfer"].map((l) => (
+              {["Freshman", "Sophomore", "Junior", "Senior", "Graduate"].map((l) => (
                 <Chip key={l} label={t(l)} selected={form.student_level === l} onClick={() => set("student_level", l)} />
               ))}
             </div>
@@ -418,12 +456,6 @@ export default function JoinForm({ club }) {
                 <Chip key={w} label={t(w)} selected={form.work_plans === w} onClick={() => set("work_plans", w)} />
               ))}
             </div>
-          </div>
-          <div>
-            <Label>{t("Your team's training schedule (optional)")}</Label>
-            <input className={iClass} value={form.training_schedule}
-              onChange={(e) => set("training_schedule", e.target.value)}
-              placeholder="e.g. Morning practice 6–8am, afternoon 3–5pm" />
           </div>
         </div>
       ),
@@ -491,7 +523,7 @@ export default function JoinForm({ club }) {
     ]),
     {
       id: "lifestyle",
-      question: t("How do you eat and move?"),
+      question: t("How do you eat?"),
       valid: true,
       content: (
         <div className="flex flex-col gap-6">
@@ -970,7 +1002,7 @@ export default function JoinForm({ club }) {
             className="text-white px-8 py-3 rounded-xl text-sm font-semibold transition-all disabled:opacity-40 w-full"
             style={{ backgroundColor: primary }}
           >
-            {pinChecking ? "Checking..." : "Continue →"}
+            {pinChecking ? "Checking..." : "Continue"}
           </button>
         </div>
       </div>
@@ -996,7 +1028,7 @@ export default function JoinForm({ club }) {
             onClick={() => setWelcomeSeen(true)}
             className="club-btn w-full py-3.5 rounded-xl text-sm font-semibold transition-all"
           >
-            {t("Let's get started →")}
+            {t("Let's get started")}
           </button>
           <p className="text-white/25 text-xs mt-5">{t("Powered by Settlyou")}</p>
         </div>
@@ -1138,7 +1170,7 @@ export default function JoinForm({ club }) {
           onClick={goBack}
           className={`text-white/30 hover:text-white/60 text-sm transition-colors ${qIndex === 0 ? "invisible" : ""}`}
         >
-          {t("← Back")}
+          {t("Back")}
         </button>
         <div className="flex items-center gap-4">
           <span className="text-white/20 text-xs hidden sm:block">{t("Press Enter ↵")}</span>
@@ -1148,7 +1180,7 @@ export default function JoinForm({ club }) {
             disabled={!current?.valid || submitting}
             className="club-btn text-white px-8 py-3 rounded-xl text-sm font-semibold transition-all"
           >
-            {submitting ? "Submitting..." : current.isLast ? t("Get my guide →") : t("Continue →")}
+            {submitting ? "Submitting..." : current.isLast ? t("Get my guide") : t("Continue")}
           </button>
         </div>
       </div>

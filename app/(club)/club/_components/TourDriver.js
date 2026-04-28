@@ -60,8 +60,8 @@ export default function TourDriver({ page }) {
         overlayOpacity: 0.4,
         stagePadding: 8,
         popoverClass: "settl-tour-popover",
-        nextBtnText: "Next →",
-        prevBtnText: "← Back",
+        nextBtnText: "Next",
+        prevBtnText: "Back",
         doneBtnText: "Done",
         steps: STEPS,
         onDestroyStarted: () => {

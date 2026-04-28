@@ -33,7 +33,7 @@ export default async function AdminRelocationDocumentPage({ params }) {
       <div className="mb-10 flex items-start justify-between">
         <div>
           <a href="/admin/relocations" className="inline-flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-foreground/30 transition-colors">
-            ← Back to relocations
+            Back to relocations
           </a>
           <h1 className="text-3xl font-bold text-foreground mt-5">
             {request.athlete_name}

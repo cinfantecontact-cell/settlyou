@@ -51,7 +51,7 @@ export default function ResetPasswordPage() {
             <p className="text-sm text-muted mb-6">You can now sign in with your new password.</p>
             <a
               href="/login"
-              className="block w-full text-center bg-brand-600 text-white rounded-md py-2.5 text-sm font-semibold hover:bg-brand-700 transition-colors"
+              className="block w-full text-center bg-brand-600 text-white rounded-lg py-2.5 text-sm font-semibold hover:bg-brand-700 transition-colors"
             >
               Sign in
             </a>
@@ -62,7 +62,7 @@ export default function ResetPasswordPage() {
             <p className="text-sm text-muted mb-6">Choose a new password for your account.</p>
 
             {error && (
-              <div className="mb-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2">
+              <div className="mb-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
                 {error}
               </div>
             )}
@@ -76,7 +76,7 @@ export default function ResetPasswordPage() {
                   type="password"
                   required
                   minLength={8}
-                  className="border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition"
+                  className="border border-border rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition"
                   placeholder="••••••••"
                 />
               </div>
@@ -88,14 +88,14 @@ export default function ResetPasswordPage() {
                   type="password"
                   required
                   minLength={8}
-                  className="border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition"
+                  className="border border-border rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition"
                   placeholder="••••••••"
                 />
               </div>
               <button
                 type="submit"
                 disabled={loading}
-                className="mt-2 bg-brand-600 text-white rounded-md py-2.5 text-sm font-semibold hover:bg-brand-700 transition-colors disabled:opacity-50"
+                className="mt-2 bg-brand-600 text-white rounded-lg py-2.5 text-sm font-semibold hover:bg-brand-700 transition-colors disabled:opacity-50"
               >
                 {loading ? "Updating..." : "Update password"}
               </button>

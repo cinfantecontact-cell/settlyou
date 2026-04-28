@@ -30,7 +30,7 @@ export default function ForgotPasswordPage() {
               If that email has an account, you'll receive a password reset link shortly.
             </p>
             <a href="/login" className="text-sm text-brand-600 font-medium hover:underline">
-              ← Back to sign in
+              Back to sign in
             </a>
           </div>
         ) : (
@@ -47,21 +47,21 @@ export default function ForgotPasswordPage() {
                   type="email"
                   required
                   autoComplete="email"
-                  className="border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition"
+                  className="border border-border rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition"
                   placeholder="you@club.com"
                 />
               </div>
               <button
                 type="submit"
                 disabled={loading}
-                className="mt-2 bg-brand-600 text-white rounded-md py-2.5 text-sm font-semibold hover:bg-brand-700 transition-colors disabled:opacity-50"
+                className="mt-2 bg-brand-600 text-white rounded-lg py-2.5 text-sm font-semibold hover:bg-brand-700 transition-colors disabled:opacity-50"
               >
                 {loading ? "Sending..." : "Send reset link"}
               </button>
             </form>
 
             <p className="mt-4 text-sm text-muted">
-              <a href="/login" className="text-brand-600 font-medium hover:underline">← Back to sign in</a>
+              <a href="/login" className="text-brand-600 font-medium hover:underline">Back to sign in</a>
             </p>
           </div>
         )}

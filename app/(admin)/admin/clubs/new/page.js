@@ -19,7 +19,7 @@ export default async function NewClubPage({ searchParams }) {
     <div className="p-8 max-w-xl">
       <div className="mb-8">
         <a href="/admin/clients" className="inline-flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-foreground/30 transition-colors">
-          ← Back to clients
+          Back to clients
         </a>
         <h1 className="text-2xl font-bold text-foreground mt-5">New university</h1>
         <p className="text-sm text-muted mt-1">Creates a unique join link and PIN for this university.</p>

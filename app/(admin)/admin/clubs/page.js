@@ -63,7 +63,7 @@ export default async function AdminClubsPage() {
         <div className="bg-white rounded-xl border border-border px-6 py-16 text-center">
           <p className="text-sm text-muted mb-4">No universities yet.</p>
           <a href="/admin/clubs/new" className="text-sm text-brand-600 font-semibold hover:underline">
-            Add your first university →
+            Add your first university
           </a>
         </div>
       ) : (

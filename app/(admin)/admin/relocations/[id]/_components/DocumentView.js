@@ -822,7 +822,7 @@ function V2Steps({ steps, accent }) {
               {s.url && (
                 <a href={s.url} target="_blank" rel="noopener noreferrer"
                   className="shrink-0 text-xs font-semibold px-2.5 py-1 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors whitespace-nowrap">
-                  Open →
+                  Open
                 </a>
               )}
             </div>
@@ -863,7 +863,7 @@ function V2LinkCard({ title, description, meta, url }) {
       {url && (
         <a href={url} target="_blank" rel="noopener noreferrer"
           className="shrink-0 text-xs font-semibold px-3 py-1.5 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors whitespace-nowrap">
-          Open →
+          Open
         </a>
       )}
     </div>

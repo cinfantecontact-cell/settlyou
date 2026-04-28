@@ -66,8 +66,8 @@ function buildDriver() {
     overlayOpacity: 0.45,
     stagePadding: 10,
     popoverClass: "settl-tour-popover",
-    nextBtnText: "Next →",
-    prevBtnText: "← Back",
+    nextBtnText: "Next",
+    prevBtnText: "Back",
     doneBtnText: "Got it",
     steps: STEPS,
   });

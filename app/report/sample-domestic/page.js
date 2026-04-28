@@ -11,7 +11,7 @@ export default function DomesticSampleReportPage() {
       <nav className="bg-white border-b border-border px-6 py-4 flex items-center justify-between no-print sticky top-0 z-50">
         <a href="/"><img src="/settlyou-logo-dark.png" alt="Settl" className="h-7" /></a>
         <a href="/pricing" className="text-xs font-semibold px-4 py-2 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors">
-          Request a quote →
+          Request a quote
         </a>
       </nav>
 

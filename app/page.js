@@ -301,7 +301,7 @@ export default function LandingPage() {
                         <p className="text-xs font-bold text-foreground uppercase tracking-wider">Links added</p>
                         {["NCAA Eligibility Center", "Team Handbook", "Athletic Trainer"].map(l => (
                           <div key={l} className="flex items-center gap-2 bg-brand-50 border border-brand-100 rounded-lg px-3 py-2">
-                            <span className="text-brand-500 text-xs">→</span>
+                            <div className="w-1.5 h-1.5 rounded-full bg-brand-500 shrink-0" />
                             <span className="text-xs font-medium text-brand-700">{l}</span>
                           </div>
                         ))}
@@ -342,7 +342,7 @@ export default function LandingPage() {
                           <div className="bg-surface border border-border rounded-lg px-3 py-2 text-xs text-foreground">{f.value}</div>
                         </div>
                       ))}
-                      <button className="w-full mt-1 bg-brand-600 text-white text-xs font-bold py-2.5 rounded-lg">Generate my guide →</button>
+                      <button className="w-full mt-1 bg-brand-600 text-white text-xs font-bold py-2.5 rounded-lg">Generate my guide</button>
                     </div>
                   </div>
                 </div>
@@ -714,7 +714,6 @@ export default function LandingPage() {
                         <div key={l} className="flex items-center gap-2.5 bg-brand-50 border border-brand-100 rounded-lg px-3 py-2">
                           <div className="w-1.5 h-1.5 rounded-full bg-brand-500 shrink-0" />
                           <span className="text-xs font-semibold text-brand-700">{l}</span>
-                          <span className="ml-auto text-xs text-brand-400">→</span>
                         </div>
                       ))}
                     </div>

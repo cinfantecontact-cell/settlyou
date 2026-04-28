@@ -15,7 +15,7 @@ export default function InviteClientPage({ searchParams }) {
     <div className="p-8 max-w-2xl">
       <div className="mb-8">
         <a href="/admin/clients" className="text-sm text-muted hover:text-foreground transition-colors">
-          ← Back to clients
+          Back to clients
         </a>
         <h1 className="text-2xl font-bold text-foreground mt-4">Invite a client</h1>
         <p className="text-sm text-muted mt-1">

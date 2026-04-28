@@ -154,7 +154,7 @@ export default async function ClubDashboard() {
           {coaches.length === 0 ? (
             <div className="px-6 py-12 text-center">
               <p className="text-sm text-muted mb-3">No coaches invited yet.</p>
-              <a href="/club/coaches" className="text-sm font-semibold text-brand-600 hover:underline">Invite your first coach →</a>
+              <a href="/club/coaches" className="text-sm font-semibold text-brand-600 hover:underline">Invite your first coach</a>
             </div>
           ) : (
             <div className="divide-y divide-border">

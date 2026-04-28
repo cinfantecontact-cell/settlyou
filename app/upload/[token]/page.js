@@ -36,7 +36,7 @@ export default async function UploadPage({ params }) {
     ? getSportDocTypes(sportConfig)
     : [
         ...BASE_DOCUMENT_TYPES,
-        ...(custom ?? []).map(c => ({ key: `custom_${c.id}`, label: c.label, required: c.required })),
+        ...(custom ?? []).map(c => ({ key: `custom_${c.id}`, label: c.label, required: true })),
       ];
 
   return (

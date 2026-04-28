@@ -149,7 +149,7 @@ export default async function ContactPage({ searchParams }) {
                   type="submit"
                   className="mt-1 bg-brand-600 text-white rounded-lg py-3 text-sm font-semibold hover:bg-brand-700 transition-colors"
                 >
-                  Submit request →
+                  Submit request
                 </button>
 
                 <p className="text-xs text-muted text-center -mt-1">

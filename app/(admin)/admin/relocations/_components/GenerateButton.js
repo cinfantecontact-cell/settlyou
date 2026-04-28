@@ -41,7 +41,7 @@ export default function GenerateButton({ requestId }) {
       <button
         onClick={handleGenerate}
         disabled={loading}
-        className="text-xs bg-brand-600 text-white px-3 py-1.5 rounded-md hover:bg-brand-700 transition-colors disabled:opacity-60 font-medium whitespace-nowrap"
+        className="text-xs bg-brand-600 text-white px-3 py-1.5 rounded-lg hover:bg-brand-700 transition-colors disabled:opacity-60 font-medium whitespace-nowrap"
       >
         {loading ? "Generating..." : "Generate document"}
       </button>

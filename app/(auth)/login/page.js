@@ -96,7 +96,7 @@ export default async function LoginPage({ searchParams }) {
               type="submit"
               className="mt-1 bg-brand-600 text-white rounded-lg py-3 text-sm font-semibold hover:bg-brand-700 transition-colors shadow-sm"
             >
-              Sign in →
+              Sign in
             </button>
           </form>
 

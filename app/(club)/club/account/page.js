@@ -63,7 +63,7 @@ export default async function AccountPage() {
       </div>
       <PinForm currentPin={club?.pin || ""} />
       <p className="text-xs text-muted">
-        <a href="/privacy" className="hover:underline">How student data is handled →</a>
+        <a href="/privacy" className="hover:underline">How student data is handled</a>
       </p>
     </div>
   );

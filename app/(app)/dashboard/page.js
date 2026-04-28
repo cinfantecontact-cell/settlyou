@@ -118,7 +118,7 @@ export default async function DashboardPage() {
             <p className="text-sm text-muted mb-4">No guides yet. Create your first one.</p>
             <a href="/requests/new"
               className="text-sm text-brand-600 font-semibold hover:underline">
-              Create a guide →
+              Create a guide
             </a>
           </div>
         ) : (
@@ -159,7 +159,7 @@ export default async function DashboardPage() {
                     {["approved", "delivered"].includes(req.status) && req.athlete_link_token && (
                       <a href={`/report/${req.athlete_link_token}`} target="_blank"
                         className="text-xs text-brand-600 hover:underline font-medium">
-                        View guide →
+                        View guide
                       </a>
                     )}
                     {["submitted", "generating", "under_review"].includes(req.status) && (
