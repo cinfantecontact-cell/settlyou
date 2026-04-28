@@ -30,15 +30,15 @@ export default function NewClubForm() {
   const [color, setColor] = useState("#111111");
   const [secondaryColor, setSecondaryColor] = useState("#ffffff");
   const [logoPreview, setLogoPreview] = useState(null);
-  const [tier, setTier] = useState("49");
-  const [seatLimit, setSeatLimit] = useState(50);
+  const [tier, setTier] = useState("starter");
+  const [seatLimit, setSeatLimit] = useState(100);
 
-  const TIER_LIMITS = { "0": 15, "49": 50, "35": 150, "25": 400 };
+  const TIER_LIMITS = { trial: 15, micro: 40, starter: 100, pro: 200, institution: 500 };
 
   function handleTierChange(e) {
     const val = e.target.value;
     setTier(val);
-    if (TIER_LIMITS[val]) setSeatLimit(TIER_LIMITS[val]);
+    setSeatLimit(TIER_LIMITS[val] ?? 100);
   }
   const [submitting, setSubmitting] = useState(false);
   const [lookingUp, setLookingUp] = useState(false);
@@ -94,7 +94,7 @@ export default function NewClubForm() {
     });
 
     if (res.ok) {
-      window.location.href = "/admin/clubs?created=1";
+      window.location.href = "/admin/clients?created=1";
     } else {
       const data = await res.json();
       const msg = data.error?.includes("unique") ? "slug_taken" : "create_failed";

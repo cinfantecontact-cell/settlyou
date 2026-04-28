@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from "react";
 import DeleteClubButton from "./DeleteClubButton";
-import SendWelcomeEmailButton from "./SendWelcomeEmailButton";
 
 function QuotaBar({ used, limit }) {
   if (!limit) return <span className="text-xs text-muted">{used} / ∞</span>;
@@ -178,7 +177,6 @@ export default function ClientsTable({ clubs, organizations, baseUrl, coachCount
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-end gap-2">
-                        <SendWelcomeEmailButton clubId={college.id} clubName={college.name} />
                         <a
                           href={`/admin/clubs/${college.id}/edit`}
                           className="text-xs font-medium px-3 py-1.5 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors"

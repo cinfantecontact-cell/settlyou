@@ -26,7 +26,15 @@ export default function EditClubForm({ club, baseDataStatus, baseDataGeneratedAt
   const [secondaryColor, setSecondaryColor] = useState(club.secondary_color || "#ffffff");
   const [logoPreview, setLogoPreview] = useState(club.logo_url || null);
   const [active, setActive] = useState(club.active);
-  const [plan, setPlan] = useState(club.plan || "essentials");
+  const TIER_LIMITS = { trial: 15, micro: 40, starter: 100, pro: 200, institution: 500 };
+  const [plan, setPlan] = useState(club.plan || "starter");
+  const [seatLimit, setSeatLimit] = useState(club.seat_limit ?? 100);
+
+  function handlePlanChange(e) {
+    const val = e.target.value;
+    setPlan(val);
+    setSeatLimit(TIER_LIMITS[val] ?? seatLimit);
+  }
   const [submitting, setSubmitting] = useState(false);
   const [pinVisible, setPinVisible] = useState(false);
   const [baseStatus, setBaseStatus] = useState(baseDataStatus);
@@ -149,7 +157,7 @@ export default function EditClubForm({ club, baseDataStatus, baseDataGeneratedAt
       {/* Pricing tier */}
       <div className="flex flex-col gap-1.5">
         <label className="text-sm font-medium text-foreground">Pricing tier</label>
-        <select value={plan} onChange={(e) => setPlan(e.target.value)}
+        <select value={plan} onChange={handlePlanChange}
           className="border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white">
           <option value="trial">Trial — free, up to 15 athletes</option>
           <option value="micro">Micro — $2,400/yr, up to 40 athletes</option>
@@ -164,7 +172,7 @@ export default function EditClubForm({ club, baseDataStatus, baseDataGeneratedAt
         <label className="text-sm font-medium text-foreground">
           Seat limit <span className="text-muted font-normal">({club.seats_used} used so far)</span>
         </label>
-        <input name="seat_limit" type="number" min={club.seats_used || 1} defaultValue={club.seat_limit}
+        <input name="seat_limit" type="number" min={club.seats_used || 1} value={seatLimit} onChange={(e) => setSeatLimit(Number(e.target.value))}
           className="border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white" />
       </div>
 
