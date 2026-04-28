@@ -977,7 +977,7 @@ export default function JoinForm({ club }) {
         <style>{formCSS}</style>
         <div className="fade-up text-center max-w-sm w-full">
           {club.logo_url
-            ? <img src={club.logo_url} alt={club.name} className="w-14 h-14 object-contain mx-auto mb-6 opacity-90" />
+            ? <img src={club.logo_url} alt={club.name} className="w-24 h-24 object-contain mx-auto mb-6 mix-blend-multiply" />
             : <img src="/settlyou-logo-white.png" alt="Settl" className="h-7 object-contain mx-auto mb-6 opacity-90" />
           }
           <h2 className="text-2xl font-bold text-white mb-2">{t("Enter your PIN")}</h2>
@@ -1016,7 +1016,7 @@ export default function JoinForm({ club }) {
         <style>{formCSS}</style>
         <div className="fade-up text-center max-w-sm w-full flex flex-col items-center">
           {club.logo_url
-            ? <img src={club.logo_url} alt={club.name} className="w-16 h-16 object-contain mx-auto mb-6" />
+            ? <img src={club.logo_url} alt={club.name} className="w-24 h-24 object-contain mx-auto mb-6 mix-blend-multiply" />
             : <img src="/settlyou-logo-white.png" alt="Settl" className="h-8 object-contain mx-auto mb-6 opacity-90" />
           }
           <h1 className="text-3xl font-bold text-white mb-3">Welcome to {club.name}</h1>
