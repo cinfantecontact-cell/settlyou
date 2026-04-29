@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function UploadClient({ token, documentTypes, initialSubmitted }) {
+export default function UploadClient({ token, documentTypes, initialSubmitted, coachAttachments = [] }) {
   const [submitted, setSubmitted] = useState(initialSubmitted);
   const [uploading, setUploading] = useState({});
   const [errors, setErrors] = useState({});
@@ -43,6 +43,33 @@ export default function UploadClient({ token, documentTypes, initialSubmitted })
 
   return (
     <div className="flex flex-col gap-6">
+      {/* Coach attachments */}
+      {coachAttachments.length > 0 && (
+        <div className="bg-white border border-border rounded-xl overflow-hidden">
+          <div className="px-6 py-4 border-b border-border">
+            <h2 className="text-sm font-semibold text-foreground">From your coach</h2>
+            <p className="text-xs text-muted mt-0.5">Download these templates, fill them out, then upload your completed version below.</p>
+          </div>
+          <div className="divide-y divide-border">
+            {coachAttachments.map(a => (
+              <div key={a.id} className="px-6 py-4 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3 min-w-0">
+                  <svg className="w-4 h-4 text-muted shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" /></svg>
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-foreground truncate">{a.label}</p>
+                    <p className="text-xs text-muted truncate">{a.file_name}</p>
+                  </div>
+                </div>
+                <a href={a.url} target="_blank" rel="noopener noreferrer"
+                  className="shrink-0 text-xs font-semibold px-4 py-2 rounded-lg border border-brand-200 text-brand-700 hover:bg-brand-50 transition-colors">
+                  Download
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Progress */}
       <div className="bg-white border border-border rounded-xl px-6 py-4 flex items-center justify-between">
         <p className="text-sm text-muted">

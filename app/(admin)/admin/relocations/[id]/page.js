@@ -2,7 +2,6 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import DocumentView from "./_components/DocumentView";
-import ApproveButton from "./_components/ApproveButton";
 import RegenerateButton from "./_components/RegenerateButton";
 import FormAnswers from "./_components/FormAnswers";
 import EditDocumentFields from "./_components/EditDocumentFields";
@@ -53,9 +52,6 @@ export default async function AdminRelocationDocumentPage({ params }) {
               })()}
             </span>
           )}
-          {document && request.status === "under_review" && (
-            <ApproveButton requestId={id} documentId={document.id} athleteToken={request.athlete_link_token} />
-          )}
           <div className="flex items-center gap-2">
             <RegenerateButton requestId={id} />
             {document && (
@@ -66,10 +62,10 @@ export default async function AdminRelocationDocumentPage({ params }) {
               />
             )}
           </div>
-          {["under_review", "approved", "delivered"].includes(request.status) && request.athlete_link_token && (
+          {["under_review", "delivered"].includes(request.status) && request.athlete_link_token && (
             <div className="flex items-center gap-2">
-              {(request.status === "approved" || request.status === "delivered") && (
-                <span className="text-xs bg-brand-100 text-brand-800 px-3 py-1 rounded-full font-medium">Approved</span>
+              {request.status === "delivered" && (
+                <span className="text-xs bg-brand-100 text-brand-800 px-3 py-1 rounded-full font-medium">Delivered</span>
               )}
               <a
                 href={`/report/${request.athlete_link_token}`}

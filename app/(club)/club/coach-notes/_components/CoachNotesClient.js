@@ -34,7 +34,7 @@ function getSportExamples(sport) {
   return SPORT_NOTE_EXAMPLES[key] || [];
 }
 
-export default function CoachNotesClient({ sport, initialNotes, initialLinks, initialDocConfig }) {
+export default function CoachNotesClient({ sport, initialNotes, initialLinks, initialAttachments, initialDocConfig }) {
   // Notes & links
   const [notes, setNotes] = useState(initialNotes || "");
   const [links, setLinks] = useState(initialLinks || []);
@@ -46,6 +46,31 @@ export default function CoachNotesClient({ sport, initialNotes, initialLinks, in
   const [disabled, setDisabled] = useState(new Set(initialDocConfig?.disabled_base_docs || []));
   const [customDocs, setCustomDocs] = useState(initialDocConfig?.custom_docs || []);
   const [newDocLabel, setNewDocLabel] = useState("");
+
+  // Attachments
+  const [attachments, setAttachments] = useState(initialAttachments || []);
+  const [attachLabel, setAttachLabel] = useState("");
+  const [attachUploading, setAttachUploading] = useState(false);
+  const [attachError, setAttachError] = useState(null);
+
+  async function handleAttachUpload(file) {
+    if (!file) return;
+    setAttachUploading(true); setAttachError(null);
+    const fd = new FormData();
+    fd.append("file", file);
+    fd.append("label", attachLabel.trim() || file.name);
+    const res = await fetch("/api/club/coach-attachments", { method: "POST", body: fd });
+    setAttachUploading(false);
+    if (!res.ok) { setAttachError("Upload failed. Try again."); return; }
+    const { attachment } = await res.json();
+    setAttachments(prev => [...prev, attachment]);
+    setAttachLabel("");
+  }
+
+  async function removeAttachment(id) {
+    await fetch("/api/club/coach-attachments", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ attachmentId: id }) });
+    setAttachments(prev => prev.filter(a => a.id !== id));
+  }
 
   // Save state
   const [loading, setLoading] = useState(false);
@@ -248,6 +273,42 @@ export default function CoachNotesClient({ sport, initialNotes, initialLinks, in
             + Add a link
           </button>
         )}
+      </div>
+
+      {/* Attachments */}
+      <div className="bg-white rounded-xl border border-border p-6 flex flex-col gap-4">
+        <div>
+          <h2 className="text-sm font-semibold text-foreground mb-1">Files for athletes</h2>
+          <p className="text-xs text-muted">Upload templates athletes need to fill out (e.g. medical form, eligibility form). They&apos;ll see a Download button on their upload page.</p>
+        </div>
+        {attachments.length > 0 && (
+          <div className="flex flex-col gap-2">
+            {attachments.map(a => (
+              <div key={a.id} className="flex items-center gap-3 px-3 py-2.5 bg-surface rounded-lg border border-border">
+                <svg className="w-4 h-4 text-muted shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" /></svg>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-foreground truncate">{a.label}</p>
+                  <p className="text-xs text-muted truncate">{a.file_name}</p>
+                </div>
+                <button type="button" onClick={() => removeAttachment(a.id)} className="text-xs text-red-400 hover:text-red-600 font-medium shrink-0">Remove</button>
+              </div>
+            ))}
+          </div>
+        )}
+        <div className="flex gap-2">
+          <input
+            type="text"
+            placeholder="Label (e.g. Medical Form Template)"
+            value={attachLabel}
+            onChange={e => setAttachLabel(e.target.value)}
+            className="flex-1 px-3 py-2 rounded-lg border border-border text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+          />
+          <label className={`cursor-pointer text-sm font-medium px-4 py-2 rounded-lg border transition-colors ${attachUploading ? "border-border text-muted opacity-50 cursor-not-allowed" : "border-border text-muted hover:text-foreground hover:border-foreground/30"}`}>
+            {attachUploading ? "Uploading..." : "Upload file"}
+            <input type="file" className="sr-only" disabled={attachUploading} accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" onChange={e => e.target.files?.[0] && handleAttachUpload(e.target.files[0])} />
+          </label>
+        </div>
+        {attachError && <p className="text-xs text-red-500">{attachError}</p>}
       </div>
 
       {/* Single save button */}

@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import JoinLinkCard from "./_components/JoinLinkCard";
 import OnboardingTutorial from "./_components/OnboardingTutorial";
 import StatusBadge from "./_components/StatusBadge";
+import { BASE_DOCUMENT_TYPES, BASE_DOC_SHORT_LABELS } from "@/lib/documents/types";
 
 const TWELVE_HOURS = 12 * 60 * 60 * 1000;
 
@@ -77,6 +78,42 @@ export default async function ClubDashboard() {
   }
 
   const isAdmin = profile.role === "club_admin";
+
+  // Document stats for coach view
+  let docStats = null;
+  if (!isAdmin && delivered > 0) {
+    const deliveredReqs = requests.filter(r => r.status === "delivered");
+    const deliveredIds = deliveredReqs.map(r => r.id);
+
+    const { data: allDocs } = await admin
+      .from("athlete_documents")
+      .select("request_id, document_type")
+      .in("request_id", deliveredIds);
+
+    const docs = allDocs || [];
+    const expectedPerAthlete = BASE_DOCUMENT_TYPES.length;
+    const totalExpected = deliveredIds.length * expectedPerAthlete;
+    const totalUploaded = docs.length;
+    const completionPct = totalExpected > 0 ? Math.round((totalUploaded / totalExpected) * 100) : 0;
+
+    // Most missed = doc type with fewest uploads
+    const docTypeCounts = {};
+    BASE_DOCUMENT_TYPES.forEach(d => { docTypeCounts[d.key] = 0; });
+    docs.forEach(d => {
+      if (docTypeCounts[d.document_type] !== undefined) docTypeCounts[d.document_type]++;
+    });
+    const mostMissedKey = Object.entries(docTypeCounts).sort(([, a], [, b]) => a - b)[0]?.[0];
+    const mostMissedLabel = BASE_DOC_SHORT_LABELS[mostMissedKey] || mostMissedKey;
+
+    const perAthlete = deliveredReqs.map(r => ({
+      id: r.id,
+      name: r.athlete_name,
+      uploaded: docs.filter(d => d.request_id === r.id).length,
+      expected: expectedPerAthlete,
+    })).sort((a, b) => b.uploaded - a.uploaded);
+
+    docStats = { totalUploaded, totalMissing: totalExpected - totalUploaded, completionPct, mostMissedLabel, perAthlete, expectedPerAthlete };
+  }
 
   return (
     <div className="p-8 max-w-5xl mx-auto flex flex-col gap-6">
@@ -201,6 +238,53 @@ export default async function ClubDashboard() {
               {statusCounts[s.key]} {s.label}
             </span>
           ))}
+        </div>
+      )}
+
+      {/* Document stats */}
+      {!isAdmin && docStats && (
+        <div className="bg-white border border-border rounded-xl overflow-hidden">
+          <div className="px-6 py-4 border-b border-border">
+            <h2 className="text-sm font-semibold text-foreground">Document Uploads</h2>
+            <p className="text-xs text-muted mt-0.5">Across all athletes with a delivered guide</p>
+          </div>
+          <div className="grid grid-cols-3 divide-x divide-border border-b border-border">
+            <div className="px-6 py-4">
+              <p className="text-[11px] font-semibold text-muted uppercase tracking-widest mb-1">Uploaded</p>
+              <p className="text-3xl font-bold text-foreground">{docStats.totalUploaded}</p>
+            </div>
+            <div className="px-6 py-4">
+              <p className="text-[11px] font-semibold text-muted uppercase tracking-widest mb-1">Missing</p>
+              <p className={`text-3xl font-bold ${docStats.totalMissing > 0 ? "text-orange-500" : "text-foreground"}`}>{docStats.totalMissing}</p>
+            </div>
+            <div className="px-6 py-4">
+              <p className="text-[11px] font-semibold text-muted uppercase tracking-widest mb-1">Completion</p>
+              <p className={`text-3xl font-bold ${docStats.completionPct === 100 ? "text-brand-600" : "text-foreground"}`}>{docStats.completionPct}%</p>
+            </div>
+          </div>
+          <div className="px-6 py-3 border-b border-border flex items-center gap-2">
+            <span className="text-xs text-muted">Most missed:</span>
+            <span className="text-xs font-semibold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full">{docStats.mostMissedLabel}</span>
+          </div>
+          <div>
+            {docStats.perAthlete.map((a, i) => (
+              <div key={a.id} className="px-6 py-3 flex items-center gap-4 border-b border-border last:border-0">
+                <span className="text-xs text-muted w-4">{i + 1}</span>
+                <a href={`/club/athletes/${a.id}`} className="text-sm font-medium text-foreground hover:underline flex-1">{a.name}</a>
+                <div className="flex items-center gap-3">
+                  <div className="w-24 h-1.5 bg-surface rounded-full overflow-hidden">
+                    <div
+                      className={`h-full rounded-full ${a.uploaded === a.expected ? "bg-brand-500" : "bg-orange-400"}`}
+                      style={{ width: `${Math.round((a.uploaded / a.expected) * 100)}%` }}
+                    />
+                  </div>
+                  <span className={`text-xs font-semibold tabular-nums w-8 text-right ${a.uploaded === a.expected ? "text-brand-600" : "text-orange-500"}`}>
+                    {a.uploaded}/{a.expected}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 

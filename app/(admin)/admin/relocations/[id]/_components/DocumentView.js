@@ -121,6 +121,32 @@ function LegacyDocumentView({ content }) {
         </div>
       )}
 
+      {/* From your coach */}
+      {meta.coach_notes && (
+        <div className="bg-white rounded-xl border border-border shadow-sm mb-5 overflow-hidden">
+          <div className="flex items-center gap-3 px-6 py-4 border-b border-border">
+            <div className="w-1 h-5 rounded-full bg-brand-500 shrink-0" />
+            <h2 className="text-sm font-bold text-foreground uppercase tracking-widest">
+              From your coach{meta.coach_name ? ` — Coach ${meta.coach_name}` : ""}
+            </h2>
+          </div>
+          <div className="p-6 flex flex-col gap-2">
+            {meta.coach_notes.split("\n").filter(l => l.trim()).map((line, i) => (
+              <div key={i} className="flex items-start gap-2 text-sm text-foreground">
+                <span className="text-brand-500 shrink-0 mt-0.5">·</span>
+                <span>{line.trim()}</span>
+              </div>
+            ))}
+            {meta.coach_links?.map((link, i) => (
+              <a key={i} href={link.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-brand-600 hover:underline">
+                <span className="text-brand-400 shrink-0">→</span>
+                <span>{link.label}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Neighborhoods */}
       {sections.neighborhoods && (
         <Section title={sections.neighborhoods.title}>
@@ -932,6 +958,39 @@ function DocumentViewV2({ content }) {
               <p className="text-base text-foreground leading-relaxed">{meta.welcome_letter}</p>
               <p className="text-xs text-muted mt-5 font-semibold tracking-wide uppercase">— The Settlyou Team</p>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Coach Notes ── */}
+      {meta.coach_notes && (
+        <div className="rounded-2xl mb-6 overflow-hidden" style={{ border: `2px solid ${accent}33`, backgroundColor: `${accent}08` }}>
+          <div className="flex items-center gap-3 px-7 py-4 border-b" style={{ borderColor: `${accent}22`, backgroundColor: `${accent}12` }}>
+            <ClubLogo url={meta.club_logo_url} name={meta.club} />
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest" style={{ color: accent }}>
+                {meta.coach_sport ? `Message from your ${meta.coach_sport} coach` : "Message from your coach"}
+              </p>
+              <p className="text-sm font-semibold text-foreground mt-0.5">
+                {meta.coach_name ? `Coach ${meta.coach_name}` : meta.club}
+              </p>
+            </div>
+          </div>
+          <div className="px-7 py-6">
+            {meta.coach_notes.split("\n").filter(l => l.trim()).map((line, i) => (
+              <p key={i} className="text-sm text-foreground leading-relaxed mb-3 last:mb-0">{line.trim()}</p>
+            ))}
+            {meta.coach_links?.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-5">
+                {meta.coach_links.map((link, i) => (
+                  <a key={i} href={link.url} target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-lg transition-opacity hover:opacity-80"
+                    style={{ backgroundColor: accent, color: "white" }}>
+                    {link.label} ↗
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -1,6 +1,7 @@
 import { NextResponse, after } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { sendAdminNewSubmission, sendGenerationFailureAlert } from "@/lib/email/send";
+import { sendAdminNewSubmission, sendGenerationFailureAlert, sendAthleteReportReady } from "@/lib/email/send";
+import { sendAthleteUploadLink } from "@/lib/whatsapp/send";
 import { generateRelocationDocument } from "@/lib/ai/generate-document";
 
 export async function POST(request, { params }) {
@@ -211,18 +212,19 @@ export async function POST(request, { params }) {
         if (clubData?.primary_color) relocationRequest.club_primary_color = clubData.primary_color;
         if (clubData?.division) relocationRequest.division = clubData.division;
 
-        // Fetch coach notes for this sport
+        // Fetch coach notes for this sport — normalize both sides to avoid case/apostrophe mismatches
         let coachNotes = null;
         let coachLinks = [];
         if (relocationRequest.sport) {
-          const { data: sportNotes } = await admin
+          const normSport = s => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+          const { data: allSportNotes } = await admin
             .from("coach_sport_notes")
-            .select("custom_notes, custom_links")
-            .eq("club_id", club.id)
-            .eq("sport", relocationRequest.sport)
-            .single();
+            .select("sport, custom_notes, custom_links")
+            .eq("club_id", club.id);
+          const sportNotes = allSportNotes?.find(n => normSport(n.sport) === normSport(relocationRequest.sport));
           if (sportNotes?.custom_notes) coachNotes = sportNotes.custom_notes;
           if (sportNotes?.custom_links?.length) coachLinks = sportNotes.custom_links;
+          if (!sportNotes) console.warn("[auto-generate] no coach notes found for sport:", relocationRequest.sport, "| available:", allSportNotes?.map(n => n.sport));
         }
 
         // Merge institution notes + coach notes (coach notes take priority — they're sport-specific)
@@ -269,14 +271,75 @@ export async function POST(request, { params }) {
         if (clubData?.primary_color) document.meta.club_primary_color = clubData.primary_color;
         if (relocationRequest.coach_sport) document.meta.coach_sport = relocationRequest.coach_sport;
         if (relocationRequest.coach_name) document.meta.coach_name = relocationRequest.coach_name;
+        if (coachNotes) document.meta.coach_notes = coachNotes;
+        if (coachLinks?.length) document.meta.coach_links = coachLinks;
 
         const { error: docError } = await admin
           .from("documents").insert({ request_id: requestId, content: document, language: "en" });
 
         if (docError) throw new Error(docError.message);
 
-        await admin.from("requests").update({ status: "under_review" }).eq("id", requestId);
-        console.log("[auto-generate] done, status set to under_review");
+        // Hard guarantee: verify coach notes are in the saved document — patch if missing
+        if (coachNotes) {
+          const { data: savedDoc } = await admin
+            .from("documents").select("id, content").eq("request_id", requestId).single();
+          if (savedDoc && !savedDoc.content?.meta?.coach_notes) {
+            console.error("[auto-generate] CRITICAL: coach notes missing from saved document, patching...");
+            await admin.from("documents").update({
+              content: {
+                ...savedDoc.content,
+                meta: { ...savedDoc.content.meta, coach_notes: coachNotes, ...(coachLinks?.length && { coach_links: coachLinks }) },
+              },
+            }).eq("id", savedDoc.id);
+          }
+        }
+
+        // Auto-deliver: send email + WhatsApp, set status to delivered
+        await admin.from("requests").update({ status: "delivered" }).eq("id", requestId);
+        await admin.from("documents")
+          .update({ approved_at: new Date().toISOString() })
+          .eq("request_id", requestId);
+
+        if (relocationRequest.athlete_email && relocationRequest.athlete_link_token) {
+          try {
+            await sendAthleteReportReady({
+              athleteName: relocationRequest.athlete_name || "Athlete",
+              athleteEmail: relocationRequest.athlete_email,
+              clubName: club.name,
+              reportToken: relocationRequest.athlete_link_token,
+            });
+          } catch (e) {
+            console.error("[auto-generate] failed to send athlete email:", e.message);
+          }
+        }
+
+        if (relocationRequest.athlete_phone && relocationRequest.upload_token) {
+          try {
+            await sendAthleteUploadLink({
+              athleteName: relocationRequest.athlete_name || "",
+              athletePhone: relocationRequest.athlete_phone,
+              uploadToken: relocationRequest.upload_token,
+              institutionName: club.name,
+              sport: relocationRequest.sport || "",
+            });
+          } catch (e) {
+            console.error("[auto-generate] failed to send WhatsApp:", e.message);
+          }
+        }
+
+        await admin.from("events").insert({
+          event_type: "guide_delivered",
+          request_id: requestId,
+          club_id: club.id,
+          metadata: {
+            athlete_name: relocationRequest.athlete_name || "Athlete",
+            athlete_email: relocationRequest.athlete_email || null,
+            report_token: relocationRequest.athlete_link_token,
+            sport: relocationRequest.sport || null,
+          },
+        });
+
+        console.log("[auto-generate] done, guide auto-delivered to", relocationRequest.athlete_email);
       } catch (err) {
         await admin.from("requests").update({ status: "submitted" }).eq("id", requestId);
         console.error("[auto-generate] error:", err);

@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { notFound } from "next/navigation";
 import UploadClient from "./_components/UploadClient";
@@ -15,7 +16,7 @@ export default async function UploadPage({ params }) {
 
   if (!req) notFound();
 
-  const [{ data: submitted }, { data: sportConfig }, { data: custom }] = await Promise.all([
+  const [{ data: submitted }, { data: sportConfig }, { data: custom }, { data: allSportNotes }] = await Promise.all([
     admin.from("athlete_documents")
       .select("id, document_type, file_name, uploaded_at")
       .eq("request_id", req.id)
@@ -29,7 +30,16 @@ export default async function UploadPage({ params }) {
       .select("id, label, required")
       .eq("club_id", req.club_id)
       .order("created_at"),
+    admin.from("coach_sport_notes")
+      .select("sport, coach_attachments")
+      .eq("club_id", req.club_id),
   ]);
+
+  // Normalize sport match for attachments
+  const normSport = s => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const coachAttachments = (allSportNotes ?? [])
+    .filter(n => normSport(n.sport) === normSport(req.sport))
+    .flatMap(n => n.coach_attachments?.filter(a => a.url) ?? []);
 
   // Use sport-specific config if available, otherwise fall back to base + club custom types
   const documentTypes = sportConfig
@@ -56,6 +66,7 @@ export default async function UploadPage({ params }) {
           token={token}
           documentTypes={documentTypes}
           initialSubmitted={submitted ?? []}
+          coachAttachments={coachAttachments}
         />
       </div>
     </div>

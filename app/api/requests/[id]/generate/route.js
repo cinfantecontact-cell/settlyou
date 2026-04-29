@@ -51,18 +51,21 @@ export async function POST(request, { params }) {
     if (club?.division) relocationRequest.division = club.division;
 
     if (relocationRequest.sport) {
-      const { data: coachNotes } = await admin
+      const normSport = s => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+      const { data: allSportNotes } = await admin
         .from("coach_sport_notes")
-        .select("custom_notes, custom_links")
-        .eq("club_id", relocationRequest.club_id)
-        .eq("sport", relocationRequest.sport)
-        .single();
+        .select("sport, custom_notes, custom_links")
+        .eq("club_id", relocationRequest.club_id);
+      const coachNotes = allSportNotes?.find(n => normSport(n.sport) === normSport(relocationRequest.sport));
+      if (!coachNotes) console.warn("[generate] no coach notes found for sport:", relocationRequest.sport, "| available:", allSportNotes?.map(n => n.sport));
       if (coachNotes?.custom_notes) {
+        relocationRequest.coach_notes_raw = coachNotes.custom_notes;
         relocationRequest.club_custom_notes =
           (relocationRequest.club_custom_notes ? relocationRequest.club_custom_notes + "\n\n" : "") +
           `[${relocationRequest.sport} Coach Notes]\n${coachNotes.custom_notes}`;
       }
       if (coachNotes?.custom_links?.length) {
+        relocationRequest.coach_links_raw = coachNotes.custom_links;
         relocationRequest.club_custom_links = [
           ...(relocationRequest.club_custom_links ?? []),
           ...coachNotes.custom_links,
@@ -105,12 +108,29 @@ export async function POST(request, { params }) {
       // Override meta with real club data
       if (relocationRequest.club_logo_url) document.meta.club_logo_url = relocationRequest.club_logo_url;
       if (relocationRequest.club_primary_color) document.meta.club_primary_color = relocationRequest.club_primary_color;
+      if (relocationRequest.coach_notes_raw) document.meta.coach_notes = relocationRequest.coach_notes_raw;
+      if (relocationRequest.coach_links_raw?.length) document.meta.coach_links = relocationRequest.coach_links_raw;
 
       const { error: docError } = await admin
         .from("documents")
         .insert({ request_id: id, content: document, language: "en" });
 
       if (docError) throw new Error(docError.message);
+
+      // Hard guarantee: verify coach notes are in the saved document — patch if missing
+      if (relocationRequest.coach_notes_raw) {
+        const { data: savedDoc } = await admin
+          .from("documents").select("id, content").eq("request_id", id).single();
+        if (savedDoc && !savedDoc.content?.meta?.coach_notes) {
+          console.error("[generate] CRITICAL: coach notes missing from saved document, patching...");
+          await admin.from("documents").update({
+            content: {
+              ...savedDoc.content,
+              meta: { ...savedDoc.content.meta, coach_notes: relocationRequest.coach_notes_raw, ...(relocationRequest.coach_links_raw?.length && { coach_links: relocationRequest.coach_links_raw }) },
+            },
+          }).eq("id", savedDoc.id);
+        }
+      }
 
       await admin.from("requests").update({ status: "under_review" }).eq("id", id);
       console.log("[generate] background: done, status set to under_review");

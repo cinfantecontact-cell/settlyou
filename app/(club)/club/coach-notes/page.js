@@ -17,7 +17,7 @@ export default async function CoachNotesPage() {
 
   const [{ data: existing }, { data: docConfig }] = await Promise.all([
     admin.from("coach_sport_notes")
-      .select("id, custom_notes, custom_links")
+      .select("id, custom_notes, custom_links, coach_attachments")
       .eq("club_id", profile.club_id)
       .eq("sport", profile.sport)
       .single(),
@@ -40,6 +40,7 @@ export default async function CoachNotesPage() {
         sport={profile.sport}
         initialNotes={existing?.custom_notes ?? ""}
         initialLinks={existing?.custom_links ?? []}
+        initialAttachments={existing?.coach_attachments ?? []}
         initialDocConfig={docConfig ?? null}
       />
     </div>
