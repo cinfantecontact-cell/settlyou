@@ -127,6 +127,9 @@ function Section({ title, docs, submittedKeys, submitted, uploading, errors, onU
                   <p className={`text-sm font-medium truncate ${isDone ? "text-brand-700" : "text-foreground"}`}>
                     {doc.label}
                   </p>
+                  {!isDone && doc.description && (
+                    <p className="text-xs text-muted mt-0.5">{doc.description}</p>
+                  )}
                   {isDone && sub && (
                     <p className="text-xs text-muted truncate">{sub.file_name}</p>
                   )}

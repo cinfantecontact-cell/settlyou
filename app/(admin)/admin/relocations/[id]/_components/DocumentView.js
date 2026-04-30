@@ -962,8 +962,8 @@ function DocumentViewV2({ content }) {
         </div>
       )}
 
-      {/* ── Coach Notes ── */}
-      {meta.coach_notes && (
+      {/* ── Coach Notes ── (fallback when AI hasn't embedded notes into content yet) */}
+      {meta.coach_notes && !content.university_notes && (
         <div className="rounded-2xl mb-6 overflow-hidden" style={{ border: `2px solid ${accent}33`, backgroundColor: `${accent}08` }}>
           <div className="flex items-center gap-3 px-7 py-4 border-b" style={{ borderColor: `${accent}22`, backgroundColor: `${accent}12` }}>
             <ClubLogo url={meta.club_logo_url} name={meta.club} />

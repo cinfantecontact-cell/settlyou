@@ -28,6 +28,7 @@ export default async function PitchPage({ params }) {
       <GuideInsideSection client={client} />
       <GuideNotesSection />
       <ROISection client={client} />
+      <ComplianceSection />
       <PricingSection />
       <FinalCTA client={client} />
       <PitchFooter />
@@ -759,9 +760,10 @@ function DocumentSection() {
           <p className="text-sm text-muted leading-relaxed mb-6">
             Every athlete receives a personal upload link the moment their guide is delivered. They upload their passport, eligibility forms, transcripts, and anything your coaches require — on their own time, from anywhere.
           </p>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 mb-8">
             {[
               "Coaches set which documents are required per sport",
+              "Coaches upload fillable templates — athletes download, complete, and return them",
               "Athletes see a clear checklist — no confusion about what's needed",
               "Coaches get notified when each document is uploaded",
               "Download all documents from the athlete's profile page",
@@ -775,6 +777,18 @@ function DocumentSection() {
               </div>
             ))}
           </div>
+          <a
+            href="/upload/demo"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 border rounded-full px-4 py-2 text-sm font-medium border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            See what athletes see
+          </a>
         </div>
 
         {/* Right — Upload portal mockup */}
@@ -791,6 +805,25 @@ function DocumentSection() {
                 <p className="text-[10px] text-muted">Carlos Mendez · Soccer</p>
               </div>
             </div>
+          </div>
+
+          {/* From your coach */}
+          <div className="px-5 py-3 border-b border-border bg-surface">
+            <p className="text-[10px] font-bold text-muted uppercase tracking-wider mb-2">From your coach</p>
+            {[
+              { label: "Medical Clearance Form", file: "Medical_Clearance_Soccer.pdf" },
+              { label: "NCAA Eligibility Checklist", file: "NCAA_Checklist.pdf" },
+            ].map(a => (
+              <div key={a.label} className="flex items-center justify-between py-1.5">
+                <div className="flex items-center gap-2 min-w-0">
+                  <svg className="w-3 h-3 text-muted shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                  </svg>
+                  <span className="text-[10px] text-foreground truncate">{a.label}</span>
+                </div>
+                <span className="text-[10px] font-semibold text-brand-600 shrink-0 ml-2">Download</span>
+              </div>
+            ))}
           </div>
 
           {/* Progress */}
@@ -943,22 +976,19 @@ function GuideNotesSection() {
 function ROISection({ client }) {
   const stats = [
     {
-      value: "From $40",
-      label: "per athlete / yr",
-      sub: "vs. $1,500–$3,000 per athlete at relocation firms",
-      color: "brand",
+      value: "25.5 hrs",
+      label: "staff time per international athlete",
+      sub: "I-20 processing, housing coordination, SEVIS check-ins, pre-arrival Q&A, cultural orientation — all manual today.",
     },
     {
-      value: "10–15 hrs",
-      label: "staff time saved per athlete",
-      sub: "At $50/hr, that's $500–$750 in labor cost eliminated per student",
-      color: "brand",
+      value: "70%",
+      label: "reduction in staff workload",
+      sub: "Settlyou handles guides, documents, and pre-arrival communication. Your staff focuses on what only they can do.",
     },
     {
       value: "~3 min",
-      label: "guide generation time",
-      sub: "vs. 2–4 weeks with a traditional firm. Guides ready before orientation.",
-      color: "brand",
+      label: "to generate a complete guide",
+      sub: "vs. weeks of back-and-forth emails, WhatsApp threads, and repeated questions from incoming athletes.",
     },
   ];
 
@@ -968,11 +998,14 @@ function ROISection({ client }) {
         <div className="text-center mb-14">
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-3 block">The math</span>
           <h2 className="text-3xl lg:text-4xl font-black text-foreground tracking-tight">
-            A fraction of the cost. Zero staff time.
+            Every international athlete takes 25.5 hours to onboard manually.
           </h2>
+          <p className="text-sm text-muted mt-4 max-w-xl mx-auto leading-relaxed">
+            DSO, compliance, coaches, and advisors — all spending hours on tasks that can be automated.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
           {stats.map((s) => (
             <div key={s.value} className="bg-white border border-border rounded-2xl overflow-hidden">
               <div className="h-1 w-full bg-brand-500" />
@@ -986,13 +1019,33 @@ function ROISection({ client }) {
         </div>
 
         {client.estimatedStudents && (
-          <div className="mt-8 bg-brand-50 border border-brand-100 rounded-2xl p-7 text-center">
-            <p className="text-sm text-brand-800 leading-relaxed">
-              For a program serving{" "}
-              <strong>{client.estimatedStudents} athletes/yr</strong> like {client.shortName}, Settlyou eliminates up to{" "}
-              <strong>{(client.estimatedStudents * 15).toLocaleString()} hours</strong> of staff time annually — and costs{" "}
-              <strong>less than one hour at a relocation firm</strong> per athlete.
-            </p>
+          <div className="bg-white border border-brand-200 rounded-2xl overflow-hidden">
+            <div className="px-7 py-4 border-b border-border bg-brand-50">
+              <p className="text-xs font-bold uppercase tracking-widest text-brand-700">
+                {client.shortName} — estimated annual savings
+              </p>
+            </div>
+            <div className="grid grid-cols-2 divide-x divide-border">
+              {[
+                {
+                  label: "Hours saved annually",
+                  value: `${Math.round(client.estimatedStudents * 25.5 * 0.7).toLocaleString()} hrs`,
+                  sub: `${client.estimatedStudents} athletes × 25.5 hrs × 70% reduction`,
+                },
+                {
+                  label: "Staff hours freed up",
+                  value: `${Math.round(client.estimatedStudents * 25.5 * 0.7 / 40)} weeks`,
+                  sub: "equivalent full-time staff weeks reclaimed per year",
+                  green: true,
+                },
+              ].map(col => (
+                <div key={col.label} className="px-6 py-5">
+                  <p className="text-[10px] font-semibold text-muted uppercase tracking-wider mb-1">{col.label}</p>
+                  <p className={`text-2xl font-black leading-none ${col.green ? "text-brand-600" : "text-foreground"}`}>{col.value}</p>
+                  <p className="text-[10px] text-muted mt-1">{col.sub}</p>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
@@ -1004,39 +1057,27 @@ function ROISection({ client }) {
 
 const TIERS = [
   {
-    label: "Micro",
-    price: "$2,400",
-    unit: "/ yr",
-    range: "Up to 40 athletes / yr",
-    note: "Small programs or single-sport pilots.",
-    per: "~$60 / athlete",
-    popular: false,
-  },
-  {
     label: "Starter",
     price: "$4,900",
     unit: "/ yr",
-    range: "Up to 100 athletes / yr",
-    note: "Mid-size programs across multiple sports.",
-    per: "~$49 / athlete",
-    popular: true,
-  },
-  {
-    label: "Pro",
-    price: "$7,900",
-    unit: "/ yr",
-    range: "Up to 200 athletes / yr",
-    note: "NCAA D1/D2 and larger universities.",
-    per: "~$40 / athlete",
+    range: "Up to 15 athletes",
+    note: "Perfect for single sports and pilot programs.",
     popular: false,
   },
   {
-    label: "Institution",
-    price: "Custom",
-    unit: "",
-    range: "200+ athletes / yr",
-    note: "Large state universities and multi-department programs.",
-    per: "Annual · contact us",
+    label: "Department",
+    price: "$19,900",
+    unit: "/ yr",
+    range: "Up to 50 athletes",
+    note: "For full athletic departments with growing international rosters.",
+    popular: true,
+  },
+  {
+    label: "Enterprise",
+    price: "$39,900",
+    unit: "/ yr",
+    range: "Up to 100 athletes",
+    note: "For large programs and Power 5 athletic departments.",
     popular: false,
   },
 ];
@@ -1056,6 +1097,66 @@ const ALL_FEATURES = [
   "Bulk resend & CSV export",
 ];
 
+// ─── Compliance Section ───────────────────────────────────────────────────────
+
+function ComplianceSection() {
+  return (
+    <section className="bg-surface border-t border-b border-border py-16 px-6">
+      <div className="max-w-5xl mx-auto">
+        <div className="text-center mb-10">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-3 block">Trust & Security</span>
+          <h2 className="text-2xl font-bold text-foreground">Built for institutional compliance</h2>
+          <p className="text-sm text-muted mt-2 max-w-md mx-auto">Student data handled in accordance with FERPA and GDPR requirements.</p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {[
+            {
+              title: "FERPA Compliant",
+              desc: "Settlyou acts as a School Official with legitimate educational interest. Student data is never sold or shared without institutional consent.",
+              icon: (
+                <svg className="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 14l9-5-9-5-9 5 9 5z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                </svg>
+              ),
+            },
+            {
+              title: "GDPR Ready",
+              desc: "EU/EEA institutions receive a Data Processing Agreement on request. 72-hour breach notification, Standard Contractual Clauses for data transfers.",
+              icon: (
+                <svg className="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              ),
+            },
+            {
+              title: "No data sold. Ever.",
+              desc: "Student records are used exclusively to generate guides and collect documents. Deleted within 30 days of account termination or written request.",
+              icon: (
+                <svg className="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              ),
+            },
+          ].map(item => (
+            <div key={item.title} className="bg-white border border-border rounded-2xl p-6 flex flex-col gap-3">
+              <div className="w-9 h-9 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center shrink-0">
+                {item.icon}
+              </div>
+              <p className="text-sm font-bold text-foreground">{item.title}</p>
+              <p className="text-xs text-muted leading-relaxed">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+        <p className="text-center mt-6 text-xs text-muted">
+          <a href="/compliance" target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:underline font-medium">View full compliance documentation</a>
+          {" "}· DPA available on request · <a href="mailto:hello@settlyou.com" className="hover:underline">hello@settlyou.com</a>
+        </p>
+      </div>
+    </section>
+  );
+}
+
 function PricingSection() {
   return (
     <section className="py-24 px-6">
@@ -1066,32 +1167,29 @@ function PricingSection() {
           <p className="text-sm text-muted mt-3 max-w-lg mx-auto leading-relaxed">
             Every tier includes the full platform — guides, portals, document uploads, branding, analytics. The only difference is volume.
           </p>
-          <div className="inline-block mt-5 px-5 py-2.5 rounded-full bg-brand-50 border border-brand-100">
-            <p className="text-sm font-bold text-brand-700">Start free — 15 athletes, 1 sport, no contract, no credit card.</p>
-          </div>
         </div>
 
         {/* Tier cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
           {TIERS.map((tier) => (
-            <div key={tier.label} className={`relative bg-white rounded-2xl overflow-hidden border ${tier.popular ? "border-brand-400 shadow-lg" : "border-border"}`}>
+            <div key={tier.label} className={`relative flex flex-col rounded-2xl overflow-hidden border ${tier.popular ? "border-brand-500 shadow-xl" : "border-border shadow-sm"}`}>
               {tier.popular && (
-                <div className="bg-brand-600 text-white text-[10px] font-black uppercase tracking-widest text-center py-1.5">
+                <div className="bg-brand-600 text-white text-[10px] font-black uppercase tracking-widest text-center py-2">
                   Most popular
                 </div>
               )}
-              {!tier.popular && <div className="h-1 bg-brand-100" />}
-              <div className="p-5 flex flex-col gap-2">
-                <p className="text-[10px] font-black uppercase tracking-widest text-brand-500">{tier.label}</p>
-                <div className="flex items-baseline gap-1 mt-1">
-                  <p className="text-3xl font-black text-foreground leading-none">{tier.price}</p>
-                  {tier.unit && <p className="text-sm text-muted">{tier.unit}</p>}
+              <div className={`flex-1 flex flex-col p-7 ${tier.popular ? "bg-brand-50" : "bg-white"}`}>
+                <p className="text-xs font-black uppercase tracking-widest text-brand-600 mb-3">{tier.label}</p>
+                <div className="flex items-end gap-1 mb-1">
+                  <span className="text-3xl font-black text-foreground leading-none">{tier.price}</span>
+                  <span className="text-sm text-muted font-medium mb-0.5">{tier.unit}</span>
                 </div>
-                <p className="text-[11px] text-muted">{tier.range}</p>
-                <p className="text-[11px] text-muted leading-relaxed">{tier.note}</p>
-                <div className="mt-3 pt-3 border-t border-border">
-                  <p className="text-xs font-bold text-brand-700">{tier.per}</p>
-                  <p className="text-[10px] text-muted mt-0.5">Annual · use-it-or-lose-it</p>
+                <p className="text-sm font-semibold text-foreground mt-2">{tier.range}</p>
+                <p className="text-sm text-muted leading-relaxed mt-1 flex-1">{tier.note}</p>
+                <div className="mt-8 pt-6 border-t border-border">
+                  <a href="https://calendar.app.google/6fVjZ9wJ9r8LUXDv8" target="_blank" rel="noopener noreferrer" className={`block text-center text-sm font-bold px-5 py-3 rounded-xl transition-colors ${tier.popular ? "bg-brand-600 text-white hover:bg-brand-700" : "border border-brand-200 text-brand-700 hover:bg-brand-50"}`}>
+                    Book a call
+                  </a>
                 </div>
               </div>
             </div>
@@ -1113,8 +1211,8 @@ function PricingSection() {
           </div>
         </div>
 
-        <p className="text-xs text-muted text-center mt-5 leading-relaxed">
-          Pay once per year. Athletes are allocated for your intake — no rollovers, no surprise invoices.
+        <p className="text-sm text-muted text-center mt-6 leading-relaxed max-w-xl mx-auto italic">
+          "Our pricing is structured around the value we deliver — every program is different. Book a 15-minute call and we'll show you exactly what your ROI looks like."
         </p>
       </div>
     </section>

@@ -110,39 +110,21 @@ function QuoteModal({ onClose }) {
 
 const TIERS = [
   {
-    label: "Micro",
-    price: "$2,400",
-    unit: "/ yr",
-    range: "Up to 40 athletes / yr",
-    note: "Small programs or single-sport pilots.",
-    annual: "~$60 / athlete",
+    label: "Starter",
+    range: "Up to 15 athletes",
+    note: "Perfect for single sports and pilot programs.",
     popular: false,
   },
   {
-    label: "Starter",
-    price: "$4,900",
-    unit: "/ yr",
-    range: "Up to 100 athletes / yr",
-    note: "Mid-size programs across multiple sports.",
-    annual: "~$49 / athlete",
+    label: "Department",
+    range: "Up to 50 athletes",
+    note: "For full athletic departments with growing international rosters.",
     popular: true,
   },
   {
-    label: "Pro",
-    price: "$7,900",
-    unit: "/ yr",
-    range: "Up to 200 athletes / yr",
-    note: "NCAA D1/D2 and larger universities.",
-    annual: "~$40 / athlete",
-    popular: false,
-  },
-  {
-    label: "Institution",
-    price: "Custom",
-    unit: "",
-    range: "200+ athletes / yr",
-    note: "Large state universities and multi-department programs.",
-    annual: "Annual · use-it-or-lose-it",
+    label: "Enterprise",
+    range: "Up to 100 athletes",
+    note: "For large programs and Power 5 athletic departments.",
     popular: false,
   },
 ];
@@ -167,24 +149,23 @@ const FEATURES = [
 
 const STATS = [
   {
-    number: "From $49",
-    label: "per athlete",
-    comparison: "vs. $1,500–$3,000 per student at relocation firms",
-  },
-  {
     number: "10–15 hrs",
     label: "of staff time saved per athlete",
-    comparison: "At $50/hr, that's $500–$750 in labor costs eliminated per student",
+    comparison: "That's 500–750 hours freed per year for a 50-athlete program — time that goes back to coaches and staff.",
   },
   {
     number: "~3 min",
-    label: "to generate a complete guide",
-    comparison: "vs. 2–4 weeks with a traditional relocation firm",
+    label: "to generate a complete, personalized guide",
+    comparison: "vs. 2–4 weeks with a traditional relocation firm — and it's ready the moment the athlete submits their intake.",
+  },
+  {
+    number: "Zero",
+    label: "manual steps to deliver",
+    comparison: "Guides are automatically sent by email, WhatsApp, and SMS — no staff follow-up needed. Coach portal tracks opens and downloads.",
   },
 ];
 
 const COMPARISON_ROWS = [
-  { label: "Cost per athlete",           firm: "$1,500–$3,000", staff: "$500–$750",    settl: "From $49" },
   { label: "Time to deliver",            firm: "2–4 weeks",     staff: "10–15 hrs",    settl: "~3 min" },
   { label: "Personalized guide",         firm: "Sometimes",     staff: "Rarely",       settl: "Always" },
   { label: "Coach portal",               firm: "No",            staff: "No",           settl: "Included" },
@@ -220,7 +201,6 @@ export default function PricingPage() {
               <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
             </svg>
           </a>
-          <a href="/pricing" className="text-sm font-medium text-brand-600 px-4 py-2 rounded-lg border border-brand-300">Pricing</a>
           <a href="/login" className="text-sm font-medium bg-brand-600 text-white px-4 py-2 rounded-lg hover:bg-brand-700 transition-colors">Sign in</a>
         </div>
       </nav>
@@ -232,9 +212,6 @@ export default function PricingPage() {
           <div className="hero-blob-alt absolute -bottom-32 -left-24 w-[380px] h-[380px] rounded-full bg-brand-100 opacity-35 blur-[80px]" />
         </div>
         <div className="relative flex flex-col items-center text-center px-6 py-24 max-w-3xl mx-auto w-full">
-          <span className="hero-animate hero-d1 badge-shimmer inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-5 border border-brand-200 px-4 py-2 rounded-full">
-            Pricing
-          </span>
           <h1 className="hero-animate hero-d2 text-5xl font-black text-foreground leading-tight mb-5 tracking-tight">
             Simple pricing.<br /><span className="gradient-text">Everything included.</span>
           </h1>
@@ -243,7 +220,7 @@ export default function PricingPage() {
           </p>
           <div className="hero-animate hero-d4 flex items-center gap-8 flex-wrap justify-center">
             {[
-              { value: "From $49", label: "per athlete" },
+              { value: "10–15 hrs", label: "saved per athlete" },
               { value: "~3 min", label: "to generate" },
               { value: "15+", label: "features included" },
             ].map((s) => (
@@ -258,28 +235,18 @@ export default function PricingPage() {
 
       {/* Tiers */}
       <section className="px-6 py-20 max-w-5xl mx-auto w-full">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
           {TIERS.map((tier) => (
-            <div key={tier.label} className={`feature-card relative rounded-xl border flex flex-col overflow-hidden ${tier.popular ? "border-brand-400 shadow-lg shadow-brand-100" : "border-border"}`}>
-              {/* Top accent */}
-              <div className={`absolute top-0 left-0 right-0 h-0.5 ${tier.popular ? "bg-brand-600" : "bg-gradient-to-r from-brand-300 to-brand-500"}`} />
+            <div key={tier.label} className={`relative flex flex-col rounded-2xl overflow-hidden border ${tier.popular ? "border-brand-500 shadow-xl" : "border-border shadow-sm"}`}>
               {tier.popular && (
-                <div className="bg-brand-600 text-white text-xs font-bold uppercase tracking-widest text-center py-1.5">
+                <div className="bg-brand-600 text-white text-[10px] font-black uppercase tracking-widest text-center py-2">
                   Most popular
                 </div>
               )}
-              <div className={`p-6 flex flex-col gap-2 flex-1 ${tier.popular ? "bg-brand-50" : "bg-white"}`}>
-                <p className="text-xs font-bold uppercase tracking-widest text-brand-600">{tier.label}</p>
-                <div className="flex items-baseline gap-1 mt-1">
-                  <p className="text-2xl font-black text-foreground leading-none">{tier.price}</p>
-                  {tier.unit && <p className="text-sm text-muted">{tier.unit}</p>}
-                </div>
-                <p className="text-xs text-muted">{tier.range}</p>
-                <p className="text-xs text-muted leading-relaxed flex-1 mt-1">{tier.note}</p>
-                <div className="pt-3 border-t border-border mt-2">
-                  <p className="text-xs font-bold text-brand-700">{tier.annual}</p>
-                  <p className="text-[10px] text-muted mt-0.5">Annual · use-it-or-lose-it</p>
-                </div>
+              <div className={`flex-1 flex flex-col p-7 ${tier.popular ? "bg-brand-50" : "bg-white"}`}>
+                <p className="text-xs font-black uppercase tracking-widest text-brand-600 mb-3">{tier.label}</p>
+                <p className="text-2xl font-black text-foreground leading-none mb-1">{tier.range}</p>
+                <p className="text-sm text-muted leading-relaxed mt-2 flex-1">{tier.note}</p>
               </div>
             </div>
           ))}
@@ -332,7 +299,7 @@ export default function PricingPage() {
               <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-3 block">The math</span>
               <h2 className="text-3xl font-bold text-foreground">This isn't a PDF service. It's a platform.</h2>
               <p className="text-muted mt-4 max-w-xl mx-auto text-sm leading-relaxed">
-                Every athlete gets a personalized guide, a document upload portal, and ongoing support — all managed by your coaches without any manual work.
+                Every hour your staff spends chasing documents, answering the same questions, or drafting welcome emails is an hour Settlyou eliminates — automatically.
               </p>
             </div>
           </ScrollReveal>
@@ -390,7 +357,7 @@ export default function PricingPage() {
             {[
               {
                 q: "How does annual pricing work?",
-                a: "You pay once per year for your athlete tier — for example, $4,900/yr for up to 100 athletes. Athletes are allocated for the year: use them or lose them. No rollovers, no surprise invoices.",
+                a: "You pay once per year based on your program size. Athletes are allocated for the year: use them or lose them. No rollovers, no surprise invoices. Reach out for a custom quote.",
               },
               {
                 q: "Is every feature included on all plans?",

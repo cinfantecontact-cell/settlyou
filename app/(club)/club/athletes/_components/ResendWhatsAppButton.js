@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
 
-export default function ResendButton({ requestId }) {
+export default function ResendWhatsAppButton({ requestId }) {
   const [state, setState] = useState("idle"); // idle | confirming | loading | sent | error
 
   async function confirm() {
     setState("loading");
-    const res = await fetch(`/api/club/requests/${requestId}/resend`, { method: "POST" });
+    const res = await fetch(`/api/club/requests/${requestId}/resend-whatsapp`, { method: "POST" });
     setState(res.ok ? "sent" : "error");
     if (res.ok) setTimeout(() => setState("idle"), 3000);
   }
@@ -23,7 +23,7 @@ export default function ResendButton({ requestId }) {
         onClick={() => setState("confirming")}
         className="text-xs font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-foreground/30 transition-colors"
       >
-        Resend email
+        Resend to WhatsApp
       </button>
 
       {state === "confirming" && createPortal(
@@ -35,8 +35,8 @@ export default function ResendButton({ requestId }) {
             className="bg-white rounded-xl border border-border shadow-lg p-6 max-w-sm w-full mx-4"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="text-sm font-semibold text-foreground mb-1">Resend guide email?</h3>
-            <p className="text-xs text-muted mb-5 leading-relaxed">The student will receive their guide link again at the email address on file.</p>
+            <h3 className="text-sm font-semibold text-foreground mb-1">Resend WhatsApp message?</h3>
+            <p className="text-xs text-muted mb-5 leading-relaxed">The student will receive their document upload link again on WhatsApp.</p>
             <div className="flex gap-2">
               <button
                 onClick={confirm}

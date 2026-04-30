@@ -3,6 +3,8 @@
 import DocumentView from "@/app/(admin)/admin/relocations/[id]/_components/DocumentView";
 import { collegeDemoDocumentV2 } from "../sample/collegeDemoData";
 import QuoteButton from "@/app/_components/QuoteButton";
+import UploadDemoClient from "@/app/upload/demo/_components/UploadDemoClient";
+import ScrollReveal from "@/app/_components/ScrollReveal";
 
 export default function CollegeSampleReportPage() {
   return (
@@ -78,6 +80,36 @@ export default function CollegeSampleReportPage() {
             { label: "NCAA Eligibility Center", url: "https://web3.ncaa.org/ecwr3/" },
           ],
         }} />
+      </div>
+
+      {/* Upload experience */}
+      <div className="no-print relative overflow-hidden border-t border-border" style={{ background: "linear-gradient(135deg, #f0f9ff 0%, #eff6ff 40%, #f5f3ff 100%)" }}>
+        {/* Decorative blobs */}
+        <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-brand-200 opacity-20 blur-[80px] pointer-events-none" />
+        <div className="absolute -bottom-16 -left-16 w-60 h-60 rounded-full bg-indigo-200 opacity-20 blur-[60px] pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-brand-100 opacity-10 blur-[100px] pointer-events-none" />
+
+        <div className="relative max-w-4xl mx-auto px-4 py-16">
+          <ScrollReveal>
+            <div className="mb-10 text-center">
+              <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-brand-600 border border-brand-200 bg-white/80 px-4 py-1.5 rounded-full mb-5 shadow-sm">
+                Document Collection
+              </div>
+              <h2 className="text-3xl font-black text-foreground mb-3 leading-tight">
+                What athletes see when<br /><span className="text-brand-600">submitting their documents</span>
+              </h2>
+              <p className="text-sm text-muted max-w-xl mx-auto leading-relaxed">
+                After receiving their guide, athletes get a personalized upload page — coach templates, required docs, and a progress tracker. Try it below.
+              </p>
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal delay={120}>
+            <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-sm border border-white p-6">
+              <UploadDemoClient />
+            </div>
+          </ScrollReveal>
+        </div>
       </div>
 
       {/* CTA footer */}

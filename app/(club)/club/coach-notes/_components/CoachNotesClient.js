@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const BASE_DOCUMENT_TYPES = [
   { key: "passport", label: "Passport Copy" },
@@ -72,6 +72,15 @@ export default function CoachNotesClient({ sport, initialNotes, initialLinks, in
     setAttachments(prev => prev.filter(a => a.id !== id));
   }
 
+  // Dirty tracking
+  const [isDirty, setIsDirty] = useState(false);
+  useEffect(() => {
+    if (!isDirty) return;
+    const handler = (e) => { e.preventDefault(); e.returnValue = ""; };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [isDirty]);
+
   // Save state
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -82,15 +91,17 @@ export default function CoachNotesClient({ sport, initialNotes, initialLinks, in
 
   function toggleBase(key) {
     setDisabled(prev => { const n = new Set(prev); n.has(key) ? n.delete(key) : n.add(key); return n; });
+    setIsDirty(true);
   }
 
   function addCustomDoc() {
     if (!newDocLabel.trim()) return;
     setCustomDocs(prev => [...prev, { id: crypto.randomUUID(), label: newDocLabel.trim(), required: true }]);
     setNewDocLabel("");
+    setIsDirty(true);
   }
 
-  function removeCustomDoc(id) { setCustomDocs(prev => prev.filter(d => d.id !== id)); }
+  function removeCustomDoc(id) { setCustomDocs(prev => prev.filter(d => d.id !== id)); setIsDirty(true); }
 
   function addLink() {
     if (!linkLabel.trim() || !linkUrl.trim()) return;
@@ -98,11 +109,12 @@ export default function CoachNotesClient({ sport, initialNotes, initialLinks, in
     if (!url.startsWith("http://") && !url.startsWith("https://")) url = "https://" + url;
     setLinks(prev => [...prev, { label: linkLabel.trim(), url }]);
     setLinkLabel(""); setLinkUrl(""); setAddingLink(false);
+    setIsDirty(true);
   }
 
-  function removeLink(i) { setLinks(prev => prev.filter((_, idx) => idx !== i)); }
+  function removeLink(i) { setLinks(prev => prev.filter((_, idx) => idx !== i)); setIsDirty(true); }
 
-  function appendExample(text) { setNotes(prev => prev ? prev + "\n" + text : text); }
+  function appendExample(text) { setNotes(prev => prev ? prev + "\n" + text : text); setIsDirty(true); }
 
   async function handleSave() {
     setLoading(true); setError(null); setSuccess(false);
@@ -122,7 +134,7 @@ export default function CoachNotesClient({ sport, initialNotes, initialLinks, in
 
     setLoading(false);
     if (notesRes.ok && docRes.ok) {
-      setSuccess(true); setTimeout(() => setSuccess(false), 3000);
+      setSuccess(true); setIsDirty(false); setTimeout(() => setSuccess(false), 3000);
     } else {
       setError("Failed to save. Please try again.");
     }
@@ -207,7 +219,7 @@ export default function CoachNotesClient({ sport, initialNotes, initialLinks, in
         <textarea
           rows={6}
           value={notes}
-          onChange={e => setNotes(e.target.value)}
+          onChange={e => { setNotes(e.target.value); setIsDirty(true); }}
           className="w-full border border-border rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500 resize-y"
           placeholder="e.g. Morning practice runs 8–10am — schedule classes for 11am or later..."
         />

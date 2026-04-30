@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import JoinLinkCard from "./_components/JoinLinkCard";
 import OnboardingTutorial from "./_components/OnboardingTutorial";
 import StatusBadge from "./_components/StatusBadge";
+import DashboardWidgets from "./_components/DashboardWidgets";
 import { BASE_DOCUMENT_TYPES, BASE_DOC_SHORT_LABELS } from "@/lib/documents/types";
 
 const TWELVE_HOURS = 12 * 60 * 60 * 1000;
@@ -79,9 +80,30 @@ export default async function ClubDashboard() {
 
   const isAdmin = profile.role === "club_admin";
 
-  // Document stats for coach view
+  // Sparkline: new athletes per day for last 7 days
+  const today = new Date();
+  const sparkline = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(today);
+    d.setDate(d.getDate() - (6 - i));
+    const day = d.toISOString().slice(0, 10);
+    return { date: day, count: requests?.filter(r => r.created_at.slice(0, 10) === day).length || 0 };
+  });
+
+  // Athletes by sport breakdown
+  const sportCounts = Object.entries(
+    (requests || []).reduce((acc, r) => { if (r.sport) acc[r.sport] = (acc[r.sport] || 0) + 1; return acc; }, {})
+  ).sort((a, b) => b[1] - a[1]).slice(0, 8);
+
+  // Precompute coach stats (admin only)
+  const coachesWithStats = coaches.map(coach => ({
+    ...coach,
+    athleteCount: requests?.filter(r => r.sport === coach.sport).length ?? 0,
+    deliveredCount: requests?.filter(r => r.sport === coach.sport && r.status === "delivered").length ?? 0,
+  }));
+
+  // Document stats (for everyone when delivered > 0)
   let docStats = null;
-  if (!isAdmin && delivered > 0) {
+  if (delivered > 0) {
     const deliveredReqs = requests.filter(r => r.status === "delivered");
     const deliveredIds = deliveredReqs.map(r => r.id);
 
@@ -163,130 +185,20 @@ export default async function ClubDashboard() {
         </div>
       )}
 
-      {/* Stat cards */}
-      <div id="tour-stats" className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        {[
-          { label: "Total Athletes", value: total, accent: false },
-          { label: "Guides Sent", value: delivered, accent: true },
-          { label: "In Progress", value: inProgress, accent: false },
-          !isAdmin && { label: "Guides Left", value: creditsLeft, accent: false },
-          isAdmin && { label: "Coaches", value: coaches.length, accent: false },
-        ].filter(Boolean).map((s) => (
-          <div key={s.label} className="bg-white border border-border rounded-xl p-5 flex flex-col gap-3 hover:shadow-md hover:border-brand-100 transition-all duration-200">
-            <p className="text-[11px] font-semibold text-muted uppercase tracking-widest">{s.label}</p>
-            <p className={`text-4xl font-bold leading-none ${s.accent ? "text-brand-600" : "text-foreground"}`}>{s.value}</p>
-          </div>
-        ))}
-      </div>
-
-      {/* AD: Coaches overview */}
-      {isAdmin && (
-        <div className="bg-white border border-border rounded-xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-border flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-foreground">Coaches</h2>
-            <a href="/club/coaches" className="text-xs font-medium px-3 py-1.5 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors">
-              Manage coaches
-            </a>
-          </div>
-          {coaches.length === 0 ? (
-            <div className="px-6 py-12 text-center">
-              <p className="text-sm text-muted mb-3">No coaches invited yet.</p>
-              <a href="/club/coaches" className="text-sm font-semibold text-brand-600 hover:underline">Invite your first coach</a>
-            </div>
-          ) : (
-            <div className="divide-y divide-border">
-              {coaches.map((coach) => {
-                const sportAthletes = requests?.filter(r => r.sport === coach.sport) ?? [];
-                const sportDelivered = sportAthletes.filter(r => r.status === "delivered").length;
-                return (
-                  <div key={coach.id} className="px-6 py-4 flex items-center justify-between gap-4">
-                    <div>
-                      <p className="text-sm font-medium text-foreground">{coach.full_name || "—"}</p>
-                      <p className="text-xs text-muted mt-0.5">{coach.sport || "No sport assigned"}</p>
-                    </div>
-                    <div className="flex items-center gap-6 text-right">
-                      <div>
-                        <p className="text-xs text-muted">Athletes</p>
-                        <p className="text-sm font-semibold text-foreground">{sportAthletes.length}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-muted">Guides sent</p>
-                        <p className="text-sm font-semibold text-brand-600">{sportDelivered}</p>
-                      </div>
-                      <a href="/club/athletes" className="text-xs font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-foreground/30 transition-colors whitespace-nowrap">
-                        View athletes
-                      </a>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Status breakdown */}
-      {inProgress > 0 && (
-        <div className="flex flex-wrap items-center gap-2 -mt-2">
-          {[
-            { key: "submitted", label: "Received", color: "bg-blue-50 text-blue-700 border-blue-100" },
-            { key: "generating", label: "Generating", color: "bg-yellow-50 text-yellow-700 border-yellow-100" },
-            { key: "under_review", label: "Quality Check", color: "bg-orange-50 text-orange-700 border-orange-100" },
-            { key: "approved", label: "Ready to Send", color: "bg-green-50 text-green-700 border-green-100" },
-          ].filter(s => statusCounts[s.key] > 0).map(s => (
-            <span key={s.key} className={`text-xs font-medium px-3 py-1 rounded-full border ${s.color}`}>
-              {statusCounts[s.key]} {s.label}
-            </span>
-          ))}
-        </div>
-      )}
-
-      {/* Document stats */}
-      {!isAdmin && docStats && (
-        <div className="bg-white border border-border rounded-xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-border">
-            <h2 className="text-sm font-semibold text-foreground">Document Uploads</h2>
-            <p className="text-xs text-muted mt-0.5">Across all athletes with a delivered guide</p>
-          </div>
-          <div className="grid grid-cols-3 divide-x divide-border border-b border-border">
-            <div className="px-6 py-4">
-              <p className="text-[11px] font-semibold text-muted uppercase tracking-widest mb-1">Uploaded</p>
-              <p className="text-3xl font-bold text-foreground">{docStats.totalUploaded}</p>
-            </div>
-            <div className="px-6 py-4">
-              <p className="text-[11px] font-semibold text-muted uppercase tracking-widest mb-1">Missing</p>
-              <p className={`text-3xl font-bold ${docStats.totalMissing > 0 ? "text-orange-500" : "text-foreground"}`}>{docStats.totalMissing}</p>
-            </div>
-            <div className="px-6 py-4">
-              <p className="text-[11px] font-semibold text-muted uppercase tracking-widest mb-1">Completion</p>
-              <p className={`text-3xl font-bold ${docStats.completionPct === 100 ? "text-brand-600" : "text-foreground"}`}>{docStats.completionPct}%</p>
-            </div>
-          </div>
-          <div className="px-6 py-3 border-b border-border flex items-center gap-2">
-            <span className="text-xs text-muted">Most missed:</span>
-            <span className="text-xs font-semibold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full">{docStats.mostMissedLabel}</span>
-          </div>
-          <div>
-            {docStats.perAthlete.map((a, i) => (
-              <div key={a.id} className="px-6 py-3 flex items-center gap-4 border-b border-border last:border-0">
-                <span className="text-xs text-muted w-4">{i + 1}</span>
-                <a href={`/club/athletes/${a.id}`} className="text-sm font-medium text-foreground hover:underline flex-1">{a.name}</a>
-                <div className="flex items-center gap-3">
-                  <div className="w-24 h-1.5 bg-surface rounded-full overflow-hidden">
-                    <div
-                      className={`h-full rounded-full ${a.uploaded === a.expected ? "bg-brand-500" : "bg-orange-400"}`}
-                      style={{ width: `${Math.round((a.uploaded / a.expected) * 100)}%` }}
-                    />
-                  </div>
-                  <span className={`text-xs font-semibold tabular-nums w-8 text-right ${a.uploaded === a.expected ? "text-brand-600" : "text-orange-500"}`}>
-                    {a.uploaded}/{a.expected}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Customizable dashboard widgets */}
+      <DashboardWidgets
+        isAdmin={isAdmin}
+        total={total}
+        delivered={delivered}
+        inProgress={inProgress}
+        seatsUsed={club?.seats_used || 0}
+        seatLimit={effectiveLimit}
+        statusCounts={statusCounts}
+        sparkline={sparkline}
+        sportCounts={sportCounts}
+        docStats={docStats}
+        coaches={coachesWithStats}
+      />
 
       {/* Recent students */}
       <div className="bg-white border border-border rounded-xl overflow-hidden">

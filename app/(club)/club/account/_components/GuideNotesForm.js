@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 const GENERIC_NOTE_EXAMPLES = [
@@ -189,6 +189,13 @@ export default function GuideNotesForm({ club, saveEndpoint = "/api/club/brandin
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
+  const [isDirty, setIsDirty] = useState(false);
+  useEffect(() => {
+    if (!isDirty) return;
+    const handler = (e) => { e.preventDefault(); e.returnValue = ""; };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [isDirty]);
 
   async function uploadDocument() {
     if (!docFile || !docName.trim()) return;
@@ -242,6 +249,7 @@ export default function GuideNotesForm({ club, saveEndpoint = "/api/club/brandin
 
   function appendExample(text) {
     setNotes((prev) => prev ? prev + "\n" + text : text);
+    setIsDirty(true);
   }
 
   function addLink() {
@@ -252,10 +260,12 @@ export default function GuideNotesForm({ club, saveEndpoint = "/api/club/brandin
     setLinkLabel("");
     setLinkUrl("");
     setAddingLink(false);
+    setIsDirty(true);
   }
 
   function removeLink(i) {
     setLinks((prev) => prev.filter((_, idx) => idx !== i));
+    setIsDirty(true);
   }
 
   function startLinkWithExample(label) {
@@ -276,7 +286,7 @@ export default function GuideNotesForm({ club, saveEndpoint = "/api/club/brandin
 
     const res = await fetch(saveEndpoint, { method: "POST", body: fd });
     setLoading(false);
-    if (res.ok) { setSuccess(true); setTimeout(() => setSuccess(false), 3000); }
+    if (res.ok) { setSuccess(true); setIsDirty(false); setTimeout(() => setSuccess(false), 3000); }
     else {
       try {
         const d = await res.json();
@@ -299,7 +309,7 @@ export default function GuideNotesForm({ club, saveEndpoint = "/api/club/brandin
         <textarea
           rows={8}
           value={notes}
-          onChange={(e) => setNotes(e.target.value)}
+          onChange={(e) => { setNotes(e.target.value); setIsDirty(true); }}
           className="w-full border border-border rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500 resize-y"
           placeholder="Add anything you want included in every guide — welcome messages, important contacts, campus tips, training schedules, deadlines..."
         />

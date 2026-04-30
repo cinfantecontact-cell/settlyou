@@ -13,15 +13,6 @@ const PLATFORM_FEATURES = [
     ),
   },
   {
-    title: "Document collection",
-    desc: "Athletes upload documents through a personal link. Coaches see real-time submission status.",
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-      </svg>
-    ),
-  },
-  {
     title: "WhatsApp delivery",
     desc: "Upload link sent by WhatsApp on delivery. Athletes always have it on hand.",
     icon: (
@@ -54,6 +45,15 @@ const PLATFORM_FEATURES = [
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+      </svg>
+    ),
+  },
+  {
+    title: "Coach file templates",
+    desc: "Coaches upload fillable templates. Athletes download, fill them out, and return the completed version — all through their personal link.",
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
       </svg>
     ),
   },
@@ -126,7 +126,7 @@ export default function LandingPage() {
               <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
             </svg>
           </a>
-          <a href="/pricing" className="text-sm font-medium text-foreground px-4 py-2 rounded-lg border border-border hover:border-brand-400 hover:text-brand-600 transition-colors">Pricing</a>
+          <a href="/pricing" className="text-sm font-medium text-foreground px-4 py-2 rounded-lg border border-border hover:border-brand-400 hover:text-brand-600 transition-colors">Plans</a>
           <a href="/login" className="text-sm font-medium bg-brand-600 text-white px-4 py-2 rounded-lg hover:bg-brand-700 transition-colors">Sign in</a>
         </div>
       </nav>
@@ -154,6 +154,10 @@ export default function LandingPage() {
               <a href="/report/sample-college"
                 className="cta-primary bg-brand-600 text-white px-7 py-3.5 rounded-lg text-sm font-bold hover:bg-brand-700 transition-colors shadow-md">
                 See a sample guide
+              </a>
+              <a href="/upload/demo"
+                className="bg-white text-foreground border border-border px-7 py-3.5 rounded-lg text-sm font-bold hover:border-brand-300 hover:text-brand-600 transition-colors">
+                Try the upload experience
               </a>
               <QuoteButton className="bg-white text-foreground border border-border px-7 py-3.5 rounded-lg text-sm font-bold hover:border-brand-300 hover:text-brand-600 transition-colors">
                 Request a quote
@@ -592,6 +596,22 @@ export default function LandingPage() {
                     <div className="w-2 h-2 rounded-full bg-green-400" />
                     <span className="text-xs text-white/60 font-mono">settlyou.com/upload/marcus-r</span>
                   </div>
+                  {/* From your coach */}
+                  <div className="px-4 pt-3 pb-2 border-b border-white/10">
+                    <p className="text-[10px] font-bold text-white/50 uppercase tracking-wider mb-2">From your coach</p>
+                    {[
+                      { label: "Medical Clearance Template", file: "Medical_Clearance_Soccer.pdf" },
+                      { label: "NCAA Eligibility Checklist", file: "NCAA_Checklist.pdf" },
+                    ].map(a => (
+                      <div key={a.label} className="flex items-center justify-between py-1.5">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <svg className="w-3 h-3 text-white/40 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" /></svg>
+                          <span className="text-[10px] text-white/70 truncate">{a.label}</span>
+                        </div>
+                        <span className="text-[10px] font-semibold text-brand-200 shrink-0 ml-2">Download</span>
+                      </div>
+                    ))}
+                  </div>
                   <div className="p-4 flex flex-col gap-3">
                     <p className="text-xs font-bold text-white uppercase tracking-wider">Your documents — Men's Soccer</p>
                     {[
@@ -803,6 +823,10 @@ export default function LandingPage() {
                 className="bg-white text-brand-700 px-8 py-4 rounded-lg text-base font-bold hover:bg-brand-50 transition-colors shadow-lg">
                 See a sample guide
               </a>
+              <a href="/upload/demo"
+                className="bg-white/15 text-white border border-white/30 px-8 py-4 rounded-lg text-base font-bold hover:bg-white/25 transition-colors">
+                Try the upload experience
+              </a>
               <QuoteButton className="bg-white/15 text-white border border-white/30 px-8 py-4 rounded-lg text-base font-bold hover:bg-white/25 transition-colors">
                 Request a quote
               </QuoteButton>
@@ -817,6 +841,7 @@ export default function LandingPage() {
         <div className="flex items-center gap-4">
           <a href="mailto:hello@settlyou.com" className="hover:text-foreground transition-colors">hello@settlyou.com</a>
           <a href="https://www.linkedin.com/company/settlyou" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">LinkedIn</a>
+          <a href="/compliance" className="hover:text-foreground transition-colors">Compliance</a>
           <a href="/privacy" className="hover:text-foreground transition-colors">Privacy policy</a>
           <a href="/terms" className="hover:text-foreground transition-colors">Terms of service</a>
         </div>

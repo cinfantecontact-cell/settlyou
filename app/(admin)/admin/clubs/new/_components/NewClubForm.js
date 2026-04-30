@@ -31,9 +31,9 @@ export default function NewClubForm() {
   const [secondaryColor, setSecondaryColor] = useState("#ffffff");
   const [logoPreview, setLogoPreview] = useState(null);
   const [tier, setTier] = useState("starter");
-  const [seatLimit, setSeatLimit] = useState(100);
+  const [seatLimit, setSeatLimit] = useState(15);
 
-  const TIER_LIMITS = { trial: 15, micro: 40, starter: 100, pro: 200, institution: 500 };
+  const TIER_LIMITS = { trial: 8, starter: 15, department: 50, enterprise: 100, institution: 500 };
 
   function handleTierChange(e) {
     const val = e.target.value;
@@ -192,11 +192,11 @@ export default function NewClubForm() {
           <label className="text-sm font-medium text-foreground">Pricing tier</label>
           <select name="plan" required value={tier} onChange={handleTierChange}
             className="border border-border rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white">
-            <option value="trial">Trial — free, up to 15 athletes</option>
-            <option value="micro">Micro — $2,400/yr, up to 40 athletes</option>
-            <option value="starter">Starter — $4,900/yr, up to 100 athletes</option>
-            <option value="pro">Pro — $7,900/yr, up to 200 athletes</option>
-            <option value="institution">Institution — custom pricing, 200+ athletes</option>
+            <option value="trial">Trial — up to 8 athletes</option>
+            <option value="starter">Starter — up to 15 athletes</option>
+            <option value="department">Department — up to 50 athletes</option>
+            <option value="enterprise">Enterprise — up to 100 athletes</option>
+            <option value="institution">Institution — 100+ athletes</option>
           </select>
         </div>
 

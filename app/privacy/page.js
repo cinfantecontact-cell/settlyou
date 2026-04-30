@@ -147,7 +147,30 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold mb-3">12. Governing law and jurisdiction</h2>
+            <h2 className="text-lg font-bold mb-3">12. FERPA (U.S. educational institutions)</h2>
+            <p className="text-sm text-muted leading-relaxed mb-3">
+              When contracted by a U.S. educational institution, Settlyou operates as a <strong className="text-foreground">"School Official"</strong> with a legitimate educational interest under the Family Educational Rights and Privacy Act (FERPA), 34 CFR §99.31(a)(1). We access student education records solely to provide our agreed services — generating relocation guides and collecting required documents on behalf of the institution.
+            </p>
+            <p className="text-sm text-muted leading-relaxed mb-3">
+              Student data is never disclosed to third parties without the institution's or student's written consent, except as required by law. Institutions remain the data controller and may request access to or deletion of their students' records at any time. See our <a href="/compliance" className="text-brand-600 hover:underline">Compliance page</a> for full details.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-bold mb-3">13. GDPR (EU/EEA)</h2>
+            <p className="text-sm text-muted leading-relaxed mb-3">
+              For institutions and athletes based in the European Union or EEA, Settlyou acts as a <strong className="text-foreground">Data Processor</strong> under the General Data Protection Regulation (GDPR), processing personal data only on the documented instructions of the institution (the Data Controller). Our legal bases for processing include contractual necessity, legitimate interest, and explicit consent obtained at the point of data collection.
+            </p>
+            <p className="text-sm text-muted leading-relaxed mb-3">
+              EU/EEA residents have rights of access, rectification, erasure, restriction, portability, and objection. Data transfers to the United States are covered by Standard Contractual Clauses (SCCs). A Data Processing Agreement (DPA) is available upon request for institutions that require it. In the event of a personal data breach, we will notify affected institutions within 72 hours as required by GDPR Article 33.
+            </p>
+            <p className="text-sm text-muted leading-relaxed">
+              For GDPR inquiries or to request a DPA, contact <a href="mailto:hello@settlyou.com" className="text-brand-600 hover:underline">hello@settlyou.com</a>. See our <a href="/compliance" className="text-brand-600 hover:underline">Compliance page</a> for full details.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-bold mb-3">14. Governing law and jurisdiction</h2>
             <p className="text-sm text-muted leading-relaxed mb-3">
               Settlyou operates internationally and is committed to complying with applicable data protection laws in the jurisdictions where it serves customers, including U.S. federal and state privacy laws.
             </p>
@@ -161,7 +184,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold mb-3">13. Contact us</h2>
+            <h2 className="text-lg font-bold mb-3">15. Contact us</h2>
             <p className="text-sm text-muted leading-relaxed">
               For any privacy-related questions, data requests, or concerns, contact us at:{" "}
               <a href="mailto:hello@settlyou.com" className="text-brand-600 hover:underline font-medium">hello@settlyou.com</a>
@@ -176,6 +199,7 @@ export default function PrivacyPage() {
         <span>© {new Date().getFullYear()} Settlyou. All rights reserved.</span>
         <div className="flex items-center gap-4">
           <a href="mailto:hello@settlyou.com" className="hover:text-foreground transition-colors">hello@settlyou.com</a>
+          <a href="/compliance" className="hover:text-foreground transition-colors">Compliance</a>
           <a href="/privacy" className="text-foreground font-medium">Privacy policy</a>
           <a href="/terms" className="hover:text-foreground transition-colors">Terms of service</a>
         </div>

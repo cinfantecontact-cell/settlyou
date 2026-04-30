@@ -20,6 +20,26 @@ export async function POST(request, { params }) {
   const { data: club } = await admin.from("clubs").select("name").eq("id", clubId).single();
   if (!club) return NextResponse.json({ error: "Club not found" }, { status: 404 });
 
+  // Check for duplicate pending invite
+  const { data: existing } = await admin
+    .from("coach_invites")
+    .select("id")
+    .eq("club_id", clubId)
+    .eq("email", email)
+    .eq("accepted", false)
+    .maybeSingle();
+  if (existing) return NextResponse.json({ error: "An invite has already been sent to this email." }, { status: 409 });
+
+  // Check if this email already accepted an invite (has an account)
+  const { data: accepted } = await admin
+    .from("coach_invites")
+    .select("id")
+    .eq("club_id", clubId)
+    .eq("email", email)
+    .eq("accepted", true)
+    .maybeSingle();
+  if (accepted) return NextResponse.json({ error: "A coach with this email already has an account." }, { status: 409 });
+
   const { data: invite, error } = await admin
     .from("coach_invites")
     .insert({ club_id: clubId, email, sport })

@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect, notFound } from "next/navigation";
 import { formatCountry } from "@/lib/format-country";
 import ResendButton from "../_components/ResendButton";
+import ResendWhatsAppButton from "../_components/ResendWhatsAppButton";
 import AthleteActions from "./_components/AthleteActions";
 import StatusBadge from "../../_components/StatusBadge";
 import { BASE_DOCUMENT_TYPES, getSportDocTypes } from "@/lib/documents/types";
@@ -98,13 +99,7 @@ export default async function AthleteDetailPage({ params }) {
               View guide
             </a>
             {r.athlete_email && <ResendButton requestId={r.id} />}
-            <button
-              disabled
-              title="WhatsApp delivery coming soon"
-              className="text-xs font-medium px-3 py-1.5 rounded-lg border border-border text-muted opacity-50 cursor-not-allowed"
-            >
-              Resend to WhatsApp
-            </button>
+            {r.athlete_phone && <ResendWhatsAppButton requestId={r.id} />}
           </div>
         )}
       </div>
