@@ -82,26 +82,8 @@ export default function CollegeSampleReportPage() {
         }} />
       </div>
 
-      {/* Connector bridge */}
-      <div className="no-print flex flex-col items-center gap-2 py-6 bg-white">
-        <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-widest text-brand-600">
-          <div className="h-px w-16 bg-brand-200" />
-          Section 3 of the guide links here
-          <div className="h-px w-16 bg-brand-200" />
-        </div>
-        <svg className="w-6 h-6 text-brand-400 animate-bounce" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-        </svg>
-        <p className="text-xs text-muted max-w-xs text-center leading-relaxed">
-          Athletes tap their personal upload link from the guide and land on this page — pre-loaded with their coach's required documents.
-        </p>
-        <svg className="w-6 h-6 text-brand-400" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-        </svg>
-      </div>
-
       {/* Upload experience */}
-      <div className="no-print relative overflow-hidden" style={{ background: "linear-gradient(135deg, #f0f9ff 0%, #eff6ff 40%, #f5f3ff 100%)" }}>
+      <div className="no-print relative overflow-hidden border-t border-border" style={{ background: "linear-gradient(135deg, #f0f9ff 0%, #eff6ff 40%, #f5f3ff 100%)" }}>
         {/* Decorative blobs */}
         <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-brand-200 opacity-20 blur-[80px] pointer-events-none" />
         <div className="absolute -bottom-16 -left-16 w-60 h-60 rounded-full bg-indigo-200 opacity-20 blur-[60px] pointer-events-none" />
