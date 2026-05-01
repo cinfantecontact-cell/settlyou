@@ -33,33 +33,33 @@ export default function RemoveAdButton({ clubId, userId }) {
       </button>
 
       {confirming && (
-        <>
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
           {/* Backdrop */}
-          <div className="fixed inset-0 z-40" onClick={() => setConfirming(false)} />
+          <div className="absolute inset-0 bg-black/30" onClick={() => setConfirming(false)} />
 
-          {/* Popover — opens upward to avoid clipping */}
-          <div className="absolute right-0 bottom-9 z-50 w-64 bg-white border border-border rounded-xl shadow-xl p-4">
-            <p className="text-sm font-semibold text-foreground mb-1">Remove Athletic Director?</p>
-            <p className="text-xs text-muted mb-4 leading-relaxed">
+          {/* Modal */}
+          <div className="relative z-10 w-80 bg-white rounded-2xl shadow-2xl p-6">
+            <p className="text-base font-bold text-foreground mb-2">Remove Athletic Director?</p>
+            <p className="text-sm text-muted mb-6 leading-relaxed">
               This will unlink the account from this university. The user can be re-invited at any time.
             </p>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <button
                 onClick={handleRemove}
                 disabled={loading}
-                className="flex-1 text-xs font-semibold py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors disabled:opacity-50"
+                className="flex-1 text-sm font-semibold py-2.5 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors disabled:opacity-50"
               >
                 {loading ? "Removing..." : "Yes, remove"}
               </button>
               <button
                 onClick={() => setConfirming(false)}
-                className="flex-1 text-xs font-medium py-2 rounded-lg border border-border text-muted hover:text-foreground transition-colors"
+                className="flex-1 text-sm font-medium py-2.5 rounded-lg border border-border text-muted hover:text-foreground transition-colors"
               >
                 Cancel
               </button>
             </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
