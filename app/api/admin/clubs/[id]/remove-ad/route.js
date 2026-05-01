@@ -16,10 +16,10 @@ export async function POST(request, { params }) {
   const { userId } = await request.json();
   if (!userId) return NextResponse.json({ error: "userId required" }, { status: 400 });
 
-  // Unlink from club — nullify club_id and reset role
+  // Unlink from club — only nullify club_id, leave role intact
   const { error } = await admin
     .from("profiles")
-    .update({ club_id: null, role: null })
+    .update({ club_id: null })
     .eq("id", userId)
     .eq("club_id", clubId);
 
