@@ -5,6 +5,7 @@ import EditClubForm from "./_components/EditClubForm";
 import InviteAdForm from "@/app/(admin)/admin/clients/_components/InviteAdForm";
 import InviteCoachForm from "@/app/(admin)/admin/clients/_components/InviteCoachForm";
 import ResetPasswordButton from "@/app/(admin)/admin/clients/_components/ResetPasswordButton";
+import RemoveAdButton from "@/app/(admin)/admin/clients/_components/RemoveAdButton";
 
 export const metadata = { title: "Edit Club — Settl Admin" };
 
@@ -78,7 +79,10 @@ export default async function EditClubPage({ params, searchParams }) {
               <p className="text-sm font-medium text-foreground">{adProfile.full_name || "—"}</p>
               <p className="text-xs text-muted mt-0.5">{adEmail}</p>
             </div>
-            <ResetPasswordButton email={adEmail} />
+            <div className="flex items-center gap-2">
+              <ResetPasswordButton email={adEmail} />
+              <RemoveAdButton clubId={id} userId={adProfile.id} />
+            </div>
           </div>
         ) : (
           <div className="px-6 py-4 flex flex-col gap-3">
