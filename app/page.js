@@ -819,10 +819,6 @@ export default function LandingPage() {
                 className="bg-white text-brand-700 px-8 py-4 rounded-lg text-base font-bold hover:bg-brand-50 transition-colors shadow-lg">
                 See a sample guide
               </a>
-              <a href="/upload/demo"
-                className="bg-white/15 text-white border border-white/30 px-8 py-4 rounded-lg text-base font-bold hover:bg-white/25 transition-colors">
-                Try the upload experience
-              </a>
               <QuoteButton className="bg-white/15 text-white border border-white/30 px-8 py-4 rounded-lg text-base font-bold hover:bg-white/25 transition-colors">
                 Request a quote
               </QuoteButton>
