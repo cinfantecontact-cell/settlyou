@@ -46,12 +46,15 @@ export default function EditClubForm({ club, baseDataStatus, baseDataGeneratedAt
     setBaseStatus("generating");
     try {
       const res = await fetch(`/api/admin/clubs/${club.id}/generate-base`, { method: "POST" });
+      const data = await res.json();
       if (!res.ok) {
-        const data = await res.json();
-        alert(data.error || "Failed to start generation");
+        alert(`Generation failed: ${data.error || "Unknown error"}`);
         setBaseStatus("failed");
+      } else {
+        setBaseStatus("ready");
       }
-    } catch {
+    } catch (err) {
+      alert(`Generation failed: ${err.message}`);
       setBaseStatus("failed");
     }
     setBaseGenerating(false);
