@@ -37,8 +37,8 @@ export default function RemoveAdButton({ clubId, userId }) {
           {/* Backdrop */}
           <div className="fixed inset-0 z-40" onClick={() => setConfirming(false)} />
 
-          {/* Popover */}
-          <div className="absolute right-0 top-9 z-50 w-64 bg-white border border-border rounded-xl shadow-lg p-4">
+          {/* Popover — opens upward to avoid clipping */}
+          <div className="absolute right-0 bottom-9 z-50 w-64 bg-white border border-border rounded-xl shadow-xl p-4">
             <p className="text-sm font-semibold text-foreground mb-1">Remove Athletic Director?</p>
             <p className="text-xs text-muted mb-4 leading-relaxed">
               This will unlink the account from this university. The user can be re-invited at any time.
