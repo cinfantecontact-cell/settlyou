@@ -65,7 +65,7 @@ export default function CollegeSampleReportPage() {
       </div>
 
       {/* Document */}
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="max-w-4xl mx-auto px-4 pt-8 pb-0">
         <DocumentView content={{
           ...collegeDemoDocumentV2,
           meta: {
@@ -84,7 +84,7 @@ export default function CollegeSampleReportPage() {
       </div>
 
       {/* Visual bridge */}
-      <div className="no-print relative overflow-hidden bg-white py-12">
+      <div className="no-print relative overflow-hidden bg-white pt-0 pb-10">
         <div className="max-w-2xl mx-auto px-4 flex flex-col items-center text-center gap-6">
           {/* Top label */}
           <div className="inline-flex items-center gap-2 bg-brand-50 border border-brand-200 text-brand-700 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full">
