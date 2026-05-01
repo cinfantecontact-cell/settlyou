@@ -45,9 +45,9 @@ export default async function EditClubPage({ params, searchParams }) {
   return (
     <div className="p-8 max-w-4xl flex flex-col gap-6">
       <div className="mb-2">
-        <a href={`/admin/clients/${id}`} className="inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-foreground transition-colors">
+        <a href="/admin/clients" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-foreground transition-colors">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
-          Back to {club.name}
+          Back
         </a>
         <h1 className="text-2xl font-bold text-foreground mt-4">{club.name}</h1>
         <p className="text-sm text-muted mt-1">Edit university details, manage accounts, and invite coaches.</p>
