@@ -155,10 +155,6 @@ export default function LandingPage() {
                 className="cta-primary bg-brand-600 text-white px-7 py-3.5 rounded-lg text-sm font-bold hover:bg-brand-700 transition-colors shadow-md">
                 See a sample guide
               </a>
-              <a href="/upload/demo"
-                className="bg-white text-foreground border border-border px-7 py-3.5 rounded-lg text-sm font-bold hover:border-brand-300 hover:text-brand-600 transition-colors">
-                Try the upload experience
-              </a>
               <QuoteButton className="bg-white text-foreground border border-border px-7 py-3.5 rounded-lg text-sm font-bold hover:border-brand-300 hover:text-brand-600 transition-colors">
                 Request a quote
               </QuoteButton>
