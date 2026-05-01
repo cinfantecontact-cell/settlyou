@@ -23,14 +23,20 @@ export default async function AdminClientsPage() {
 
   if (profile?.role !== "settl_admin") redirect("/dashboard");
 
-  const [{ data: clubs }, { data: organizations }, { data: coaches }] = await Promise.all([
+  const [{ data: clubs }, { data: organizations }, { data: coaches }, { data: baseDataRows }] = await Promise.all([
     admin.from("clubs").select("*").order("created_at", { ascending: false }),
     admin.from("organizations").select("*").order("created_at", { ascending: false }),
     admin.from("profiles").select("club_id").eq("role", "coach"),
+    admin.from("city_base_data").select("club_id, status").eq("language", "en"),
   ]);
 
   const coachCountByClub = (coaches ?? []).reduce((acc, c) => {
     if (c.club_id) acc[c.club_id] = (acc[c.club_id] ?? 0) + 1;
+    return acc;
+  }, {});
+
+  const baseStatusByClub = (baseDataRows ?? []).reduce((acc, r) => {
+    acc[r.club_id] = r.status;
     return acc;
   }, {});
 
@@ -51,7 +57,7 @@ export default async function AdminClientsPage() {
         </a>
       </div>
 
-      <ClientsTable clubs={clubs ?? []} organizations={organizations ?? []} baseUrl={baseUrl} coachCountByClub={coachCountByClub} />
+      <ClientsTable clubs={clubs ?? []} organizations={organizations ?? []} baseUrl={baseUrl} coachCountByClub={coachCountByClub} baseStatusByClub={baseStatusByClub} />
     </div>
   );
 }

@@ -59,7 +59,19 @@ function CopyLinkButton({ slug, baseUrl }) {
   );
 }
 
-export default function ClientsTable({ clubs, organizations, baseUrl, coachCountByClub = {} }) {
+function BaseDataDot({ status }) {
+  if (status === "ready") return (
+    <span title="Base data ready" className="w-2 h-2 rounded-full bg-green-500 shrink-0 inline-block" />
+  );
+  if (status === "generating") return (
+    <span title="Base data generating..." className="w-2 h-2 rounded-full bg-yellow-400 shrink-0 inline-block animate-pulse" />
+  );
+  return (
+    <span title={status === "failed" ? "Base data failed" : "No base data yet"} className="w-2 h-2 rounded-full bg-red-400 shrink-0 inline-block" />
+  );
+}
+
+export default function ClientsTable({ clubs, organizations, baseUrl, coachCountByClub = {}, baseStatusByClub = {} }) {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
 
@@ -145,6 +157,7 @@ export default function ClientsTable({ clubs, organizations, baseUrl, coachCount
                         )}
                         <div>
                           <div className="flex items-center gap-1.5">
+                            <BaseDataDot status={baseStatusByClub[college.id]} />
                             <a href={`/admin/clients/${college.id}`} className="font-medium text-foreground hover:text-brand-600 hover:underline">{college.name}</a>
                             {nearLimit && (
                               <span className="text-xs bg-red-50 text-red-600 px-1.5 py-0.5 rounded-full font-medium">
