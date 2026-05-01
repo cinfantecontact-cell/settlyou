@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect, notFound } from "next/navigation";
 import ResetPasswordButton from "../_components/ResetPasswordButton";
 import InviteCoachForm from "../_components/InviteCoachForm";
+import InviteAdForm from "../_components/InviteAdForm";
 
 export default async function AdminClientDetailPage({ params }) {
   const { id } = await params;
@@ -72,13 +73,20 @@ export default async function AdminClientDetailPage({ params }) {
         <div className="px-6 py-4 border-b border-border bg-surface">
           <h2 className="text-xs font-semibold text-muted uppercase tracking-wider">Athletic Director Account</h2>
         </div>
-        <div className="px-6 py-4 flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-foreground">{adProfile?.full_name || "—"}</p>
-            <p className="text-xs text-muted mt-0.5">{adEmail}</p>
+        {adProfile ? (
+          <div className="px-6 py-4 flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-foreground">{adProfile.full_name || "—"}</p>
+              <p className="text-xs text-muted mt-0.5">{adEmail}</p>
+            </div>
+            <ResetPasswordButton email={adEmail} />
           </div>
-          {adEmail !== "—" && <ResetPasswordButton email={adEmail} />}
-        </div>
+        ) : (
+          <div className="px-6 py-4 flex flex-col gap-3">
+            <p className="text-sm text-muted">No athletic director account yet.</p>
+            <InviteAdForm clubId={id} />
+          </div>
+        )}
       </div>
 
       {/* Coaches */}
