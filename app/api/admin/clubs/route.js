@@ -39,6 +39,7 @@ export async function POST(request) {
   const plan = formData.get("plan") || "essentials";
   const admin_email = formData.get("admin_email") || null;
   const division = formData.get("division") || null;
+  const state = formData.get("state") || null;
 
   // Upload logo if provided
   let logo_url = null;
@@ -75,6 +76,7 @@ export async function POST(request) {
     custom_notes,
     address,
     city,
+    state,
     country,
     plan,
     division,
@@ -88,30 +90,42 @@ export async function POST(request) {
 
   // If admin_email provided: create login + send welcome email
   if (admin_email) {
-    const tempPassword = generateTempPassword();
+    const { data: newClub } = await admin.from("clubs").select("id").eq("slug", slug).single();
 
-    // Create Supabase auth user
-    const { data: newUser, error: userError } = await admin.auth.admin.createUser({
-      email: admin_email,
-      password: tempPassword,
-      email_confirm: true,
-    });
+    // Check if user already exists in auth
+    const { data: existingUsers } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 });
+    const existingUser = existingUsers?.users?.find(u => u.email === admin_email);
 
-    if (!userError && newUser?.user) {
-      // Get the newly created club id
-      const { data: newClub } = await admin.from("clubs").select("id").eq("slug", slug).single();
+    let userId = existingUser?.id;
+    let tempPassword = null;
 
-      // Set profile role + club link
+    if (!existingUser) {
+      // Create new auth user
+      tempPassword = generateTempPassword();
+      const { data: newUser, error: userError } = await admin.auth.admin.createUser({
+        email: admin_email,
+        password: tempPassword,
+        email_confirm: true,
+      });
+      if (userError) {
+        console.error("[clubs/create] createUser failed:", userError.message);
+      } else {
+        userId = newUser?.user?.id;
+      }
+    }
+
+    if (userId) {
+      // Link user to club as club_admin
       await admin.from("profiles").upsert({
-        id: newUser.user.id,
+        id: userId,
         role: "club_admin",
         club_id: newClub?.id,
       });
 
-      // Send welcome email with password
+      // Send welcome email
       const joinLink = `${baseUrl}/join/${slug}`;
       const loginLink = `${baseUrl}/login`;
-      const planLabel = plan === "premium" ? "Premium" : "Essentials";
+      const planLabel = plan.charAt(0).toUpperCase() + plan.slice(1);
 
       await resend.emails.send({
         from: "Settlyou Team <hello@settlyou.com>",
@@ -211,8 +225,11 @@ function buildWelcomeEmail({ clubName, planLabel, joinLink, loginLink, pin, emai
                   </td></tr>
                   <tr><td style="padding-top:16px;">
                     <p style="margin:0 0 4px;font-size:11px;font-weight:600;color:#a1a1aa;text-transform:uppercase;letter-spacing:0.06em;">Temporary Password</p>
-                    <p style="margin:0;font-size:18px;font-weight:700;color:#09090b;font-family:monospace;letter-spacing:0.1em;">${tempPassword}</p>
-                    <p style="margin:4px 0 0;font-size:12px;color:#71717a;">You can change this after logging in</p>
+                    ${tempPassword
+                      ? `<p style="margin:0;font-size:18px;font-weight:700;color:#09090b;font-family:monospace;letter-spacing:0.1em;">${tempPassword}</p>
+                         <p style="margin:4px 0 0;font-size:12px;color:#71717a;">You can change this after logging in</p>`
+                      : `<p style="margin:0;font-size:14px;color:#52525b;">Use your existing Settlyou password to log in.</p>`
+                    }
                   </td></tr>
                 </table>
               </td></tr>
