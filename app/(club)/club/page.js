@@ -52,7 +52,7 @@ export default async function ClubDashboard() {
 
   let requestsQuery = admin
     .from("requests")
-    .select("id, status, athlete_name, created_at, athlete_link_token, sport")
+    .select("id, status, athlete_name, created_at, athlete_link_token, sport, deleted_at")
     .eq("club_id", profile.club_id)
     .order("created_at", { ascending: false });
 
@@ -62,23 +62,26 @@ export default async function ClubDashboard() {
 
   const { data: requests } = await requestsQuery;
 
-  const total = requests?.length || 0;
-  const delivered = requests?.filter(r => r.status === "delivered").length || 0;
-  const inProgress = requests?.filter(r => ["submitted", "generating", "under_review", "approved"].includes(r.status)).length || 0;
+  const active = requests?.filter(r => !r.deleted_at) ?? [];
+  const deletedCount = requests?.filter(r => r.deleted_at).length ?? 0;
+
+  const total = active.length;
+  const delivered = active.filter(r => r.status === "delivered").length;
+  const inProgress = active.filter(r => ["submitted", "generating", "under_review", "approved"].includes(r.status)).length;
   const effectiveLimit = club?.seat_limit ?? 40;
   const creditsLeft = effectiveLimit - (club?.seats_used || 0);
 
   const statusCounts = {
-    submitted: requests?.filter(r => r.status === "submitted").length || 0,
-    generating: requests?.filter(r => r.status === "generating").length || 0,
-    under_review: requests?.filter(r => r.status === "under_review").length || 0,
-    approved: requests?.filter(r => r.status === "approved").length || 0,
+    submitted: active.filter(r => r.status === "submitted").length,
+    generating: active.filter(r => r.status === "generating").length,
+    under_review: active.filter(r => r.status === "under_review").length,
+    approved: active.filter(r => r.status === "approved").length,
   };
 
-  const stuckGuides = requests?.filter(r =>
+  const stuckGuides = active.filter(r =>
     (r.status === "submitted" || r.status === "generating") &&
     Date.now() - new Date(r.created_at).getTime() > TWELVE_HOURS
-  ) || [];
+  );
 
   const attentionItems = [
     stuckGuides.length > 0 && `${stuckGuides.length} guide${stuckGuides.length > 1 ? "s" : ""} stuck in processing for over 12 hours`,
@@ -103,22 +106,22 @@ export default async function ClubDashboard() {
     const d = new Date(today);
     d.setDate(d.getDate() - (6 - i));
     const day = d.toISOString().slice(0, 10);
-    return { date: day, count: requests?.filter(r => r.created_at.slice(0, 10) === day).length || 0 };
+    return { date: day, count: active.filter(r => r.created_at.slice(0, 10) === day).length };
   });
 
   const sportCounts = Object.entries(
-    (requests || []).reduce((acc, r) => { if (r.sport) acc[r.sport] = (acc[r.sport] || 0) + 1; return acc; }, {})
+    active.reduce((acc, r) => { if (r.sport) acc[r.sport] = (acc[r.sport] || 0) + 1; return acc; }, {})
   ).sort((a, b) => b[1] - a[1]).slice(0, 8);
 
   const coachesWithStats = coaches.map(coach => ({
     ...coach,
-    athleteCount: requests?.filter(r => r.sport === coach.sport).length ?? 0,
-    deliveredCount: requests?.filter(r => r.sport === coach.sport && r.status === "delivered").length ?? 0,
+    athleteCount: active.filter(r => r.sport === coach.sport).length,
+    deliveredCount: active.filter(r => r.sport === coach.sport && r.status === "delivered").length,
   }));
 
   let docStats = null;
   if (delivered > 0) {
-    const deliveredReqs = requests.filter(r => r.status === "delivered");
+    const deliveredReqs = active.filter(r => r.status === "delivered");
     const deliveredIds = deliveredReqs.map(r => r.id);
 
     const { data: allDocs } = await admin
@@ -167,6 +170,11 @@ export default async function ClubDashboard() {
       icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>,
     },
     {
+      label: "Deleted", value: deletedCount,
+      accent: "text-gray-500", bg: "bg-gray-50", border: "border-gray-200",
+      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>,
+    },
+    {
       label: "Guides left", value: creditsLeft,
       accent: creditsLeft <= 5 ? "text-red-600" : "text-yellow-700",
       bg: creditsLeft <= 5 ? "bg-red-50" : "bg-yellow-50",
@@ -190,7 +198,7 @@ export default async function ClubDashboard() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div className="grid grid-cols-5 gap-4">
         {kpis.map((k) => (
           <div key={k.label} className="bg-white rounded-xl border border-border p-5 flex flex-col gap-3">
             <div className={`w-9 h-9 rounded-lg ${k.bg} border ${k.border} flex items-center justify-center ${k.accent}`}>
@@ -247,7 +255,7 @@ export default async function ClubDashboard() {
             View all
           </a>
         </div>
-        {requests?.length === 0 ? (
+        {active.length === 0 ? (
           <div className="px-6 py-12 text-center flex flex-col items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-surface border border-border flex items-center justify-center">
               <svg className="w-4 h-4 text-muted" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
@@ -266,7 +274,7 @@ export default async function ClubDashboard() {
               </tr>
             </thead>
             <tbody>
-              {requests?.slice(0, 5).map((r) => (
+              {active.slice(0, 5).map((r) => (
                 <tr key={r.id} className="border-b border-border last:border-0 hover:bg-surface transition-colors">
                   <td className="px-6 py-3.5">
                     <div className="flex items-center gap-3">

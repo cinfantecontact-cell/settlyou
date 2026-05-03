@@ -41,6 +41,7 @@ export default function NewClubForm() {
     setSeatLimit(TIER_LIMITS[val] ?? 100);
   }
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
   const [lookingUp, setLookingUp] = useState(false);
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
@@ -56,7 +57,7 @@ export default function NewClubForm() {
     lookupTimerRef.current = setTimeout(async () => {
       setLookingUp(true);
       try {
-        const res = await fetch("/api/admin/lookup-club", {
+        const res = await fetch("/api/lookup-club", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, type: "college" }),
@@ -97,13 +98,18 @@ export default function NewClubForm() {
       window.location.href = "/admin/clients?created=1";
     } else {
       const data = await res.json();
-      const msg = data.error?.includes("unique") ? "slug_taken" : "create_failed";
-      window.location.href = `/admin/clubs/new?error=${msg}`;
+      setSubmitError(data.error || "Something went wrong. Please try again.");
+      setSubmitting(false);
     }
   }
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+      {submitError && (
+        <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+          {submitError}
+        </div>
+      )}
       <input type="hidden" name="type" value="college" />
 
       {/* Basic info */}

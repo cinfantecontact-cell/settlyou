@@ -7,11 +7,11 @@ import DeleteRelocationButton from "./DeleteRelocationButton";
 import ApproveRelocationButton from "./ApproveRelocationButton";
 
 const STATUS_META = {
-  submitted:    { label: "Submitted",    color: "bg-yellow-50 text-yellow-700 border-yellow-100",  bar: "bg-yellow-400" },
-  generating:   { label: "Generating…",  color: "bg-blue-50 text-blue-700 border-blue-100",        bar: "bg-blue-500" },
-  under_review: { label: "Under review", color: "bg-purple-50 text-purple-700 border-purple-100",  bar: "bg-purple-500" },
-  approved:     { label: "Approved",     color: "bg-brand-50 text-brand-700 border-brand-100",     bar: "bg-brand-500" },
-  delivered:    { label: "Delivered",    color: "bg-green-50 text-green-700 border-green-100",     bar: "bg-green-500" },
+  submitted:    { label: "Submitted",    color: "bg-yellow-50 text-yellow-700 border-yellow-100",  dot: "bg-yellow-400" },
+  generating:   { label: "Generating…",  color: "bg-blue-50 text-blue-700 border-blue-100",        dot: "bg-blue-500" },
+  under_review: { label: "Under review", color: "bg-purple-50 text-purple-700 border-purple-100",  dot: "bg-purple-500" },
+  approved:     { label: "Approved",     color: "bg-brand-50 text-brand-700 border-brand-100",     dot: "bg-brand-500" },
+  delivered:    { label: "Delivered",    color: "bg-green-50 text-green-700 border-green-100",     dot: "bg-green-500" },
 };
 
 const AVATAR_COLORS = [
@@ -27,82 +27,68 @@ function Avatar({ name }) {
   const initials = (name ?? "?").split(" ").slice(0, 2).map((n) => n[0]).join("").toUpperCase();
   const idx = (name ?? "").charCodeAt(0) % AVATAR_COLORS.length;
   return (
-    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${AVATAR_COLORS[idx]}`}>
+    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${AVATAR_COLORS[idx]}`}>
       {initials}
     </div>
   );
 }
 
-function RelocationCard({ req }) {
+function RelocationRow({ req }) {
   const meta = STATUS_META[req.status] ?? STATUS_META.submitted;
   const institution = req.organizations?.name ?? req.clubs?.name ?? "—";
   const type = req.athlete_type === "college" ? (req.is_part_of_team ? "Athlete" : "Student") : "Pro";
   const date = new Date(req.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
   const destination = [req.destination_city, req.destination_country].filter(Boolean).join(", ");
-  const origin = [req.origin_city, req.origin_country].filter(Boolean).join(", ");
+  const origin = [req.current_city, req.current_country].filter(Boolean).join(", ");
 
   return (
     <div
       onClick={() => window.location.href = `/admin/relocations/${req.id}`}
-      className="bg-white rounded-xl border border-border hover:border-brand-200 hover:shadow-md transition-all cursor-pointer overflow-hidden flex flex-col group"
+      className="flex items-center gap-4 px-4 py-3 hover:bg-surface transition-colors cursor-pointer group border-b border-border last:border-b-0"
     >
-      {/* Status bar */}
-      <div className={`h-1 w-full ${meta.bar}`} />
-
-      <div className="p-5 flex flex-col gap-4 flex-1">
-        {/* Header */}
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <Avatar name={req.athlete_name} />
-            <div>
-              <p className="font-bold text-foreground text-sm leading-tight">{req.athlete_name}</p>
-              <p className="text-xs text-muted mt-0.5 flex items-center gap-1">
-                {institution}
-                {req.submitted_by_athlete && (
-                  <span className="bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded-full text-[10px] font-semibold">self</span>
-                )}
-              </p>
-            </div>
+      {/* Athlete */}
+      <div className="flex items-center gap-3 min-w-0 w-52 shrink-0">
+        <Avatar name={req.athlete_name} />
+        <div className="min-w-0">
+          <p className="text-sm font-semibold text-foreground truncate leading-snug">{req.athlete_name}</p>
+          <div className="flex items-center gap-1 min-w-0">
+            <span className="text-xs text-muted truncate">{institution}</span>
+            {req.submitted_by_athlete && (
+              <span className="shrink-0 bg-purple-100 text-purple-700 px-1 py-0.5 rounded-full text-[10px] font-semibold">self</span>
+            )}
           </div>
-          {req.status === "generating" ? (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border bg-blue-50 text-blue-700 border-blue-100 shrink-0">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
-              Generating…
-            </span>
-          ) : (
-            <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold border shrink-0 ${meta.color}`}>
-              {meta.label}
-            </span>
-          )}
-        </div>
-
-        {/* Route */}
-        <div className="flex items-center gap-2 bg-surface rounded-lg px-3 py-2">
-          <div className="flex-1 min-w-0">
-            <p className="text-[10px] font-semibold text-muted uppercase tracking-wider mb-0.5">From</p>
-            <p className="text-xs font-medium text-foreground truncate">{origin || "—"}</p>
-          </div>
-          <svg className="w-3.5 h-3.5 text-muted shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-          </svg>
-          <div className="flex-1 min-w-0 text-right">
-            <p className="text-[10px] font-semibold text-muted uppercase tracking-wider mb-0.5">To</p>
-            <p className="text-xs font-medium text-foreground truncate">{destination || "—"}</p>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="flex items-center justify-between mt-auto">
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] font-semibold bg-surface border border-border px-1.5 py-0.5 rounded-full text-muted capitalize">{type}</span>
-            {req.status === "generating" && <GeneratingBadge startedAt={req.created_at} />}
-          </div>
-          <p className="text-[11px] text-muted">{date}</p>
         </div>
       </div>
 
+      {/* Spacer */}
+      <div className="flex-1" />
+
+      {/* Status */}
+      <div className="shrink-0 w-32 flex justify-end">
+        {req.deleted_at ? (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border bg-gray-50 text-gray-500 border-gray-200">
+            <span className="w-1.5 h-1.5 rounded-full bg-gray-400" />
+            Deleted by {req.deleted_by === "club_admin" ? "club admin" : "coach"}
+          </span>
+        ) : req.status === "generating" ? (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border bg-blue-50 text-blue-700 border-blue-100">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+            Generating…
+          </span>
+        ) : (
+          <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border ${meta.color}`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${meta.dot}`} />
+            {meta.label}
+          </span>
+        )}
+      </div>
+
+      {/* Date */}
+      <p className="shrink-0 text-xs text-muted w-24 text-right">{date}</p>
+
       {/* Actions */}
-      <div className="px-5 pb-4 flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+      <div className="shrink-0 flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+        {req.status === "generating" && <GeneratingBadge startedAt={req.created_at} />}
         {req.status === "submitted" && <GenerateButton requestId={req.id} />}
         {req.status === "under_review" && <ApproveRelocationButton requestId={req.id} />}
         <DeleteRelocationButton requestId={req.id} athleteName={req.athlete_name} />
@@ -187,7 +173,7 @@ export default function RelocationsTable({ requests }) {
         <span className="ml-auto text-xs text-muted">{filtered.length} of {requests.length}</span>
       </div>
 
-      {/* Cards */}
+      {/* List */}
       {filtered.length === 0 ? (
         <div className="bg-white rounded-xl border border-border px-6 py-16 flex flex-col items-center gap-3 text-center">
           <div className="w-12 h-12 rounded-full bg-surface border border-border flex items-center justify-center">
@@ -199,9 +185,17 @@ export default function RelocationsTable({ requests }) {
           <p className="text-xs text-muted">Requests appear here when athletes submit their intake form.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="bg-white rounded-xl border border-border overflow-hidden">
+          {/* Header */}
+          <div className="flex items-center gap-4 px-4 py-2.5 border-b border-border bg-surface">
+            <p className="text-[11px] font-semibold text-muted uppercase tracking-wider w-52 shrink-0">Athlete</p>
+            <div className="flex-1" />
+            <p className="text-[11px] font-semibold text-muted uppercase tracking-wider w-32 text-right shrink-0">Status</p>
+            <p className="text-[11px] font-semibold text-muted uppercase tracking-wider w-24 text-right shrink-0">Date</p>
+            <p className="text-[11px] font-semibold text-muted uppercase tracking-wider shrink-0">Actions</p>
+          </div>
           {filtered.map((req) => (
-            <RelocationCard key={req.id} req={req} />
+            <RelocationRow key={req.id} req={req} />
           ))}
         </div>
       )}

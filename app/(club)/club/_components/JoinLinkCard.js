@@ -4,8 +4,7 @@ import { useState, useEffect } from "react";
 import QRCode from "qrcode";
 
 export default function JoinLinkCard({ slug, pin, clubName, sport }) {
-  const baseUrl = typeof window !== "undefined" ? window.location.origin : "https://settlyou.com";
-  const joinUrl = `${baseUrl}/join/${slug}`;
+  const joinUrl = `https://settlyou.com/join/${slug}`;
 
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedPin, setCopiedPin] = useState(false);

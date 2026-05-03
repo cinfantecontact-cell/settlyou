@@ -22,6 +22,7 @@ export default async function ClubAthletes() {
     .from("requests")
     .select("id, status, athlete_name, athlete_email, sport, created_at, athlete_link_token")
     .eq("club_id", profile.club_id)
+    .is("deleted_at", null)
     .order("created_at", { ascending: false });
 
   if (isCoach && profile.sport) {

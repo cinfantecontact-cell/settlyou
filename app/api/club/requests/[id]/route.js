@@ -20,10 +20,12 @@ export async function DELETE(request, { params }) {
   const { data: req } = await query.single();
   if (!req) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  await admin.from("athlete_documents").delete().eq("request_id", id);
-  await admin.from("documents").delete().eq("request_id", id);
-  await admin.from("events").delete().eq("request_id", id);
-  await admin.from("requests").delete().eq("id", id);
+  // Soft delete — keeps the record visible in the admin view
+  const { error } = await admin
+    .from("requests")
+    .update({ deleted_at: new Date().toISOString(), deleted_by: profile.role })
+    .eq("id", id);
 
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ ok: true });
 }
