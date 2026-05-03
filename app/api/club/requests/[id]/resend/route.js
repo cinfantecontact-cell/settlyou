@@ -31,6 +31,7 @@ export async function POST(request, { params }) {
     athleteEmail: req.athlete_email,
     clubName: req.clubs?.name || "",
     reportToken: req.athlete_link_token,
+    uploadToken: req.upload_token,
   });
 
   if (req.athlete_phone && req.upload_token) {

@@ -16,14 +16,9 @@ export async function POST(request, { params }) {
   const { userId } = await request.json();
   if (!userId) return NextResponse.json({ error: "userId required" }, { status: 400 });
 
-  // Unlink from club — only nullify club_id, leave role intact
-  const { error } = await admin
-    .from("profiles")
-    .update({ club_id: null })
-    .eq("id", userId)
-    .eq("club_id", clubId);
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  // Delete the auth user entirely (also cascades to profiles via DB trigger/RLS)
+  const { error: authError } = await admin.auth.admin.deleteUser(userId);
+  if (authError) return NextResponse.json({ error: authError.message }, { status: 500 });
 
   return NextResponse.json({ ok: true });
 }

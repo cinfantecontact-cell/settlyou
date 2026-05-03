@@ -4,6 +4,8 @@ import { sendAdminNewSubmission, sendGenerationFailureAlert, sendAthleteReportRe
 import { sendAthleteUploadLink } from "@/lib/whatsapp/send";
 import { generateRelocationDocument } from "@/lib/ai/generate-document";
 
+export const maxDuration = 300;
+
 export async function POST(request, { params }) {
   const admin = createAdminClient();
   const { slug } = await params;
@@ -265,7 +267,12 @@ export async function POST(request, { params }) {
           console.log("[auto-generate] using pre-generated base data (two-tier)");
         }
 
-        const document = await generateRelocationDocument(relocationRequest, baseData);
+        const document = await Promise.race([
+          generateRelocationDocument(relocationRequest, baseData),
+          new Promise((_, reject) =>
+            setTimeout(() => reject(new Error("Generation timed out after 4 minutes")), 4 * 60 * 1000)
+          ),
+        ]);
 
         if (clubData?.logo_url) document.meta.club_logo_url = clubData.logo_url;
         if (clubData?.primary_color) document.meta.club_primary_color = clubData.primary_color;
@@ -307,6 +314,7 @@ export async function POST(request, { params }) {
               athleteEmail: relocationRequest.athlete_email,
               clubName: club.name,
               reportToken: relocationRequest.athlete_link_token,
+              uploadToken: relocationRequest.upload_token,
             });
           } catch (e) {
             console.error("[auto-generate] failed to send athlete email:", e.message);

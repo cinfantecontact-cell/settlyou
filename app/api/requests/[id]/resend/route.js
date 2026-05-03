@@ -19,7 +19,7 @@ export async function POST(request, { params }) {
 
   const { data: req } = await admin
     .from("requests")
-    .select("athlete_name, athlete_email, athlete_link_token, club_id, status, clubs(name)")
+    .select("athlete_name, athlete_email, athlete_link_token, upload_token, club_id, status, clubs(name)")
     .eq("id", id)
     .single();
 
@@ -40,6 +40,7 @@ export async function POST(request, { params }) {
     athleteEmail: req.athlete_email,
     clubName: req.clubs?.name || "",
     reportToken: req.athlete_link_token,
+    uploadToken: req.upload_token,
   });
 
   return NextResponse.json({ ok: true });
