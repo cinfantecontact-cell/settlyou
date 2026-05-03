@@ -32,6 +32,25 @@ const DEFAULT_COACH_DOC_COLS = [
   { key: "eligibility_form", label: "Eligibility" },
 ];
 
+const AVATAR_COLORS = [
+  "bg-blue-100 text-blue-700",
+  "bg-purple-100 text-purple-700",
+  "bg-green-100 text-green-700",
+  "bg-orange-100 text-orange-700",
+  "bg-brand-100 text-brand-700",
+  "bg-pink-100 text-pink-700",
+];
+
+function Avatar({ name }) {
+  const initials = (name ?? "?").split(" ").slice(0, 2).map((n) => n[0]).join("").toUpperCase();
+  const idx = (name ?? "").charCodeAt(0) % AVATAR_COLORS.length;
+  return (
+    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${AVATAR_COLORS[idx]}`}>
+      {initials}
+    </div>
+  );
+}
+
 function DocDot({ uploaded, label }) {
   return (
     <div className="relative group flex items-center justify-center">
@@ -59,7 +78,7 @@ export default function AthletesTable({ requests, isCoach = false, docsByRequest
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [selected, setSelected] = useState(new Set());
-  const [bulkState, setBulkState] = useState("idle"); // idle | sending | done
+  const [bulkState, setBulkState] = useState("idle");
 
   const sports = useMemo(() => {
     const s = new Set(requests.map((r) => r.sport).filter(Boolean));
@@ -128,53 +147,58 @@ export default function AthletesTable({ requests, isCoach = false, docsByRequest
       {/* Filters */}
       <div className="flex items-center gap-2 mb-4 overflow-x-auto">
         <div className="flex items-center gap-2 flex-1 min-w-0">
-        <input
-          type="text"
-          placeholder="Search by name..."
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="text-sm px-3 py-1.5 rounded-lg border border-border bg-white text-foreground placeholder:text-muted focus:outline-none focus:border-brand-400 transition-colors w-48"
-        />
-        <select
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-          className="text-sm px-3 py-1.5 rounded-lg border border-border bg-white text-foreground focus:outline-none focus:border-brand-400 transition-colors"
-        >
-          {STATUS_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-        </select>
-        {sports.length > 0 && (
+          <div className="relative">
+            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z" />
+            </svg>
+            <input
+              type="text"
+              placeholder="Search by name..."
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="text-sm pl-8 pr-3 py-1.5 rounded-lg border border-border bg-white text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-brand-200 focus:border-brand-400 transition-colors w-48"
+            />
+          </div>
           <select
-            value={sport}
-            onChange={(e) => setSport(e.target.value)}
-            className="text-sm px-3 py-1.5 rounded-lg border border-border bg-white text-foreground focus:outline-none focus:border-brand-400 transition-colors"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="text-sm px-3 py-1.5 rounded-lg border border-border bg-white text-foreground focus:outline-none focus:ring-2 focus:ring-brand-200 transition-colors"
           >
-            <option value="">All sports</option>
-            {sports.map((s) => <option key={s} value={s}>{s}</option>)}
+            {STATUS_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
           </select>
-        )}
-        <div className="flex items-center gap-2 shrink-0">
-          <input
-            type="date"
-            value={dateFrom}
-            onChange={(e) => setDateFrom(e.target.value)}
-            className="text-xs px-2 py-1.5 rounded-lg border border-border bg-white text-foreground focus:outline-none focus:border-brand-400 transition-colors w-32"
-          />
-          <span className="text-xs text-muted">to</span>
-          <input
-            type="date"
-            value={dateTo}
-            onChange={(e) => setDateTo(e.target.value)}
-            className="text-xs px-2 py-1.5 rounded-lg border border-border bg-white text-foreground focus:outline-none focus:border-brand-400 transition-colors w-32"
-          />
-        </div>
-        {hasFilters && (
-          <button
-            onClick={clearFilters}
-            className="text-xs font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-foreground/30 transition-colors"
-          >
-            Clear
-          </button>
-        )}
+          {sports.length > 0 && (
+            <select
+              value={sport}
+              onChange={(e) => setSport(e.target.value)}
+              className="text-sm px-3 py-1.5 rounded-lg border border-border bg-white text-foreground focus:outline-none focus:ring-2 focus:ring-brand-200 transition-colors"
+            >
+              <option value="">All sports</option>
+              {sports.map((s) => <option key={s} value={s}>{s}</option>)}
+            </select>
+          )}
+          <div className="flex items-center gap-2 shrink-0">
+            <input
+              type="date"
+              value={dateFrom}
+              onChange={(e) => setDateFrom(e.target.value)}
+              className="text-xs px-2 py-1.5 rounded-lg border border-border bg-white text-foreground focus:outline-none focus:ring-2 focus:ring-brand-200 transition-colors w-32"
+            />
+            <span className="text-xs text-muted">to</span>
+            <input
+              type="date"
+              value={dateTo}
+              onChange={(e) => setDateTo(e.target.value)}
+              className="text-xs px-2 py-1.5 rounded-lg border border-border bg-white text-foreground focus:outline-none focus:ring-2 focus:ring-brand-200 transition-colors w-32"
+            />
+          </div>
+          {hasFilters && (
+            <button
+              onClick={clearFilters}
+              className="text-xs font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground transition-colors"
+            >
+              Clear
+            </button>
+          )}
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {selected.size > 0 && (
@@ -188,7 +212,7 @@ export default function AthletesTable({ requests, isCoach = false, docsByRequest
           )}
           <button
             onClick={exportCsv}
-            className="text-xs font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-foreground/30 transition-colors"
+            className="text-xs font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground transition-colors"
           >
             Export CSV
           </button>
@@ -209,8 +233,14 @@ export default function AthletesTable({ requests, isCoach = false, docsByRequest
       {/* Table */}
       <div id="tour-athletes-table" className="bg-white border border-border rounded-xl overflow-x-auto">
         {filtered.length === 0 && requests.length > 0 ? (
-          <div className="px-6 py-16 text-center text-sm text-muted">
-            No students match your filters.
+          <div className="px-6 py-16 flex flex-col items-center gap-3 text-center">
+            <div className="w-12 h-12 rounded-full bg-surface border border-border flex items-center justify-center">
+              <svg className="w-5 h-5 text-muted" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <p className="text-sm font-medium text-foreground">No students match your filters</p>
+            <button onClick={clearFilters} className="text-xs text-brand-600 hover:underline">Clear filters</button>
           </div>
         ) : (
           <table className="w-full text-sm">
@@ -247,9 +277,14 @@ export default function AthletesTable({ requests, isCoach = false, docsByRequest
               {isCoach && requests.length === 0 && (
                 <tr className="border-b border-border last:border-0 bg-brand-50/30">
                   <td className="px-4 py-4">
-                    <a href="/club/athletes/demo" className="font-medium text-foreground hover:underline">{DEMO_ATHLETE.athlete_name}</a>
-                    <p className="text-xs text-muted">{DEMO_ATHLETE.athlete_email}</p>
-                    <span className="inline-block mt-1 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-brand-100 text-brand-600 uppercase tracking-wide">Example</span>
+                    <div className="flex items-center gap-3">
+                      <Avatar name={DEMO_ATHLETE.athlete_name} />
+                      <div>
+                        <a href="/club/athletes/demo" className="font-medium text-foreground hover:underline">{DEMO_ATHLETE.athlete_name}</a>
+                        <p className="text-xs text-muted">{DEMO_ATHLETE.athlete_email}</p>
+                        <span className="inline-block mt-1 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-brand-100 text-brand-600 uppercase tracking-wide">Example</span>
+                      </div>
+                    </div>
                   </td>
                   <td className="px-4 py-4 whitespace-nowrap">
                     <StatusBadge status="delivered" />
@@ -261,13 +296,11 @@ export default function AthletesTable({ requests, isCoach = false, docsByRequest
                       ))}
                     </div>
                   </td>
-                  <td className="px-4 py-4 text-muted">{new Date(DEMO_ATHLETE.created_at).toLocaleDateString()}</td>
+                  <td className="px-4 py-4 text-muted text-xs">{new Date(DEMO_ATHLETE.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</td>
                   <td className="px-4 py-4">
-                    <div className="flex items-center gap-2 whitespace-nowrap">
-                      <a href="/club/athletes/demo" className="text-xs font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-foreground/30 transition-colors">
-                        View details
-                      </a>
-                    </div>
+                    <a href="/club/athletes/demo" className="text-xs font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-foreground/30 transition-colors">
+                      View details
+                    </a>
                   </td>
                 </tr>
               )}
@@ -290,8 +323,13 @@ export default function AthletesTable({ requests, isCoach = false, docsByRequest
                       </td>
                     )}
                     <td className="px-4 py-4">
-                      <a href={`/club/athletes/${r.id}`} className="font-medium text-foreground hover:underline">{r.athlete_name || "—"}</a>
-                      <p className="text-xs text-muted">{r.athlete_email || ""}</p>
+                      <div className="flex items-center gap-3">
+                        <Avatar name={r.athlete_name} />
+                        <div>
+                          <a href={`/club/athletes/${r.id}`} className="font-medium text-foreground hover:underline">{r.athlete_name || "—"}</a>
+                          <p className="text-xs text-muted">{r.athlete_email || ""}</p>
+                        </div>
+                      </div>
                     </td>
                     {!isCoach && sports.length > 0 && <td className="px-4 py-4 text-muted text-sm whitespace-nowrap">{r.sport || "—"}</td>}
                     <td className="px-4 py-4 whitespace-nowrap">
@@ -313,7 +351,7 @@ export default function AthletesTable({ requests, isCoach = false, docsByRequest
                         </div>
                       </td>
                     )}
-                    <td className="px-4 py-4 text-muted">{new Date(r.created_at).toLocaleDateString()}</td>
+                    <td className="px-4 py-4 text-muted text-xs whitespace-nowrap">{new Date(r.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</td>
                     <td className="px-4 py-4">
                       <div className="flex items-center gap-2 whitespace-nowrap">
                         <a href={`/club/athletes/${r.id}`} className="text-xs font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-foreground/30 transition-colors">
@@ -344,4 +382,3 @@ export default function AthletesTable({ requests, isCoach = false, docsByRequest
     </>
   );
 }
-

@@ -5,7 +5,7 @@ import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import { createClient } from "@/lib/supabase/client";
 
-const TOUR_KEY = "settl_tour_v2";
+const TOUR_KEY = "settl_tour_v3";
 
 async function markTourComplete() {
   try {
@@ -17,28 +17,10 @@ async function markTourComplete() {
 
 const STEPS = [
   {
-    element: "#tour-join-link",
-    popover: {
-      title: "Start here — share this link",
-      description: "Send this link to each incoming student. They fill in a 5-minute form and receive their personalized relocation guide within 24 hours.",
-      side: "bottom",
-      align: "start",
-    },
-  },
-  {
-    element: "#tour-stats",
-    popover: {
-      title: "Track your guides",
-      description: "See how many guides have been delivered, which are in progress, and how many credits you have left.",
-      side: "bottom",
-      align: "start",
-    },
-  },
-  {
     element: "#tour-assistant-btn",
     popover: {
-      title: "Need help? Just ask",
-      description: "Click this button anytime to ask a question about the portal — how to do something, where to find something, anything.",
+      title: "Have a question? Just ask",
+      description: "Click this button anytime to ask the Settlyou assistant anything — how to send a guide, where to find something, or anything else about the portal.",
       side: "top",
       align: "end",
     },

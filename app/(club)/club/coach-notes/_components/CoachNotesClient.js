@@ -34,20 +34,25 @@ function getSportExamples(sport) {
   return SPORT_NOTE_EXAMPLES[key] || [];
 }
 
+function SectionIcon({ children, bg, border, color }) {
+  return (
+    <div className={`w-8 h-8 rounded-lg ${bg} border ${border} flex items-center justify-center ${color} shrink-0`}>
+      {children}
+    </div>
+  );
+}
+
 export default function CoachNotesClient({ sport, initialNotes, initialLinks, initialAttachments, initialDocConfig }) {
-  // Notes & links
   const [notes, setNotes] = useState(initialNotes || "");
   const [links, setLinks] = useState(initialLinks || []);
   const [addingLink, setAddingLink] = useState(false);
   const [linkLabel, setLinkLabel] = useState("");
   const [linkUrl, setLinkUrl] = useState("");
 
-  // Doc config
   const [disabled, setDisabled] = useState(new Set(initialDocConfig?.disabled_base_docs || []));
   const [customDocs, setCustomDocs] = useState(initialDocConfig?.custom_docs || []);
   const [newDocLabel, setNewDocLabel] = useState("");
 
-  // Attachments
   const [attachments, setAttachments] = useState(initialAttachments || []);
   const [attachLabel, setAttachLabel] = useState("");
   const [attachUploading, setAttachUploading] = useState(false);
@@ -72,7 +77,6 @@ export default function CoachNotesClient({ sport, initialNotes, initialLinks, in
     setAttachments(prev => prev.filter(a => a.id !== id));
   }
 
-  // Dirty tracking
   const [isDirty, setIsDirty] = useState(false);
   useEffect(() => {
     if (!isDirty) return;
@@ -81,7 +85,6 @@ export default function CoachNotesClient({ sport, initialNotes, initialLinks, in
     return () => window.removeEventListener("beforeunload", handler);
   }, [isDirty]);
 
-  // Save state
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
@@ -145,9 +148,16 @@ export default function CoachNotesClient({ sport, initialNotes, initialLinks, in
 
       {/* Required Uploads */}
       <div className="bg-white rounded-xl border border-border p-6 flex flex-col gap-4">
-        <div>
-          <h2 className="text-sm font-semibold text-foreground mb-1">Required uploads</h2>
-          <p className="text-xs text-muted">Toggle off anything you don&apos;t need — athletes only see what&apos;s enabled. {enabledCount} document{enabledCount !== 1 ? "s" : ""} required.</p>
+        <div className="flex items-start gap-3">
+          <SectionIcon bg="bg-brand-50" border="border-brand-100" color="text-brand-600">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </SectionIcon>
+          <div>
+            <h2 className="text-sm font-semibold text-foreground">Required uploads</h2>
+            <p className="text-xs text-muted mt-0.5">Toggle off anything you don&apos;t need — athletes only see what&apos;s enabled. {enabledCount} document{enabledCount !== 1 ? "s" : ""} required.</p>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-2">
@@ -177,7 +187,6 @@ export default function CoachNotesClient({ sport, initialNotes, initialLinks, in
           })}
         </div>
 
-        {/* Custom docs */}
         {customDocs.length > 0 && (
           <div className="flex flex-col gap-1.5">
             {customDocs.map(doc => (
@@ -212,9 +221,16 @@ export default function CoachNotesClient({ sport, initialNotes, initialLinks, in
 
       {/* Notes */}
       <div className="bg-white rounded-xl border border-border p-6 flex flex-col gap-4">
-        <div>
-          <h2 className="text-sm font-semibold text-foreground mb-1">Notes for every guide</h2>
-          <p className="text-xs text-muted">The AI weaves this into each athlete&apos;s guide. Great for schedule reminders, deadlines, or anything every incoming athlete should know.</p>
+        <div className="flex items-start gap-3">
+          <SectionIcon bg="bg-purple-50" border="border-purple-100" color="text-purple-600">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+          </SectionIcon>
+          <div>
+            <h2 className="text-sm font-semibold text-foreground">Notes for every guide</h2>
+            <p className="text-xs text-muted mt-0.5">The AI weaves this into each athlete&apos;s guide. Great for schedule reminders, deadlines, or anything every incoming athlete should know.</p>
+          </div>
         </div>
         <textarea
           rows={6}
@@ -240,15 +256,27 @@ export default function CoachNotesClient({ sport, initialNotes, initialLinks, in
 
       {/* Links */}
       <div className="bg-white rounded-xl border border-border p-6 flex flex-col gap-4">
-        <div>
-          <h2 className="text-sm font-semibold text-foreground mb-1">Helpful links</h2>
-          <p className="text-xs text-muted">These appear in every guide with their titles so athletes can access them directly.</p>
+        <div className="flex items-start gap-3">
+          <SectionIcon bg="bg-blue-50" border="border-blue-100" color="text-blue-600">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+            </svg>
+          </SectionIcon>
+          <div>
+            <h2 className="text-sm font-semibold text-foreground">Helpful links</h2>
+            <p className="text-xs text-muted mt-0.5">These appear in every guide with their titles so athletes can access them directly.</p>
+          </div>
         </div>
 
         {links.length > 0 && (
           <div className="flex flex-col gap-2">
             {links.map((link, i) => (
               <div key={i} className="flex items-center gap-3 px-3 py-2.5 bg-surface rounded-lg border border-border">
+                <div className="w-6 h-6 rounded-md bg-blue-50 border border-blue-100 flex items-center justify-center shrink-0">
+                  <svg className="w-3 h-3 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-foreground truncate">{link.label}</p>
                   <p className="text-xs text-muted truncate">{link.url}</p>
@@ -289,15 +317,24 @@ export default function CoachNotesClient({ sport, initialNotes, initialLinks, in
 
       {/* Attachments */}
       <div className="bg-white rounded-xl border border-border p-6 flex flex-col gap-4">
-        <div>
-          <h2 className="text-sm font-semibold text-foreground mb-1">Files for athletes</h2>
-          <p className="text-xs text-muted">Upload templates athletes need to fill out (e.g. medical form, eligibility form). They&apos;ll see a Download button on their upload page.</p>
+        <div className="flex items-start gap-3">
+          <SectionIcon bg="bg-orange-50" border="border-orange-100" color="text-orange-500">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+            </svg>
+          </SectionIcon>
+          <div>
+            <h2 className="text-sm font-semibold text-foreground">Files for athletes</h2>
+            <p className="text-xs text-muted mt-0.5">Upload templates athletes need to fill out (e.g. medical form, eligibility form). They&apos;ll see a Download button on their upload page.</p>
+          </div>
         </div>
         {attachments.length > 0 && (
           <div className="flex flex-col gap-2">
             {attachments.map(a => (
               <div key={a.id} className="flex items-center gap-3 px-3 py-2.5 bg-surface rounded-lg border border-border">
-                <svg className="w-4 h-4 text-muted shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" /></svg>
+                <div className="w-6 h-6 rounded-md bg-orange-50 border border-orange-100 flex items-center justify-center shrink-0">
+                  <svg className="w-3 h-3 text-orange-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" /></svg>
+                </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-foreground truncate">{a.label}</p>
                   <p className="text-xs text-muted truncate">{a.file_name}</p>
@@ -323,7 +360,7 @@ export default function CoachNotesClient({ sport, initialNotes, initialLinks, in
         {attachError && <p className="text-xs text-red-500">{attachError}</p>}
       </div>
 
-      {/* Single save button */}
+      {/* Save */}
       <div className="flex items-center gap-3">
         <button type="button" onClick={handleSave} disabled={loading}
           className="bg-brand-600 text-white rounded-lg py-2.5 text-sm font-semibold hover:bg-brand-700 transition-colors disabled:opacity-50 px-8">

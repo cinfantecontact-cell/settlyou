@@ -1057,27 +1057,35 @@ function ROISection({ client }) {
 
 const TIERS = [
   {
-    label: "Starter",
-    price: "$4,900",
+    label: "Squad",
+    price: "$2,950",
     unit: "/ yr",
-    range: "Up to 15 athletes",
-    note: "Perfect for single sports and pilot programs.",
+    range: "Up to 10 athletes",
+    note: "For smaller programs onboarding a focused recruiting class.",
+    popular: false,
+  },
+  {
+    label: "Roster",
+    price: "$6,500",
+    unit: "/ yr",
+    range: "Up to 25 athletes",
+    note: "For typical college programs managing a full incoming class of international and out-of-state athletes.",
+    popular: true,
+  },
+  {
+    label: "Program",
+    price: "$11,500",
+    unit: "/ yr",
+    range: "Up to 50 athletes",
+    note: "For large rosters or programs combining multiple teams.",
     popular: false,
   },
   {
     label: "Department",
-    price: "$19,900",
+    price: "$19,500",
     unit: "/ yr",
-    range: "Up to 50 athletes",
-    note: "For full athletic departments with growing international rosters.",
-    popular: true,
-  },
-  {
-    label: "Enterprise",
-    price: "$39,900",
-    unit: "/ yr",
-    range: "Up to 100 athletes",
-    note: "For large programs and Power 5 athletic departments.",
+    range: "Unlimited athletes",
+    note: "For athletic departments covering every sport, every athlete, every year.",
     popular: false,
   },
 ];
@@ -1170,7 +1178,7 @@ function PricingSection() {
         </div>
 
         {/* Tier cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           {TIERS.map((tier) => (
             <div key={tier.label} className={`relative flex flex-col rounded-2xl overflow-hidden border ${tier.popular ? "border-brand-500 shadow-xl" : "border-border shadow-sm"}`}>
               {tier.popular && (

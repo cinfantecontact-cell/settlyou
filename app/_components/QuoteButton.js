@@ -81,10 +81,10 @@ function QuoteModal({ onClose }) {
                 <select value={form.volume} onChange={set("volume")}
                   className="border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white">
                   <option value="">— Select a range —</option>
-                  <option value="Under 40">Under 40 (Micro)</option>
-                  <option value="40–100">40 – 100 (Starter)</option>
-                  <option value="100–200">100 – 200 (Pro)</option>
-                  <option value="200+">200+ (Institution)</option>
+                  <option value="Up to 10">Up to 10 (Squad)</option>
+                  <option value="Up to 25">Up to 25 (Roster)</option>
+                  <option value="Up to 50">Up to 50 (Program)</option>
+                  <option value="Unlimited">Unlimited (Department)</option>
                 </select>
               </div>
               <div className="flex flex-col gap-1.5">

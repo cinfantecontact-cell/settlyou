@@ -82,10 +82,10 @@ function QuoteModal({ onClose }) {
                 <select value={form.volume} onChange={set("volume")}
                   className="border border-border rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white">
                   <option value="">— Select a range —</option>
-                  <option value="Under 40">Under 40 (Micro)</option>
-                  <option value="40–100">40 – 100 (Starter)</option>
-                  <option value="100–200">100 – 200 (Pro)</option>
-                  <option value="200+">200+ (Institution)</option>
+                  <option value="Up to 10">Up to 10 (Squad)</option>
+                  <option value="Up to 25">Up to 25 (Roster)</option>
+                  <option value="Up to 50">Up to 50 (Program)</option>
+                  <option value="Unlimited">Unlimited (Department)</option>
                 </select>
               </div>
               <div className="flex flex-col gap-1.5">
@@ -110,21 +110,27 @@ function QuoteModal({ onClose }) {
 
 const TIERS = [
   {
-    label: "Starter",
-    range: "Up to 15 athletes",
-    note: "Perfect for single sports and pilot programs.",
+    label: "Squad",
+    range: "Up to 10 athletes",
+    note: "For smaller programs onboarding a focused recruiting class.",
+    popular: false,
+  },
+  {
+    label: "Roster",
+    range: "Up to 25 athletes",
+    note: "For typical college programs managing a full incoming class of international and out-of-state athletes.",
+    popular: true,
+  },
+  {
+    label: "Program",
+    range: "Up to 50 athletes",
+    note: "For large rosters or programs combining multiple teams.",
     popular: false,
   },
   {
     label: "Department",
-    range: "Up to 50 athletes",
-    note: "For full athletic departments with growing international rosters.",
-    popular: true,
-  },
-  {
-    label: "Enterprise",
-    range: "Up to 100 athletes",
-    note: "For large programs and Power 5 athletic departments.",
+    range: "Unlimited athletes",
+    note: "For athletic departments covering every sport, every athlete, every year.",
     popular: false,
   },
 ];
@@ -235,7 +241,7 @@ export default function PricingPage() {
 
       {/* Tiers */}
       <section className="px-6 py-20 max-w-5xl mx-auto w-full">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
           {TIERS.map((tier) => (
             <div key={tier.label} className={`relative flex flex-col rounded-2xl overflow-hidden border ${tier.popular ? "border-brand-500 shadow-xl" : "border-border shadow-sm"}`}>
               {tier.popular && (

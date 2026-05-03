@@ -16,6 +16,29 @@ const STATUS_LABELS = {
 
 const DEMO_UPLOADED_KEYS = ["passport", "transcript"];
 
+const CARD_META = {
+  "Student": {
+    bg: "bg-brand-50", border: "border-brand-100", color: "text-brand-600",
+    icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>,
+  },
+  "Destination & Housing": {
+    bg: "bg-blue-50", border: "border-blue-100", color: "text-blue-600",
+    icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>,
+  },
+  "Family": {
+    bg: "bg-pink-50", border: "border-pink-100", color: "text-pink-600",
+    icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>,
+  },
+  "Lifestyle": {
+    bg: "bg-orange-50", border: "border-orange-100", color: "text-orange-500",
+    icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>,
+  },
+  "Schools, Cars & Healthcare": {
+    bg: "bg-purple-50", border: "border-purple-100", color: "text-purple-600",
+    icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 14l9-5-9-5-9 5 9 5z" /><path strokeLinecap="round" strokeLinejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" /></svg>,
+  },
+};
+
 export default async function DemoAthletePage() {
   const supabase = await createClient();
   const admin = createAdminClient();
@@ -35,7 +58,8 @@ export default async function DemoAthletePage() {
     .single() : { data: null };
 
   const docTypes = getSportDocTypes(sportConfig ?? null);
-
+  const submittedCount = DEMO_UPLOADED_KEYS.filter(k => docTypes.some(d => d.key === k)).length;
+  const docPct = docTypes.length > 0 ? Math.round((submittedCount / docTypes.length) * 100) : 0;
   const currentStep = STATUS_STEPS.indexOf("delivered");
 
   return (
@@ -59,14 +83,20 @@ export default async function DemoAthletePage() {
         <span>This is a sample student for demonstration purposes. Real students will look exactly like this once they submit the form and upload their documents.</span>
       </div>
 
-      {/* Header */}
-      <div className="flex items-start justify-between mb-8">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Carlos Mendez</h1>
-          <div className="flex items-center gap-3 mt-2">
+      {/* Profile header card */}
+      <div className="bg-white border border-border rounded-xl p-6 flex items-center gap-5 mb-6">
+        <div className="w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold shrink-0 bg-orange-100 text-orange-700">
+          CM
+        </div>
+        <div className="flex-1 min-w-0">
+          <h1 className="text-xl font-bold text-foreground tracking-tight">Carlos Mendez</h1>
+          <p className="text-sm text-muted mt-0.5">carlos.m@example.com</p>
+          <div className="flex items-center gap-2 mt-2 flex-wrap">
             <StatusBadge status="delivered" />
-            <span className="text-sm text-muted">Men&apos;s Soccer</span>
-            <span className="text-sm text-muted">Submitted Apr 22, 2026</span>
+            <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-surface border border-border text-muted">
+              Men&apos;s Soccer
+            </span>
+            <span className="text-xs text-muted">Submitted Apr 22, 2026</span>
           </div>
         </div>
       </div>
@@ -157,27 +187,45 @@ export default async function DemoAthletePage() {
 
         {/* Documents */}
         <div className="md:col-span-2 bg-white border border-border rounded-xl overflow-hidden">
-          <div className="px-5 py-3 border-b border-border bg-surface flex items-center justify-between">
-            <h2 className="text-xs font-semibold text-muted uppercase tracking-wider">Documents</h2>
-            <span className="text-xs text-muted">{DEMO_UPLOADED_KEYS.filter(k => docTypes.some(d => d.key === k)).length} / {docTypes.length} submitted</span>
+          <div className="px-5 py-4 border-b border-border flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-green-50 border border-green-100 flex items-center justify-center text-green-600 shrink-0">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <h2 className="text-sm font-semibold text-foreground">Documents</h2>
+              <p className="text-xs text-muted mt-0.5">{submittedCount} of {docTypes.length} submitted</p>
+            </div>
+            {docTypes.length > 0 && (
+              <div className="flex items-center gap-2 shrink-0">
+                <div className="w-24 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                  <div
+                    className={`h-full rounded-full ${docPct === 100 ? "bg-brand-500" : docPct >= 50 ? "bg-yellow-400" : "bg-red-400"}`}
+                    style={{ width: `${docPct}%` }}
+                  />
+                </div>
+                <span className="text-xs font-semibold text-muted">{docPct}%</span>
+              </div>
+            )}
           </div>
           <div className="divide-y divide-border">
             {docTypes.map(doc => {
               const isUploaded = DEMO_UPLOADED_KEYS.includes(doc.key);
               const sub = isUploaded ? { file_name: `carlos_${doc.key}.pdf` } : null;
               return (
-                <div key={doc.key} className="px-5 py-3 flex items-center justify-between gap-4">
+                <div key={doc.key} className={`px-5 py-3.5 flex items-center justify-between gap-4 ${sub ? "bg-brand-50/30" : ""}`}>
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${sub ? "border-brand-500 bg-brand-500" : "border-border bg-white"}`}>
+                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${sub ? "border-brand-500 bg-brand-500" : "border-border bg-white"}`}>
                       {sub && (
-                        <svg className="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
                       )}
                     </div>
                     <div className="min-w-0">
-                      <p className={`text-xs font-medium truncate ${sub ? "text-brand-700" : "text-foreground"}`}>{doc.label}</p>
-                      {sub && <p className="text-xs text-muted truncate">{sub.file_name}</p>}
+                      <p className={`text-sm font-medium truncate ${sub ? "text-brand-700" : "text-foreground"}`}>{doc.label}</p>
+                      {sub && <p className="text-xs text-muted truncate mt-0.5">{sub.file_name}</p>}
                     </div>
                   </div>
                   {sub ? (
@@ -185,7 +233,7 @@ export default async function DemoAthletePage() {
                       Sample file
                     </span>
                   ) : (
-                    <span className="text-xs text-muted shrink-0">Pending</span>
+                    <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-surface border border-border text-muted shrink-0">Pending</span>
                   )}
                 </div>
               );
@@ -199,12 +247,18 @@ export default async function DemoAthletePage() {
 }
 
 function Card({ title, children }) {
+  const meta = CARD_META[title] ?? { bg: "bg-gray-50", border: "border-gray-200", color: "text-gray-500", icon: null };
   return (
     <div className="bg-white border border-border rounded-xl overflow-hidden">
-      <div className="px-5 py-3 border-b border-border bg-surface">
-        <h2 className="text-xs font-semibold text-muted uppercase tracking-wider">{title}</h2>
+      <div className="px-5 py-4 border-b border-border flex items-center gap-3">
+        {meta.icon && (
+          <div className={`w-8 h-8 rounded-lg ${meta.bg} border ${meta.border} flex items-center justify-center ${meta.color} shrink-0`}>
+            {meta.icon}
+          </div>
+        )}
+        <h2 className="text-sm font-semibold text-foreground">{title}</h2>
       </div>
-      <div className="px-5 py-4 space-y-2.5">{children}</div>
+      <div className="px-5 py-4 space-y-3">{children}</div>
     </div>
   );
 }
@@ -213,8 +267,8 @@ function Row({ label, value }) {
   if (!value) return null;
   return (
     <div className="flex items-start justify-between gap-4">
-      <span className="text-xs text-muted shrink-0">{label}</span>
-      <span className="text-xs text-foreground text-right">{value}</span>
+      <span className="text-xs text-muted shrink-0 w-32">{label}</span>
+      <span className="text-xs text-foreground text-right font-medium">{value}</span>
     </div>
   );
 }

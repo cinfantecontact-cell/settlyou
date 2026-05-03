@@ -9,9 +9,9 @@ const ADMIN_SUGGESTIONS = [
 ];
 
 const COACH_SUGGESTIONS = [
-  "Where can I see my athletes' documents?",
-  "How do I add sport-specific notes to guides?",
-  "How do I download a student's uploaded files?",
+  "How do I read the document progress bar on a student's profile?",
+  "How do I add notes and links to my athletes' guides?",
+  "Where do I see which documents each athlete has uploaded?",
 ];
 
 export default function PortalAssistant({ role }) {

@@ -16,7 +16,6 @@ export default async function ClubNotificationsPage() {
 
   const isCoach = profile.role === "coach";
 
-  // Fetch all relevant event types
   let eventsQuery = admin
     .from("events")
     .select("id, request_id, created_at, event_type, metadata")
@@ -26,7 +25,6 @@ export default async function ClubNotificationsPage() {
 
   const { data: rawEvents } = await eventsQuery;
 
-  // For coaches: filter to only their sport via metadata or request lookup
   let sportRequestIds = null;
   if (isCoach && profile.sport) {
     const { data: sportReqs } = await admin
@@ -39,13 +37,11 @@ export default async function ClubNotificationsPage() {
 
   const filtered = (rawEvents ?? []).filter(e => {
     if (!isCoach) return true;
-    // match via metadata.sport or request_id
     if (e.metadata?.sport) return e.metadata.sport === profile.sport;
     if (e.request_id && sportRequestIds) return sportRequestIds.has(e.request_id);
     return false;
   });
 
-  // Deduplicate guide_opened to first open per request
   const firstOpenMap = {};
   const nonOpenEvents = [];
   for (const e of filtered) {
@@ -56,7 +52,6 @@ export default async function ClubNotificationsPage() {
     }
   }
 
-  // Fetch athlete names for open events
   const openRequestIds = Object.keys(firstOpenMap);
   let reqMap = {};
   if (openRequestIds.length) {
@@ -81,54 +76,111 @@ export default async function ClubNotificationsPage() {
     })),
   ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
+  const deliveredCount = allNotifications.filter(e => e.event_type === "guide_delivered").length;
+  const openedCount = allNotifications.filter(e => e.event_type === "guide_opened").length;
+  const uploadedCount = allNotifications.filter(e => e.event_type === "document_uploaded").length;
+
+  const EVENT_META = {
+    guide_delivered: {
+      label: "Guide delivered",
+      bar: "bg-brand-500",
+      iconBg: "bg-brand-50 border-brand-100",
+      iconColor: "text-brand-600",
+      nameColor: "text-brand-600",
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      ),
+    },
+    document_uploaded: {
+      label: "Document uploaded",
+      bar: "bg-orange-400",
+      iconBg: "bg-orange-50 border-orange-100",
+      iconColor: "text-orange-500",
+      nameColor: "text-orange-600",
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+      ),
+    },
+    guide_opened: {
+      label: "Guide opened",
+      bar: "bg-blue-500",
+      iconBg: "bg-blue-50 border-blue-100",
+      iconColor: "text-blue-600",
+      nameColor: "text-blue-600",
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+        </svg>
+      ),
+    },
+  };
+
   return (
     <div className="p-8 max-w-5xl mx-auto flex flex-col gap-6">
-      <div className="flex items-start justify-between gap-6">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground mb-1">Notifications</h1>
-          <p className="text-sm text-muted max-w-lg">A log of every guide delivered and every student who has opened their guide. You also receive a weekly email summary every Monday.</p>
-        </div>
-        <p className="text-sm text-muted shrink-0 mt-1">{allNotifications.length} total</p>
+      {/* Header */}
+      <div>
+        <h1 className="text-2xl font-bold text-foreground tracking-tight mb-1">Notifications</h1>
+        <p className="text-sm text-muted max-w-lg">A log of every guide delivered and every student who has opened their guide. You also receive a weekly email summary every Monday.</p>
       </div>
 
+      {/* Summary pills */}
+      <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-xl border border-border">
+          <div className="w-2 h-2 rounded-full bg-brand-500" />
+          <span className="text-sm font-semibold text-foreground">{deliveredCount}</span>
+          <span className="text-xs text-muted">guides delivered</span>
+        </div>
+        <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-xl border border-border">
+          <div className="w-2 h-2 rounded-full bg-blue-500" />
+          <span className="text-sm font-semibold text-foreground">{openedCount}</span>
+          <span className="text-xs text-muted">guides opened</span>
+        </div>
+        <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-xl border border-border">
+          <div className="w-2 h-2 rounded-full bg-orange-400" />
+          <span className="text-sm font-semibold text-foreground">{uploadedCount}</span>
+          <span className="text-xs text-muted">documents uploaded</span>
+        </div>
+        <span className="ml-auto text-xs text-muted">{allNotifications.length} total</span>
+      </div>
+
+      {/* Notification cards */}
       <div id="tour-notifications-list" className="bg-white border border-border rounded-xl overflow-hidden">
         {!allNotifications.length ? (
-          <div className="px-6 py-16 text-center">
-            <p className="text-sm text-muted">No notifications yet. You'll see an update here each time a guide is delivered.</p>
+          <div className="px-6 py-16 flex flex-col items-center gap-3 text-center">
+            <div className="w-12 h-12 rounded-full bg-surface border border-border flex items-center justify-center">
+              <svg className="w-5 h-5 text-muted" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+            </div>
+            <p className="text-sm font-medium text-foreground">No notifications yet</p>
+            <p className="text-xs text-muted">You'll see an update here each time a guide is delivered.</p>
           </div>
         ) : (
           <ul className="divide-y divide-border">
-            {allNotifications.map((e) => (
-              <li key={e.id} className="flex items-center justify-between px-6 py-4 hover:bg-surface transition-colors">
-                <div className="flex items-center gap-4">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-                    e.event_type === "guide_delivered" ? "bg-brand-50 border border-brand-100"
-                    : e.event_type === "document_uploaded" ? "bg-orange-50 border border-orange-100"
-                    : "bg-blue-50 border border-blue-100"
-                  }`}>
-                    {e.event_type === "guide_delivered" ? (
-                      <svg className="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                    ) : e.event_type === "document_uploaded" ? (
-                      <svg className="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                    ) : (
-                      <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                      </svg>
-                    )}
+            {allNotifications.map((e) => {
+              const meta = EVENT_META[e.event_type] ?? EVENT_META.guide_delivered;
+              return (
+                <li key={e.id} className="flex items-center gap-4 px-6 py-4 hover:bg-surface transition-colors relative">
+                  {/* Colored left stripe */}
+                  <div className={`absolute left-0 top-0 bottom-0 w-0.5 ${meta.bar}`} />
+
+                  {/* Icon */}
+                  <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 border ${meta.iconBg} ${meta.iconColor}`}>
+                    {meta.icon}
                   </div>
-                  <div>
+
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-foreground">
-                      {e.event_type === "guide_delivered" ? (
-                        <>Guide delivered — <span className="text-brand-600">{e.athlete_name || "Student"}</span></>
-                      ) : e.event_type === "document_uploaded" ? (
-                        <>Document uploaded — <span className="text-orange-600">{e.athlete_name || "Student"}</span>{e.document_type ? <span className="text-muted font-normal"> · {e.document_type.replace(/_/g, " ")}</span> : ""}</>
-                      ) : (
-                        <>Guide opened — <span className="text-blue-600">{e.athlete_name || "Student"}</span></>
+                      {meta.label} —{" "}
+                      <span className={meta.nameColor}>{e.athlete_name || "Student"}</span>
+                      {e.event_type === "document_uploaded" && e.document_type && (
+                        <span className="text-muted font-normal"> · {e.document_type.replace(/_/g, " ")}</span>
                       )}
                     </p>
                     {e.athlete_email && (
@@ -138,24 +190,26 @@ export default async function ClubNotificationsPage() {
                       <p className="text-xs text-muted mt-0.5">{e.file_name}</p>
                     )}
                   </div>
-                </div>
-                <div className="flex items-center gap-4 shrink-0">
-                  <span className="text-xs text-muted">
-                    {new Date(e.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-                  </span>
-                  {e.report_token && (
-                    <a
-                      href={`/report/${e.report_token}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs font-medium px-3 py-1.5 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors whitespace-nowrap"
-                    >
-                      View guide
-                    </a>
-                  )}
-                </div>
-              </li>
-            ))}
+
+                  {/* Right side */}
+                  <div className="flex items-center gap-4 shrink-0">
+                    <span className="text-xs text-muted">
+                      {new Date(e.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                    </span>
+                    {e.report_token && (
+                      <a
+                        href={`/report/${e.report_token}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs font-medium px-3 py-1.5 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors whitespace-nowrap"
+                      >
+                        View guide
+                      </a>
+                    )}
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>

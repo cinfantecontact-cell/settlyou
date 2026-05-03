@@ -6,32 +6,115 @@ import GeneratingBadge from "./GeneratingBadge";
 import DeleteRelocationButton from "./DeleteRelocationButton";
 import ApproveRelocationButton from "./ApproveRelocationButton";
 
-const STATUS_COLORS = {
-  submitted: "bg-yellow-100 text-yellow-800",
-  generating: "bg-blue-100 text-blue-800",
-  under_review: "bg-purple-100 text-purple-800",
-  approved: "bg-brand-100 text-brand-800",
-  delivered: "bg-gray-100 text-gray-600",
+const STATUS_META = {
+  submitted:    { label: "Submitted",    color: "bg-yellow-50 text-yellow-700 border-yellow-100",  bar: "bg-yellow-400" },
+  generating:   { label: "Generating…",  color: "bg-blue-50 text-blue-700 border-blue-100",        bar: "bg-blue-500" },
+  under_review: { label: "Under review", color: "bg-purple-50 text-purple-700 border-purple-100",  bar: "bg-purple-500" },
+  approved:     { label: "Approved",     color: "bg-brand-50 text-brand-700 border-brand-100",     bar: "bg-brand-500" },
+  delivered:    { label: "Delivered",    color: "bg-green-50 text-green-700 border-green-100",     bar: "bg-green-500" },
 };
 
-const STATUS_LABELS = {
-  submitted: "Submitted",
-  generating: "Generating...",
-  under_review: "Under review",
-  approved: "Approved",
-  delivered: "Delivered",
-};
+const AVATAR_COLORS = [
+  "bg-blue-100 text-blue-700",
+  "bg-purple-100 text-purple-700",
+  "bg-green-100 text-green-700",
+  "bg-orange-100 text-orange-700",
+  "bg-brand-100 text-brand-700",
+  "bg-pink-100 text-pink-700",
+];
 
-function formatCountry(c) {
-  return c || "";
+function Avatar({ name }) {
+  const initials = (name ?? "?").split(" ").slice(0, 2).map((n) => n[0]).join("").toUpperCase();
+  const idx = (name ?? "").charCodeAt(0) % AVATAR_COLORS.length;
+  return (
+    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${AVATAR_COLORS[idx]}`}>
+      {initials}
+    </div>
+  );
+}
+
+function RelocationCard({ req }) {
+  const meta = STATUS_META[req.status] ?? STATUS_META.submitted;
+  const institution = req.organizations?.name ?? req.clubs?.name ?? "—";
+  const type = req.athlete_type === "college" ? (req.is_part_of_team ? "Athlete" : "Student") : "Pro";
+  const date = new Date(req.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  const destination = [req.destination_city, req.destination_country].filter(Boolean).join(", ");
+  const origin = [req.origin_city, req.origin_country].filter(Boolean).join(", ");
+
+  return (
+    <div
+      onClick={() => window.location.href = `/admin/relocations/${req.id}`}
+      className="bg-white rounded-xl border border-border hover:border-brand-200 hover:shadow-md transition-all cursor-pointer overflow-hidden flex flex-col group"
+    >
+      {/* Status bar */}
+      <div className={`h-1 w-full ${meta.bar}`} />
+
+      <div className="p-5 flex flex-col gap-4 flex-1">
+        {/* Header */}
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <Avatar name={req.athlete_name} />
+            <div>
+              <p className="font-bold text-foreground text-sm leading-tight">{req.athlete_name}</p>
+              <p className="text-xs text-muted mt-0.5 flex items-center gap-1">
+                {institution}
+                {req.submitted_by_athlete && (
+                  <span className="bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded-full text-[10px] font-semibold">self</span>
+                )}
+              </p>
+            </div>
+          </div>
+          {req.status === "generating" ? (
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border bg-blue-50 text-blue-700 border-blue-100 shrink-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+              Generating…
+            </span>
+          ) : (
+            <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold border shrink-0 ${meta.color}`}>
+              {meta.label}
+            </span>
+          )}
+        </div>
+
+        {/* Route */}
+        <div className="flex items-center gap-2 bg-surface rounded-lg px-3 py-2">
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] font-semibold text-muted uppercase tracking-wider mb-0.5">From</p>
+            <p className="text-xs font-medium text-foreground truncate">{origin || "—"}</p>
+          </div>
+          <svg className="w-3.5 h-3.5 text-muted shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+          <div className="flex-1 min-w-0 text-right">
+            <p className="text-[10px] font-semibold text-muted uppercase tracking-wider mb-0.5">To</p>
+            <p className="text-xs font-medium text-foreground truncate">{destination || "—"}</p>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="flex items-center justify-between mt-auto">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-semibold bg-surface border border-border px-1.5 py-0.5 rounded-full text-muted capitalize">{type}</span>
+            {req.status === "generating" && <GeneratingBadge startedAt={req.created_at} />}
+          </div>
+          <p className="text-[11px] text-muted">{date}</p>
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div className="px-5 pb-4 flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+        {req.status === "submitted" && <GenerateButton requestId={req.id} />}
+        {req.status === "under_review" && <ApproveRelocationButton requestId={req.id} />}
+        <DeleteRelocationButton requestId={req.id} athleteName={req.athlete_name} />
+      </div>
+    </div>
+  );
 }
 
 export default function RelocationsTable({ requests }) {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
   const [club, setClub] = useState("");
-  const [dateFrom, setDateFrom] = useState("");
-  const [dateTo, setDateTo] = useState("");
 
   const clubs = useMemo(() => {
     const seen = new Map();
@@ -51,62 +134,52 @@ export default function RelocationsTable({ requests }) {
         const rClub = r.club_id ?? r.organization_id;
         if (rClub !== club) return false;
       }
-      if (dateFrom && new Date(r.created_at) < new Date(dateFrom)) return false;
-      if (dateTo && new Date(r.created_at) > new Date(dateTo + "T23:59:59")) return false;
       return true;
     });
-  }, [requests, search, status, club, dateFrom, dateTo]);
+  }, [requests, search, status, club]);
 
-  const hasFilters = search || status || club || dateFrom || dateTo;
+  const hasFilters = search || status || club;
 
   return (
     <>
       {/* Filters */}
-      <div className="flex flex-wrap items-center gap-2 mb-4">
-        <input
-          type="text"
-          placeholder="Search by name..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="text-sm px-3 py-1.5 rounded-lg border border-border bg-white text-foreground placeholder:text-muted focus:outline-none focus:border-brand-400 transition-colors w-44"
-        />
+      <div className="flex flex-wrap items-center gap-2 mb-5">
+        <div className="relative">
+          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z" />
+          </svg>
+          <input
+            type="text"
+            placeholder="Search by name..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="text-sm pl-8 pr-3 py-1.5 rounded-lg border border-border bg-white text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-brand-200 focus:border-brand-400 transition-colors w-48"
+          />
+        </div>
         <select
           value={status}
           onChange={(e) => setStatus(e.target.value)}
-          className="text-sm px-3 py-1.5 rounded-lg border border-border bg-white text-foreground focus:outline-none focus:border-brand-400 transition-colors"
+          className="text-sm px-3 py-1.5 rounded-lg border border-border bg-white text-foreground focus:outline-none focus:ring-2 focus:ring-brand-200 transition-colors"
         >
           <option value="">All statuses</option>
-          {Object.entries(STATUS_LABELS).map(([val, label]) => (
+          {Object.entries(STATUS_META).map(([val, { label }]) => (
             <option key={val} value={val}>{label}</option>
           ))}
         </select>
         <select
           value={club}
           onChange={(e) => setClub(e.target.value)}
-          className="text-sm px-3 py-1.5 rounded-lg border border-border bg-white text-foreground focus:outline-none focus:border-brand-400 transition-colors max-w-[180px]"
+          className="text-sm px-3 py-1.5 rounded-lg border border-border bg-white text-foreground focus:outline-none focus:ring-2 focus:ring-brand-200 transition-colors max-w-[200px]"
         >
           <option value="">All institutions</option>
           {clubs.map(([key, name]) => (
             <option key={key} value={key}>{name}</option>
           ))}
         </select>
-        <input
-          type="date"
-          value={dateFrom}
-          onChange={(e) => setDateFrom(e.target.value)}
-          className="text-sm px-3 py-1.5 rounded-lg border border-border bg-white text-foreground focus:outline-none focus:border-brand-400 transition-colors"
-        />
-        <span className="text-xs text-muted">to</span>
-        <input
-          type="date"
-          value={dateTo}
-          onChange={(e) => setDateTo(e.target.value)}
-          className="text-sm px-3 py-1.5 rounded-lg border border-border bg-white text-foreground focus:outline-none focus:border-brand-400 transition-colors"
-        />
         {hasFilters && (
           <button
-            onClick={() => { setSearch(""); setStatus(""); setClub(""); setDateFrom(""); setDateTo(""); }}
-            className="text-xs font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-foreground/30 transition-colors"
+            onClick={() => { setSearch(""); setStatus(""); setClub(""); }}
+            className="text-xs font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground transition-colors"
           >
             Clear
           </button>
@@ -114,81 +187,24 @@ export default function RelocationsTable({ requests }) {
         <span className="ml-auto text-xs text-muted">{filtered.length} of {requests.length}</span>
       </div>
 
-      {/* Table */}
-      <div className="bg-white rounded-xl border border-border overflow-hidden">
-        {filtered.length === 0 ? (
-          <div className="px-6 py-12 text-center text-sm text-muted">
-            {requests.length === 0 ? "No relocation requests yet." : "No requests match your filters."}
+      {/* Cards */}
+      {filtered.length === 0 ? (
+        <div className="bg-white rounded-xl border border-border px-6 py-16 flex flex-col items-center gap-3 text-center">
+          <div className="w-12 h-12 rounded-full bg-surface border border-border flex items-center justify-center">
+            <svg className="w-5 h-5 text-muted" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
           </div>
-        ) : (
-          <table className="w-full text-sm">
-            <thead className="bg-surface border-b border-border">
-              <tr>
-                <th className="px-4 py-3 text-left font-medium text-muted">Student</th>
-                <th className="px-4 py-3 text-left font-medium text-muted">Institution</th>
-                <th className="px-4 py-3 text-left font-medium text-muted">Destination</th>
-                <th className="px-4 py-3 text-left font-medium text-muted">Type</th>
-                <th className="px-4 py-3 text-left font-medium text-muted">Status</th>
-                <th className="px-4 py-3 text-left font-medium text-muted">Timer</th>
-                <th className="px-4 py-3 text-left font-medium text-muted">Date</th>
-                <th className="px-4 py-3 text-left font-medium text-muted">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {filtered.map((req) => (
-                <tr
-                  key={req.id}
-                  onClick={() => window.location.href = `/admin/relocations/${req.id}`}
-                  className="hover:bg-surface transition-colors cursor-pointer"
-                >
-                  <td className="px-4 py-3 font-medium text-foreground">{req.athlete_name}</td>
-                  <td className="px-4 py-3 text-muted">
-                    {req.organizations?.name ?? req.clubs?.name ?? "—"}
-                    {req.submitted_by_athlete && (
-                      <span className="ml-1.5 text-xs bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded-full">self-submitted</span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3 text-muted">{req.destination_city}, {formatCountry(req.destination_country)}</td>
-                  <td className="px-4 py-3">
-                    <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium capitalize bg-gray-100 text-gray-600">
-                      {req.athlete_type === "college" ? (req.is_part_of_team ? "Athlete" : "Student") : "Pro"}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    {req.status === "generating" ? (
-                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
-                        Generating…
-                      </span>
-                    ) : (
-                      <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_COLORS[req.status]}`}>
-                        {STATUS_LABELS[req.status]}
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3">
-                    {req.status === "generating" ? (
-                      <GeneratingBadge startedAt={req.created_at} />
-                    ) : (
-                      <span className="text-xs text-muted">—</span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3 text-muted">
-                    {new Date(req.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-                  </td>
-                  <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
-                    <div className="flex items-center gap-2">
-                      {req.status === "submitted" && <GenerateButton requestId={req.id} />}
-                      {req.status === "under_review" && <ApproveRelocationButton requestId={req.id} />}
-                      <DeleteRelocationButton requestId={req.id} athleteName={req.athlete_name} />
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+          <p className="text-sm font-medium text-foreground">{requests.length === 0 ? "No relocation requests yet" : "No requests match your filters"}</p>
+          <p className="text-xs text-muted">Requests appear here when athletes submit their intake form.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {filtered.map((req) => (
+            <RelocationCard key={req.id} req={req} />
+          ))}
+        </div>
+      )}
     </>
   );
 }

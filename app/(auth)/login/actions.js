@@ -20,7 +20,7 @@ export async function login(formData) {
   const admin = createAdminClient();
   const { data: profile } = await admin.from("profiles").select("role").eq("id", user.id).single();
 
-  if (profile?.role === "settl_admin") redirect("/admin");
+  if (profile?.role === "settl_admin") redirect("/admin/clients");
   if (profile?.role === "club_admin") redirect("/club");
   if (profile?.role === "coach") redirect("/club");
   redirect("/dashboard");

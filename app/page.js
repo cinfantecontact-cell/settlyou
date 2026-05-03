@@ -142,7 +142,7 @@ export default function LandingPage() {
           {/* Left — copy */}
           <div className="flex flex-col items-start">
             <span className="hero-animate hero-d1 badge-shimmer inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-6 border border-brand-200 px-4 py-2 rounded-full">
-              Built for college athletics
+              Welcome them better
             </span>
             <h1 className="hero-animate hero-d2 text-5xl lg:text-6xl font-black text-foreground leading-[1.08] mb-5 tracking-tight">
               Every athlete<br />arrives <span className="gradient-text">ready.</span>

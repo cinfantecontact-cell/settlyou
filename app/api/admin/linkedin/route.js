@@ -36,6 +36,20 @@ export async function GET() {
   return NextResponse.json({ posts });
 }
 
+export async function DELETE(request) {
+  const user = await verifyAdmin();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { ids } = await request.json().catch(() => ({}));
+  if (!Array.isArray(ids) || ids.length === 0)
+    return NextResponse.json({ error: "No ids provided" }, { status: 400 });
+
+  const admin = createAdminClient();
+  const { error } = await admin.from("linkedin_posts").delete().in("id", ids);
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  return NextResponse.json({ ok: true });
+}
+
 export async function POST(request) {
   const user = await verifyAdmin();
   if (!user)

@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Settlyou — AI Relocation Software",
-  description: "Settlyou gives universities a personalized AI relocation guide for every incoming student.",
+  title: "Settlyou — Welcome them better",
+  description: "Welcome them better. Settlyou gives every incoming athlete a personalized AI relocation guide — in under 5 minutes.",
 };
 
 export default function RootLayout({ children }) {
