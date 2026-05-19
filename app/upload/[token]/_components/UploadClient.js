@@ -15,6 +15,11 @@ export default function UploadClient({ token, documentTypes, initialSubmitted, c
     new Set(initialResponses.filter(r => r.answer).map(r => r.question_id))
   );
 
+  // Save this URL so the PWA can redirect back here when opened from home screen
+  useEffect(() => {
+    try { localStorage.setItem("settlyou_upload_url", window.location.pathname); } catch(e) {}
+  }, []);
+
   // Install prompt
   const [installPrompt, setInstallPrompt] = useState(null); // "android" | "ios" | null
   const deferredInstall = useRef(null);
