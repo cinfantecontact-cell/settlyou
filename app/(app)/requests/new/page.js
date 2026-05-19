@@ -54,33 +54,17 @@ const COOKING_HABITS = ["Cook daily", "Meal prep weekly", "Mix of cooking and ea
 const RELOCATION_EXP = ["First time abroad", "Relocated once before", "Experienced — multiple relocations"];
 const TRAINING_SCHEDULE = ["Morning (before noon)", "Afternoon", "Evening", "Varies / mixed"];
 
-const DIAL_CODES = [
-  { code: "+1",   label: "+1 (US/CA)" },
-  { code: "+52",  label: "+52 (MX)" },
-  { code: "+54",  label: "+54 (AR)" },
-  { code: "+55",  label: "+55 (BR)" },
-  { code: "+56",  label: "+56 (CL)" },
-  { code: "+57",  label: "+57 (CO)" },
-  { code: "+58",  label: "+58 (VE)" },
-  { code: "+34",  label: "+34 (ES)" },
-  { code: "+44",  label: "+44 (UK)" },
-  { code: "+49",  label: "+49 (DE)" },
-  { code: "+33",  label: "+33 (FR)" },
-  { code: "+39",  label: "+39 (IT)" },
-  { code: "+351", label: "+351 (PT)" },
-  { code: "+31",  label: "+31 (NL)" },
-  { code: "+32",  label: "+32 (BE)" },
-  { code: "+46",  label: "+46 (SE)" },
-  { code: "+47",  label: "+47 (NO)" },
-  { code: "+45",  label: "+45 (DK)" },
-  { code: "+90",  label: "+90 (TR)" },
-  { code: "+966", label: "+966 (SA)" },
-  { code: "+971", label: "+971 (UAE)" },
-  { code: "+81",  label: "+81 (JP)" },
-  { code: "+82",  label: "+82 (KR)" },
-  { code: "+61",  label: "+61 (AU)" },
-  { code: "+7",   label: "+7 (RU)" },
+const US_STATES = [
+  "Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut",
+  "Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa",
+  "Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan",
+  "Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire",
+  "New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio",
+  "Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota",
+  "Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia",
+  "Wisconsin","Wyoming",
 ];
+
 
 const inputClass = "border border-border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition bg-white w-full";
 const selectClass = `${inputClass}`;
@@ -155,8 +139,6 @@ export default function NewRequestPage() {
     athlete_name: "",
     athlete_age: "",
     athlete_nationality: "",
-    phone_code: "+1",
-    phone_number: "",
     athlete_languages: [],
     sport: "",
     current_city: "",
@@ -187,6 +169,7 @@ export default function NewRequestPage() {
     guest_hotel_budget: "",
     // Destination
     destination_city: "",
+    destination_state: "",
     destination_country: "",
     move_date: "",
     budget_usd: "",
@@ -266,7 +249,6 @@ export default function NewRequestPage() {
         children_ages: form.children_ages
           ? form.children_ages.split(",").map((a) => parseInt(a.trim())).filter(Boolean)
           : [],
-        athlete_phone: form.phone_number ? `${form.phone_code} ${form.phone_number}` : null,
       }),
     });
 
@@ -282,7 +264,10 @@ export default function NewRequestPage() {
   const canAdvance = () => {
     if (athleteType === "college") {
       if (step === 0) return form.athlete_name && form.athlete_nationality && form.athlete_languages.length && form.sport;
-      if (step === 1) return form.university && form.destination_city && form.destination_country;
+      if (step === 1) {
+        const needsState = form.destination_country === "United States";
+        return form.university && form.destination_city && form.destination_country && (!needsState || form.destination_state);
+      }
     } else {
       if (step === 0) return form.athlete_name && form.athlete_nationality && form.athlete_languages.length;
       if (step === 2) return form.destination_city && form.destination_country;
@@ -346,16 +331,6 @@ export default function NewRequestPage() {
                     onChange={(e) => set("athlete_name", e.target.value)} placeholder="Carlos Mendoza" />
                 </Field>
 
-                <Field label="Phone number" hint="(optional)">
-                  <div className="flex gap-2">
-                    <select className={`${selectClass} w-36 shrink-0`} value={form.phone_code}
-                      onChange={(e) => set("phone_code", e.target.value)}>
-                      {DIAL_CODES.map((d) => <option key={d.code} value={d.code}>{d.label}</option>)}
-                    </select>
-                    <input className={`${inputClass} flex-1 min-w-0`} type="text" value={form.phone_number}
-                      onChange={(e) => set("phone_number", e.target.value)} placeholder="555 123 4567" />
-                  </div>
-                </Field>
 
                 <Field label="Nationality">
                   <select className={selectClass} value={form.athlete_nationality}
@@ -402,8 +377,11 @@ export default function NewRequestPage() {
                       onChange={(e) => set("destination_city", e.target.value)} placeholder="Miami" />
                   </Field>
                   <Field label="State" hint="(US only)">
-                    <input className={inputClass} value={form.destination_state ?? ""}
-                      onChange={(e) => set("destination_state", e.target.value)} placeholder="FL" />
+                    <select className={selectClass} value={form.destination_state}
+                      onChange={(e) => set("destination_state", e.target.value)}>
+                      <option value="">Select state...</option>
+                      {US_STATES.map((s) => <option key={s}>{s}</option>)}
+                    </select>
                   </Field>
                   <Field label="Campus country">
                     <select className={selectClass} value={form.destination_country}
@@ -611,16 +589,6 @@ export default function NewRequestPage() {
                   </Field>
                 </div>
 
-                <Field label="Phone number" hint="(optional)">
-                  <div className="flex gap-2">
-                    <select className={`${selectClass} w-36 shrink-0`} value={form.phone_code}
-                      onChange={(e) => set("phone_code", e.target.value)}>
-                      {DIAL_CODES.map((d) => <option key={d.code} value={d.code}>{d.label}</option>)}
-                    </select>
-                    <input className={`${inputClass} flex-1 min-w-0`} type="text" value={form.phone_number}
-                      onChange={(e) => set("phone_number", e.target.value)} placeholder="555 123 4567" />
-                  </div>
-                </Field>
 
                 <Field label="Nationality">
                   <select className={selectClass} value={form.athlete_nationality}

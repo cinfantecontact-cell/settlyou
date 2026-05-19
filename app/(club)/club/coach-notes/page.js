@@ -22,7 +22,7 @@ export default async function CoachNotesPage() {
       .eq("sport", profile.sport)
       .single(),
     admin.from("sport_document_config")
-      .select("disabled_base_docs, custom_docs")
+      .select("disabled_base_docs, custom_docs, doc_settings")
       .eq("club_id", profile.club_id)
       .eq("sport", profile.sport)
       .single(),

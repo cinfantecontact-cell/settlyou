@@ -11,7 +11,7 @@ export async function GET(request) {
 
   const { data: profile } = await admin
     .from("profiles").select("role").eq("id", user.id).single();
-  if (!["club_admin", "coach"].includes(profile?.role)) {
+  if (!["club_admin", "coach", "admissions"].includes(profile?.role)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 

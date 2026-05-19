@@ -10,19 +10,19 @@ export default async function UploadPage({ params }) {
 
   const { data: req } = await admin
     .from("requests")
-    .select("id, athlete_name, club_id, sport, clubs(name)")
+    .select("id, athlete_name, club_id, sport, athlete_nationality, clubs(name)")
     .eq("upload_token", token)
     .single();
 
   if (!req) notFound();
 
-  const [{ data: submitted }, { data: sportConfig }, { data: custom }, { data: allSportNotes }] = await Promise.all([
+  const [{ data: submitted }, { data: sportConfig }, { data: custom }, { data: allSportNotes }, { data: admissionsConfig }] = await Promise.all([
     admin.from("athlete_documents")
       .select("id, document_type, file_name, uploaded_at")
       .eq("request_id", req.id)
       .order("uploaded_at", { ascending: false }),
     req.sport ? admin.from("sport_document_config")
-      .select("disabled_base_docs, custom_docs")
+      .select("disabled_base_docs, custom_docs, doc_settings, form_questions")
       .eq("club_id", req.club_id)
       .eq("sport", req.sport)
       .single() : Promise.resolve({ data: null }),
@@ -33,21 +33,104 @@ export default async function UploadPage({ params }) {
     admin.from("coach_sport_notes")
       .select("sport, coach_attachments")
       .eq("club_id", req.club_id),
+    admin.from("admissions_doc_config")
+      .select("active_base_docs, custom_docs, doc_settings, form_questions, attachments")
+      .eq("club_id", req.club_id)
+      .single(),
   ]);
 
   // Normalize sport match for attachments
   const normSport = s => (s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const isDomestic = ["US", "UNITED STATES"].includes((req.athlete_nationality || "").trim().toUpperCase());
+  const nationalityKnown = !!req.athlete_nationality;
   const coachAttachments = (allSportNotes ?? [])
     .filter(n => normSport(n.sport) === normSport(req.sport))
-    .flatMap(n => n.coach_attachments?.filter(a => a.url) ?? []);
+    .flatMap(n => n.coach_attachments?.filter(a => a.url) ?? [])
+    .filter(a => {
+      if (!nationalityKnown || !a.visibility || a.visibility === "all") return true;
+      if (a.visibility === "international") return !isDomestic;
+      if (a.visibility === "domestic") return isDomestic;
+      return true;
+    });
 
-  // Use sport-specific config if available, otherwise fall back to base + club custom types
-  const documentTypes = sportConfig
-    ? getSportDocTypes(sportConfig)
-    : [
-        ...BASE_DOCUMENT_TYPES,
-        ...(custom ?? []).map(c => ({ key: `custom_${c.id}`, label: c.label, required: true })),
-      ];
+  // Coach docs (sport-specific config or base + club custom types)
+  const coachDocs = (sportConfig
+    ? getSportDocTypes(sportConfig, req.athlete_nationality ?? null)
+    : BASE_DOCUMENT_TYPES.map(d => ({ ...d }))
+  ).map(d => ({ ...d, source: "coach" }));
+
+  // Admissions docs (if config exists) — filtered by nationality
+  const admissionsDocSettings = admissionsConfig?.doc_settings || {};
+  function admissionsVisibilityMatches(visibility) {
+    if (!nationalityKnown || !visibility || visibility === "all") return true;
+    if (visibility === "international") return !isDomestic;
+    if (visibility === "domestic") return isDomestic;
+    return true;
+  }
+  const admissionsBaseDocs = admissionsConfig
+    ? BASE_DOCUMENT_TYPES
+        .filter(d => (admissionsConfig.active_base_docs || []).includes(d.key))
+        .map(d => {
+          const vis = (admissionsDocSettings[d.key] || {}).visibility || "all";
+          return { ...d, visibility: vis, source: "admissions" };
+        })
+        .filter(d => admissionsVisibilityMatches(d.visibility))
+    : [];
+  const admissionsCustomDocs = (admissionsConfig?.custom_docs || [])
+    .filter(d => admissionsVisibilityMatches(d.visibility || "all"))
+    .map(d => ({
+      key: `admissions_custom_${d.id}`,
+      label: d.label,
+      required: true,
+      source: "admissions",
+      visibility: d.visibility || "all",
+    }));
+
+  // Merge: union base docs by key, upgrading source to "both" when required by coach AND admissions
+  const admissionsKeys = new Set(admissionsBaseDocs.map(d => d.key));
+  const mergedCoachDocs = coachDocs.map(d =>
+    admissionsKeys.has(d.key) ? { ...d, source: "both" } : d
+  );
+  const coachKeys = new Set(mergedCoachDocs.map(d => d.key));
+  const extraFromAdmissions = admissionsBaseDocs.filter(d => !coachKeys.has(d.key));
+  const documentTypes = [...mergedCoachDocs, ...extraFromAdmissions, ...admissionsCustomDocs];
+
+  // Form questions: merge coach + admissions, dedup by label
+  const coachQuestions = (sportConfig?.form_questions ?? []).map(q => ({ ...q, source: "coach" }));
+  const admissionsQuestions = (admissionsConfig?.form_questions ?? []).map(q => ({ ...q, source: "admissions" }));
+  const coachQLabels = new Map(coachQuestions.map(q => [q.label, q]));
+  const mergedQuestions = [...coachQuestions];
+  for (const q of admissionsQuestions) {
+    if (coachQLabels.has(q.label)) {
+      const idx = mergedQuestions.findIndex(mq => mq.label === q.label);
+      if (idx !== -1) mergedQuestions[idx] = { ...mergedQuestions[idx], source: "both" };
+    } else {
+      mergedQuestions.push(q);
+    }
+  }
+  const formQuestions = mergedQuestions;
+
+  // Merge coach attachments with admissions attachments
+  const admissionsAttachments = (admissionsConfig?.attachments ?? [])
+    .filter(a => a.url)
+    .filter(a => {
+      if (!nationalityKnown || !a.visibility || a.visibility === "all") return true;
+      if (a.visibility === "international") return !isDomestic;
+      if (a.visibility === "domestic") return isDomestic;
+      return true;
+    })
+    .map(a => ({ ...a, source: "admissions" }));
+  const allAttachments = [
+    ...coachAttachments.map(a => ({ ...a, source: "coach" })),
+    ...admissionsAttachments,
+  ];
+
+  const { data: formResponsesRaw } = formQuestions.length
+    ? await admin.from("athlete_form_responses")
+        .select("question_id, answer")
+        .eq("request_id", req.id)
+    : { data: [] };
+  const initialResponses = formResponsesRaw ?? [];
 
   return (
     <div className="min-h-screen bg-surface">
@@ -66,7 +149,9 @@ export default async function UploadPage({ params }) {
           token={token}
           documentTypes={documentTypes}
           initialSubmitted={submitted ?? []}
-          coachAttachments={coachAttachments}
+          coachAttachments={allAttachments}
+          formQuestions={formQuestions}
+          initialResponses={initialResponses}
         />
       </div>
     </div>

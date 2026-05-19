@@ -20,18 +20,19 @@ export async function POST(request) {
   const fd = await request.formData();
   const custom_notes = fd.get("custom_notes") || null;
   let custom_links = [];
-  try {
-    custom_links = JSON.parse(fd.get("custom_links") || "[]");
-  } catch {
-    custom_links = [];
+  try { custom_links = JSON.parse(fd.get("custom_links") || "[]"); } catch { custom_links = []; }
+
+  const upsertData = { club_id: profile.club_id, sport: profile.sport, custom_notes, custom_links };
+
+  // Optional: update coach_attachments metadata (e.g. visibility) without touching stored files
+  const attachmentsRaw = fd.get("coach_attachments");
+  if (attachmentsRaw) {
+    try { upsertData.coach_attachments = JSON.parse(attachmentsRaw); } catch { /* ignore */ }
   }
 
   const { error } = await admin
     .from("coach_sport_notes")
-    .upsert(
-      { club_id: profile.club_id, sport: profile.sport, custom_notes, custom_links },
-      { onConflict: "club_id,sport" }
-    );
+    .upsert(upsertData, { onConflict: "club_id,sport" });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 

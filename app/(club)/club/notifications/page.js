@@ -12,7 +12,7 @@ export default async function ClubNotificationsPage() {
 
   const { data: profile } = await admin
     .from("profiles").select("role, club_id, sport").eq("id", user.id).single();
-  if (!["club_admin", "coach"].includes(profile?.role)) redirect("/login");
+  if (!["club_admin", "coach", "admissions"].includes(profile?.role)) redirect("/login");
 
   const isCoach = profile.role === "coach";
 

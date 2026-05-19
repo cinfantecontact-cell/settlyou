@@ -13,6 +13,8 @@ export default async function ClubLayout({ children }) {
     const { data: profile } = await admin.from("profiles").select("role").eq("id", user.id).single();
     role = profile?.role ?? null;
   }
+  // Allow coach, club_admin, and admissions roles through the portal
+  // (redirect happens inside individual pages for unauthorized roles)
 
   return (
     <div className="flex min-h-screen bg-surface">

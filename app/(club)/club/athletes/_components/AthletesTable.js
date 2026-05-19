@@ -70,7 +70,7 @@ function DocDot({ uploaded, label }) {
   );
 }
 
-export default function AthletesTable({ requests, isCoach = false, docsByRequest = {}, coachDocCols = null }) {
+export default function AthletesTable({ requests, isCoach = false, docsByRequest = {}, coachDocCols = null, canResend = true }) {
   const COACH_DOC_COLS = (coachDocCols ?? DEFAULT_COACH_DOC_COLS).slice(0, 10);
   const [name, setName] = useState("");
   const [sport, setSport] = useState("");
@@ -201,7 +201,7 @@ export default function AthletesTable({ requests, isCoach = false, docsByRequest
           )}
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          {selected.size > 0 && (
+          {canResend && selected.size > 0 && (
             <button
               onClick={bulkResend}
               disabled={bulkState === "sending"}
@@ -246,7 +246,7 @@ export default function AthletesTable({ requests, isCoach = false, docsByRequest
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border bg-surface">
-                {!isCoach && (
+                {!isCoach && canResend && (
                   <th className="px-4 py-3 w-8">
                     <input
                       type="checkbox"
@@ -267,7 +267,7 @@ export default function AthletesTable({ requests, isCoach = false, docsByRequest
                 </th>
                 {!isCoach && sports.length > 0 && <th className="text-left px-4 py-3 text-xs text-muted font-medium uppercase tracking-wider">Sport</th>}
                 <th className="text-left px-4 py-3 text-xs text-muted font-medium uppercase tracking-wider">Guide Status</th>
-                {isCoach && <th className="px-4 py-3 text-xs text-muted font-medium uppercase tracking-wider text-center">Documents</th>}
+                {COACH_DOC_COLS.length > 0 && <th className="px-4 py-3 text-xs text-muted font-medium uppercase tracking-wider text-center">Documents</th>}
                 <th className="text-left px-4 py-3 text-xs text-muted font-medium uppercase tracking-wider">Date</th>
                 <th className="text-left px-4 py-3 text-xs text-muted font-medium uppercase tracking-wider">Actions</th>
               </tr>
@@ -310,7 +310,7 @@ export default function AthletesTable({ requests, isCoach = false, docsByRequest
                 const requestDocs = docsByRequest[r.id] || {};
                 return (
                   <tr key={r.id} className="border-b border-border last:border-0 hover:bg-surface transition-colors">
-                    {!isCoach && (
+                    {!isCoach && canResend && (
                       <td className="px-4 py-4">
                         {isSelectable && (
                           <input
@@ -338,7 +338,7 @@ export default function AthletesTable({ requests, isCoach = false, docsByRequest
                         <p className="text-xs text-orange-600 mt-1">Taking longer than usual</p>
                       )}
                     </td>
-                    {isCoach && (
+                    {COACH_DOC_COLS.length > 0 && (
                       <td className="px-4 py-4">
                         <div className="flex items-center gap-2 justify-center">
                           {COACH_DOC_COLS.map(doc => (
@@ -353,22 +353,22 @@ export default function AthletesTable({ requests, isCoach = false, docsByRequest
                     )}
                     <td className="px-4 py-4 text-muted text-xs whitespace-nowrap">{new Date(r.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</td>
                     <td className="px-4 py-4">
-                      <div className="flex items-center gap-2 whitespace-nowrap">
-                        <a href={`/club/athletes/${r.id}`} className="text-xs font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-foreground/30 transition-colors">
+                      <div className="flex flex-col gap-1.5">
+                        <a href={`/club/athletes/${r.id}`} className="text-xs font-medium px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-foreground/30 transition-colors text-center">
                           View details
                         </a>
                         {r.status === "delivered" && r.athlete_link_token && (
-                          <>
-                            <a
-                              href={`/report/${r.athlete_link_token}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-xs font-medium px-3 py-1.5 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors whitespace-nowrap"
-                            >
-                              View guide
-                            </a>
-                            {!isCoach && r.athlete_email && <ResendButton requestId={r.id} />}
-                          </>
+                          <a
+                            href={`/report/${r.athlete_link_token}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs font-medium px-3 py-1.5 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 transition-colors text-center"
+                          >
+                            View guide
+                          </a>
+                        )}
+                        {r.status === "delivered" && canResend && !isCoach && r.athlete_email && (
+                          <ResendButton requestId={r.id} />
                         )}
                       </div>
                     </td>

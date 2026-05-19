@@ -42,7 +42,7 @@ export default async function ClubDashboard() {
     .eq("id", user.id)
     .single();
 
-  if (!["club_admin", "coach"].includes(profile?.role)) redirect("/login");
+  if (!["club_admin", "coach", "admissions"].includes(profile?.role)) redirect("/login");
 
   const { data: club } = await admin
     .from("clubs")
@@ -228,14 +228,14 @@ export default async function ClubDashboard() {
       )}
 
       {/* Coach: join link */}
-      {!isAdmin && club?.slug && (
+      {profile.role === "coach" && club?.slug && (
         <div id="tour-join-link">
           <JoinLinkCard slug={club.slug} pin={club.pin} clubName={club.name} sport={profile.sport} />
         </div>
       )}
 
       {/* Coach: guide notes prompt */}
-      {!isAdmin && profile.sport && (
+      {profile.role === "coach" && profile.sport && (
         <div className="bg-surface border border-border rounded-xl px-5 py-3 flex items-center justify-between gap-4">
           <p className="text-sm text-muted">
             Add notes and links for your {profile.sport} athletes — compliance deadlines, team contacts, or anything every {profile.sport} student should know.

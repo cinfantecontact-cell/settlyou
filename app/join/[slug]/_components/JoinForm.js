@@ -573,7 +573,7 @@ export default function JoinForm({ club }) {
       id: "final",
       question: t("Almost there."),
       hint: t("Last few things and your guide is on its way."),
-      valid: consented && form.phone_number.trim().length > 0,
+      valid: consented,
       isLast: true,
       content: null,
     },
@@ -861,7 +861,7 @@ export default function JoinForm({ club }) {
       id: "final",
       question: t("Almost there."),
       hint: t("Last few things and your guide is on its way."),
-      valid: consented && form.phone_number.trim().length > 0,
+      valid: consented,
       isLast: true,
       content: null,
     },
@@ -1108,7 +1108,7 @@ export default function JoinForm({ club }) {
               />
             </div>
             <div>
-              <Label>{t("Phone number — for WhatsApp or SMS delivery")}</Label>
+              <Label>{t("Phone number (optional)")}</Label>
               <div className="flex gap-3">
                 <select
                   value={form.phone_code}

@@ -4,7 +4,6 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect, notFound } from "next/navigation";
 import { formatCountry } from "@/lib/format-country";
 import ResendButton from "../_components/ResendButton";
-import ResendWhatsAppButton from "../_components/ResendWhatsAppButton";
 import AthleteActions from "./_components/AthleteActions";
 import StatusBadge from "../../_components/StatusBadge";
 import { BASE_DOCUMENT_TYPES, getSportDocTypes } from "@/lib/documents/types";
@@ -65,7 +64,7 @@ export default async function AthleteDetailPage({ params }) {
 
   const { data: profile } = await admin
     .from("profiles").select("role, club_id, sport").eq("id", user.id).single();
-  if (!["club_admin", "coach"].includes(profile?.role)) redirect("/login");
+  if (!["club_admin", "coach", "admissions"].includes(profile?.role)) redirect("/login");
 
   const { data: r } = await admin
     .from("requests")
@@ -76,18 +75,73 @@ export default async function AthleteDetailPage({ params }) {
 
   if (!r) notFound();
 
-  const [{ data: athleteDocs }, { data: sportConfig }, { data: customDocTypes }] = await Promise.all([
+  const [{ data: athleteDocs }, { data: sportConfig }, { data: customDocTypes }, { data: admissionsConfig }, { data: formResponsesRaw }] = await Promise.all([
     admin.from("athlete_documents").select("id, document_type, file_name, file_url, uploaded_at").eq("request_id", id).order("uploaded_at", { ascending: false }),
-    r.sport ? admin.from("sport_document_config").select("disabled_base_docs, custom_docs").eq("club_id", profile.club_id).eq("sport", r.sport).single() : Promise.resolve({ data: null }),
+    r.sport ? admin.from("sport_document_config").select("disabled_base_docs, custom_docs, form_questions").eq("club_id", profile.club_id).eq("sport", r.sport).single() : Promise.resolve({ data: null }),
     admin.from("custom_document_types").select("id, label, required").eq("club_id", profile.club_id).order("created_at"),
+    admin.from("admissions_doc_config").select("active_base_docs, custom_docs, doc_settings, form_questions").eq("club_id", profile.club_id).single(),
+    admin.from("athlete_form_responses").select("question_id, answer").eq("request_id", id),
   ]);
 
-  const allDocTypes = sportConfig
+  const coachDocTypes = (sportConfig
     ? getSportDocTypes(sportConfig)
     : [
         ...BASE_DOCUMENT_TYPES,
         ...(customDocTypes ?? []).map(c => ({ key: `custom_${c.id}`, label: c.label, required: c.required })),
-      ];
+      ]).map(d => ({ ...d, source: "coach" }));
+
+  const admissionsDocSettings = admissionsConfig?.doc_settings || {};
+  const isDomestic = ["US", "UNITED STATES"].includes((r.athlete_nationality || "").trim().toUpperCase());
+  const nationalityKnown = !!r.athlete_nationality;
+  function admissionsVisibilityMatches(visibility) {
+    if (!nationalityKnown || !visibility || visibility === "all") return true;
+    if (visibility === "international") return !isDomestic;
+    if (visibility === "domestic") return isDomestic;
+    return true;
+  }
+  const admissionsBaseDocs = admissionsConfig
+    ? BASE_DOCUMENT_TYPES
+        .filter(d => (admissionsConfig.active_base_docs || []).includes(d.key))
+        .map(d => {
+          const vis = (admissionsDocSettings[d.key] || {}).visibility || "all";
+          return { ...d, visibility: vis, source: "admissions" };
+        })
+        .filter(d => admissionsVisibilityMatches(d.visibility))
+    : [];
+  const admissionsCustomDocs = (admissionsConfig?.custom_docs || [])
+    .filter(d => admissionsVisibilityMatches(d.visibility || "all"))
+    .map(d => ({
+      key: `admissions_custom_${d.id}`,
+      label: d.label,
+      required: true,
+      source: "admissions",
+      visibility: d.visibility || "all",
+    }));
+  const admissionsBaseKeys = new Set(admissionsBaseDocs.map(d => d.key));
+  const mergedCoachDocs = coachDocTypes.map(d =>
+    admissionsBaseKeys.has(d.key) ? { ...d, source: "both" } : d
+  );
+  const coachKeys = new Set(mergedCoachDocs.map(d => d.key));
+  const allDocTypes = [
+    ...mergedCoachDocs,
+    ...admissionsBaseDocs.filter(d => !coachKeys.has(d.key)),
+    ...admissionsCustomDocs,
+  ];
+
+  // Merge form questions from coach + admissions, dedup by label
+  const coachQuestions = (sportConfig?.form_questions ?? []).map(q => ({ ...q, source: "coach" }));
+  const admissionsQuestions = (admissionsConfig?.form_questions ?? []).map(q => ({ ...q, source: "admissions" }));
+  const coachQLabels = new Map(coachQuestions.map(q => [q.label, q]));
+  const mergedFormQuestions = [...coachQuestions];
+  for (const q of admissionsQuestions) {
+    if (coachQLabels.has(q.label)) {
+      const idx = mergedFormQuestions.findIndex(mq => mq.label === q.label);
+      if (idx !== -1) mergedFormQuestions[idx] = { ...mergedFormQuestions[idx], source: "both" };
+    } else {
+      mergedFormQuestions.push(q);
+    }
+  }
+  const formResponsesMap = Object.fromEntries((formResponsesRaw ?? []).map(r => [r.question_id, r.answer]));
   const submittedMap = Object.fromEntries((athleteDocs ?? []).map(d => [d.document_type, d]));
   const submittedCount = Object.keys(submittedMap).length;
 
@@ -147,8 +201,7 @@ export default async function AthleteDetailPage({ params }) {
             >
               View guide
             </a>
-            {r.athlete_email && <ResendButton requestId={r.id} />}
-            {r.athlete_phone && <ResendWhatsAppButton requestId={r.id} />}
+            {r.athlete_email && profile.role !== "admissions" && <ResendButton requestId={r.id} />}
           </div>
         )}
       </div>
@@ -295,7 +348,18 @@ export default async function AthleteDetailPage({ params }) {
                       )}
                     </div>
                     <div className="min-w-0">
-                      <p className={`text-sm font-medium truncate ${sub ? "text-brand-700" : "text-foreground"}`}>{doc.label}</p>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className={`text-sm font-medium truncate ${sub ? "text-brand-700" : "text-foreground"}`}>{doc.label}</p>
+                        {doc.source === "coach" && (
+                          <span className="shrink-0 text-xs px-1.5 py-0.5 rounded-full border border-blue-100 bg-blue-50 text-blue-700">coach</span>
+                        )}
+                        {doc.source === "admissions" && (
+                          <span className="shrink-0 text-xs px-1.5 py-0.5 rounded-full border border-purple-100 bg-purple-50 text-purple-700">admissions</span>
+                        )}
+                        {doc.source === "both" && (
+                          <span className="shrink-0 text-xs px-1.5 py-0.5 rounded-full border border-blue-100 bg-blue-50 text-blue-700">coach & admissions</span>
+                        )}
+                      </div>
                       {sub && <p className="text-xs text-muted truncate mt-0.5">{sub.file_name}</p>}
                     </div>
                   </div>
@@ -325,15 +389,64 @@ export default async function AthleteDetailPage({ params }) {
           )}
         </div>
 
-        <div className="md:col-span-2">
-          <AthleteActions
-            requestId={r.id}
-            athleteEmail={r.athlete_email}
-            athleteName={r.athlete_name}
-            reportToken={r.athlete_link_token}
-            status={r.status}
-          />
-        </div>
+        {/* Form Responses */}
+        {mergedFormQuestions.length > 0 && (
+          <div className="md:col-span-2 bg-white border border-border rounded-xl overflow-hidden">
+            <div className="px-5 py-4 border-b border-border flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-brand-50 border border-brand-100 flex items-center justify-center text-brand-600 shrink-0">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <h2 className="text-sm font-semibold text-foreground">Form Responses</h2>
+                <p className="text-xs text-muted mt-0.5">{Object.keys(formResponsesMap).length} of {mergedFormQuestions.length} answered</p>
+              </div>
+            </div>
+            {Object.keys(formResponsesMap).length === 0 ? (
+              <div className="px-5 py-6 text-center">
+                <p className="text-sm text-muted italic">No responses yet. The athlete has not answered any questions.</p>
+              </div>
+            ) : (
+              <div className="divide-y divide-border">
+                {mergedFormQuestions.map(q => {
+                  const answer = formResponsesMap[q.id];
+                  return (
+                    <div key={q.id} className="px-5 py-3.5 flex items-start justify-between gap-4">
+                      <div className="flex items-center gap-2 flex-wrap min-w-0">
+                        <p className="text-sm text-foreground">{q.label}</p>
+                        {q.source === "coach" && (
+                          <span className="shrink-0 text-xs px-1.5 py-0.5 rounded-full border border-blue-100 bg-blue-50 text-blue-700">coach</span>
+                        )}
+                        {q.source === "admissions" && (
+                          <span className="shrink-0 text-xs px-1.5 py-0.5 rounded-full border border-purple-100 bg-purple-50 text-purple-700">admissions</span>
+                        )}
+                        {q.source === "both" && (
+                          <span className="shrink-0 text-xs px-1.5 py-0.5 rounded-full border border-blue-100 bg-blue-50 text-blue-700">coach & admissions</span>
+                        )}
+                      </div>
+                      <span className={`text-sm shrink-0 text-right ${answer ? "text-foreground font-medium" : "text-muted italic"}`}>
+                        {answer || "No answer"}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
+        {profile.role !== "admissions" && (
+          <div className="md:col-span-2">
+            <AthleteActions
+              requestId={r.id}
+              athleteEmail={r.athlete_email}
+              athleteName={r.athlete_name}
+              reportToken={r.athlete_link_token}
+              status={r.status}
+            />
+          </div>
+        )}
 
       </div>
     </div>

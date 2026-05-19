@@ -14,7 +14,7 @@ export default async function ClubAthletes() {
 
   const { data: profile } = await admin
     .from("profiles").select("role, club_id, sport").eq("id", user.id).single();
-  if (!["club_admin", "coach"].includes(profile?.role)) redirect("/login");
+  if (!["club_admin", "coach", "admissions"].includes(profile?.role)) redirect("/login");
 
   const isCoach = profile.role === "coach";
 
@@ -31,24 +31,23 @@ export default async function ClubAthletes() {
 
   const { data: requests } = await requestsQuery;
 
-  // For coaches: fetch documents + sport doc config in parallel
+  // For coaches and admissions: fetch documents + config in parallel
   let docsByRequest = {};
   let coachDocCols = null;
+  const isAdmissions = profile.role === "admissions";
 
-  if (isCoach) {
+  if (isCoach || isAdmissions) {
+    const configPromise = isCoach
+      ? (profile.sport
+          ? admin.from("sport_document_config").select("disabled_base_docs, custom_docs").eq("club_id", profile.club_id).eq("sport", profile.sport).single()
+          : Promise.resolve({ data: null }))
+      : admin.from("admissions_doc_config").select("active_base_docs, custom_docs, doc_settings").eq("club_id", profile.club_id).single();
+
     const [docsResult, configResult] = await Promise.all([
       requests?.length
-        ? admin.from("athlete_documents")
-            .select("request_id, document_type, file_name, file_url")
-            .in("request_id", requests.map(r => r.id))
+        ? admin.from("athlete_documents").select("request_id, document_type, file_name, file_url").in("request_id", requests.map(r => r.id))
         : Promise.resolve({ data: [] }),
-      profile.sport
-        ? admin.from("sport_document_config")
-            .select("disabled_base_docs, custom_docs")
-            .eq("club_id", profile.club_id)
-            .eq("sport", profile.sport)
-            .single()
-        : Promise.resolve({ data: null }),
+      configPromise,
     ]);
 
     if (docsResult.data) {
@@ -58,11 +57,27 @@ export default async function ClubAthletes() {
       }
     }
 
-    const docTypes = getSportDocTypes(configResult.data ?? null);
-    coachDocCols = docTypes.map(d => ({
-      key: d.key,
-      label: BASE_DOC_SHORT_LABELS[d.key] || d.label.split(" ").slice(0, 2).join(" "),
-    }));
+    if (isCoach) {
+      const docTypes = getSportDocTypes(configResult.data ?? null);
+      coachDocCols = docTypes.map(d => ({
+        key: d.key,
+        label: BASE_DOC_SHORT_LABELS[d.key] || d.label.split(" ").slice(0, 2).join(" "),
+      }));
+    } else {
+      const cfg = configResult.data;
+      const { BASE_DOCUMENT_TYPES } = await import("@/lib/documents/types");
+      const baseCols = cfg
+        ? BASE_DOCUMENT_TYPES.filter(d => (cfg.active_base_docs || []).includes(d.key)).map(d => ({
+            key: d.key,
+            label: BASE_DOC_SHORT_LABELS[d.key] || d.label.split(" ").slice(0, 2).join(" "),
+          }))
+        : [];
+      const customCols = (cfg?.custom_docs || []).map(d => ({
+        key: `admissions_custom_${d.id}`,
+        label: d.label.split(" ").slice(0, 2).join(" "),
+      }));
+      coachDocCols = [...baseCols, ...customCols];
+    }
   }
 
   return (
@@ -75,7 +90,7 @@ export default async function ClubAthletes() {
         <p className="text-sm text-muted shrink-0 mt-1">{requests?.length || 0} total</p>
       </div>
       <div id="tour-athletes-table">
-        <AthletesTable requests={requests ?? []} isCoach={isCoach} docsByRequest={docsByRequest} coachDocCols={coachDocCols} />
+        <AthletesTable requests={requests ?? []} isCoach={isCoach} docsByRequest={docsByRequest} coachDocCols={coachDocCols} canResend={profile.role !== "admissions"} />
       </div>
     </div>
   );
