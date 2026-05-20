@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import NavigationProgress from "./_components/NavigationProgress";
+import PwaRedirect from "./_components/PwaRedirect";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,17 +25,7 @@ export default function RootLayout({ children }) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        {/* Redirect standalone PWA installs back to the athlete's upload link */}
-        <script dangerouslySetInnerHTML={{ __html: `
-          (function(){
-            try {
-              if (window.matchMedia('(display-mode: standalone)').matches && window.location.pathname === '/') {
-                var url = localStorage.getItem('settlyou_upload_url');
-                if (url && url.startsWith('/upload/')) window.location.replace(url);
-              }
-            } catch(e) {}
-          })();
-        `}} />
+        <PwaRedirect />
         <NavigationProgress />
         {children}
       </body>
