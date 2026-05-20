@@ -20,31 +20,35 @@ export default function UploadClient({ token, documentTypes, initialSubmitted, c
     try { localStorage.setItem("settlyou_upload_url", window.location.pathname); } catch(e) {}
   }, []);
 
-  // Install prompt
-  const [installPrompt, setInstallPrompt] = useState(null); // "android" | "ios" | null
+  // Install banner — shown on first visit
+  const [installBanner, setInstallBanner] = useState(null); // "android" | "ios" | null
   const deferredInstall = useRef(null);
-  const hasShownPrompt = useRef(false);
 
   useEffect(() => {
-    const handler = (e) => {
-      e.preventDefault();
-      deferredInstall.current = e;
-    };
+    const handler = (e) => { e.preventDefault(); deferredInstall.current = e; };
     window.addEventListener("beforeinstallprompt", handler);
     return () => window.removeEventListener("beforeinstallprompt", handler);
   }, []);
 
-  function triggerInstallPrompt() {
-    if (hasShownPrompt.current) return;
-    hasShownPrompt.current = true;
-    const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
-    const isInStandalone = window.matchMedia("(display-mode: standalone)").matches;
-    if (isInStandalone) return; // already installed
-    if (deferredInstall.current) {
-      setInstallPrompt("android");
-    } else if (isIos) {
-      setInstallPrompt("ios");
-    }
+  useEffect(() => {
+    try {
+      const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
+      const dismissed = localStorage.getItem("settlyou_pwa_dismissed");
+      if (isStandalone || dismissed) return;
+
+      const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+      // Small delay so page content renders first
+      const t = setTimeout(() => {
+        if (deferredInstall.current) setInstallBanner("android");
+        else if (isIos) setInstallBanner("ios");
+      }, 800);
+      return () => clearTimeout(t);
+    } catch(e) {}
+  }, []);
+
+  function dismissBanner() {
+    try { localStorage.setItem("settlyou_pwa_dismissed", "1"); } catch(e) {}
+    setInstallBanner(null);
   }
 
   async function handleNativeInstall() {
@@ -52,7 +56,7 @@ export default function UploadClient({ token, documentTypes, initialSubmitted, c
     deferredInstall.current.prompt();
     const { outcome } = await deferredInstall.current.userChoice;
     deferredInstall.current = null;
-    if (outcome === "accepted") setInstallPrompt(null);
+    if (outcome === "accepted") dismissBanner();
   }
 
   async function handleResponseSave(questionId, value) {
@@ -110,6 +114,15 @@ export default function UploadClient({ token, documentTypes, initialSubmitted, c
 
   return (
     <div className="flex flex-col gap-5">
+      {/* First-visit install banner */}
+      {installBanner && (
+        <InstallBanner
+          type={installBanner}
+          onInstall={handleNativeInstall}
+          onDismiss={dismissBanner}
+        />
+      )}
+
       {/* Progress bar */}
       <div className="bg-white border border-border rounded-xl px-5 py-4">
         <div className="flex items-center justify-between mb-2.5">
@@ -300,14 +313,6 @@ export default function UploadClient({ token, documentTypes, initialSubmitted, c
         Bookmark this page to come back anytime.
       </p>
 
-      {/* Install prompt — bottom sheet */}
-      {installPrompt && (
-        <InstallSheet
-          type={installPrompt}
-          onInstall={handleNativeInstall}
-          onDismiss={() => setInstallPrompt(null)}
-        />
-      )}
     </div>
   );
 }
@@ -443,91 +448,77 @@ function Section({ title, variant = "required", docs, submittedKeys, submitted, 
   );
 }
 
-function InstallSheet({ type, onInstall, onDismiss }) {
+function InstallBanner({ type, onInstall, onDismiss }) {
   return (
-    <>
-      {/* Backdrop */}
-      <div
-        className="fixed inset-0 bg-black/40 z-40"
-        onClick={onDismiss}
-      />
-      {/* Sheet */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-2xl shadow-xl px-6 pt-5 pb-8">
-        {/* Handle */}
-        <div className="w-10 h-1 bg-border rounded-full mx-auto mb-5" />
-
-        <div className="flex items-start gap-4 mb-5">
-          <div className="w-12 h-12 rounded-2xl bg-brand-500 flex items-center justify-center shrink-0">
-            <img src="/apple-touch-icon.png" alt="" className="w-10 h-10 rounded-xl" />
-          </div>
-          <div>
-            <p className="text-sm font-bold text-foreground">Add to Home Screen</p>
-            <p className="text-xs text-muted mt-0.5 leading-relaxed">
-              Save Settlyou to your home screen so you can come back easily to upload more documents.
-            </p>
-          </div>
+    <div className="rounded-2xl overflow-hidden border border-brand-200 bg-brand-800 text-white">
+      {/* Header */}
+      <div className="px-5 pt-5 pb-4 flex items-start gap-4">
+        <img src="/apple-touch-icon.png" alt="" className="w-12 h-12 rounded-2xl shrink-0 shadow-lg" />
+        <div>
+          <p className="font-bold text-base leading-tight">Save this page to your phone</p>
+          <p className="text-sm text-brand-200 mt-1 leading-snug">
+            Open your upload page with one tap — no link needed.
+          </p>
         </div>
+      </div>
 
+      {/* Steps / Action */}
+      <div className="mx-4 mb-4 bg-white/10 rounded-xl px-4 py-4">
         {type === "android" ? (
           <button
             onClick={onInstall}
-            className="w-full min-h-[48px] bg-brand-500 text-white font-semibold text-sm rounded-xl border border-brand-600 hover:bg-brand-600 active:bg-brand-700 transition-colors"
+            className="w-full min-h-[48px] bg-white text-brand-800 font-bold text-sm rounded-xl active:opacity-80 transition-opacity"
           >
             Add to Home Screen
           </button>
         ) : (
-          <div className="space-y-3">
-            <div className="bg-surface rounded-xl px-4 py-3 space-y-2.5">
-              <Step n={1} text='Tap the Share button in Safari' icon={<ShareIcon />} />
-              <Step n={2} text='Scroll down and tap "Add to Home Screen"' icon={<PlusSquareIcon />} />
-              <Step n={3} text='Tap "Add" to confirm' icon={<CheckIcon />} />
-            </div>
+          <div className="space-y-3.5">
+            <BannerStep n={1}>
+              Tap the <span className="font-bold">Share</span> button{" "}
+              <span className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-white/20 align-middle mx-0.5">
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                </svg>
+              </span>{" "}
+              at the bottom of Safari
+            </BannerStep>
+            <div className="border-t border-white/10" />
+            <BannerStep n={2}>
+              Scroll down and tap <span className="font-bold">"Add to Home Screen"</span>
+            </BannerStep>
+            <div className="border-t border-white/10" />
+            <BannerStep n={3}>
+              Tap <span className="font-bold">"Add"</span> in the top right corner
+            </BannerStep>
           </div>
         )}
+      </div>
 
+      {/* Footer */}
+      <div className="px-4 pb-4 flex items-center justify-between gap-3">
+        <p className="text-xs text-brand-300 leading-snug">
+          {type === "ios"
+            ? "Follow the steps above in Safari to save the app."
+            : "Tap the button above to save the app."}
+        </p>
         <button
           onClick={onDismiss}
-          className="w-full mt-3 min-h-[44px] text-sm text-muted font-medium"
+          className="shrink-0 text-xs font-semibold text-brand-300 underline underline-offset-2 min-h-[44px] flex items-center"
         >
-          Not now
+          Skip
         </button>
       </div>
-    </>
-  );
-}
-
-function Step({ n, text, icon }) {
-  return (
-    <div className="flex items-center gap-3">
-      <div className="w-6 h-6 rounded-full bg-brand-100 text-brand-700 text-xs font-bold flex items-center justify-center shrink-0">
-        {n}
-      </div>
-      <p className="text-xs text-foreground flex-1">{text}</p>
-      <div className="text-muted shrink-0">{icon}</div>
     </div>
   );
 }
 
-function ShareIcon() {
+function BannerStep({ n, children }) {
   return (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.75" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-    </svg>
-  );
-}
-
-function PlusSquareIcon() {
-  return (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.75" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.75" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg>
+    <div className="flex items-start gap-3">
+      <div className="w-6 h-6 rounded-full bg-brand-500 text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
+        {n}
+      </div>
+      <p className="text-sm text-white leading-snug">{children}</p>
+    </div>
   );
 }
