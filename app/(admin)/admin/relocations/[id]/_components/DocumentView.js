@@ -970,8 +970,8 @@ function DocumentViewV2({ content }) {
               </p>
               <p className="text-xs leading-none" style={{ color: "rgba(255,255,255,0.75)" }}>
                 {content.required_docs?.length
-                  ? `Your coach needs ${content.required_docs.length} document${content.required_docs.length !== 1 ? "s" : ""} from you`
-                  : "Tap to see what your coach is requesting"}
+                  ? `You need to upload ${content.required_docs.length} document${content.required_docs.length !== 1 ? "s" : ""}`
+                  : "Tap to upload your documents"}
               </p>
             </div>
           </div>

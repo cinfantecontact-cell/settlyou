@@ -148,9 +148,14 @@ export default function UploadClient({ token, documentTypes, initialSubmitted, c
       {/* Attachments from team */}
       {coachAttachments.length > 0 && (
         <div className="bg-white border border-border rounded-xl overflow-hidden">
-          <div className="px-5 py-4 border-b border-border">
-            <h2 className="text-sm font-semibold text-foreground">From your team</h2>
-            <p className="text-xs text-muted mt-0.5">Download, fill out, then upload below.</p>
+          <div className="px-5 py-4 border-b border-blue-100 bg-blue-50 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center shrink-0">
+              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" /></svg>
+            </div>
+            <div>
+              <h2 className="text-sm font-bold text-blue-900">Templates from your team</h2>
+              <p className="text-xs text-blue-600 mt-0.5">Download, fill out, then upload below.</p>
+            </div>
           </div>
           <div className="divide-y divide-border">
             {coachAttachments.map(a => (
@@ -181,11 +186,11 @@ export default function UploadClient({ token, documentTypes, initialSubmitted, c
       )}
 
       {/* Required */}
-      <Section title="Required documents" docs={required} submittedKeys={submittedKeys} submitted={submitted} uploading={uploading} errors={errors} onUpload={handleUpload} />
+      <Section title="Required documents" variant="required" docs={required} submittedKeys={submittedKeys} submitted={submitted} uploading={uploading} errors={errors} onUpload={handleUpload} />
 
       {/* Optional */}
       {optional.length > 0 && (
-        <Section title="Optional documents" docs={optional} submittedKeys={submittedKeys} submitted={submitted} uploading={uploading} errors={errors} onUpload={handleUpload} />
+        <Section title="Optional documents" variant="optional" docs={optional} submittedKeys={submittedKeys} submitted={submitted} uploading={uploading} errors={errors} onUpload={handleUpload} />
       )}
 
       {/* Form questions */}
@@ -202,9 +207,14 @@ export default function UploadClient({ token, documentTypes, initialSubmitted, c
         }
         return (
           <div className="bg-white border border-border rounded-xl overflow-hidden">
-            <div className="px-5 py-4 border-b border-border">
-              <h2 className="text-sm font-semibold text-foreground">Questions for you</h2>
-              <p className="text-xs text-muted mt-0.5">Your answers save automatically.</p>
+            <div className="px-5 py-4 border-b border-purple-100 bg-purple-50 flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-purple-500 flex items-center justify-center shrink-0">
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+              </div>
+              <div>
+                <h2 className="text-sm font-bold text-purple-900">Questions for you</h2>
+                <p className="text-xs text-purple-600 mt-0.5">Your answers save automatically.</p>
+              </div>
             </div>
             {groups.map(group => (
               <div key={group.name ?? "__general__"}>
@@ -302,12 +312,41 @@ export default function UploadClient({ token, documentTypes, initialSubmitted, c
   );
 }
 
-function Section({ title, docs, submittedKeys, submitted, uploading, errors, onUpload }) {
+function Section({ title, variant = "required", docs, submittedKeys, submitted, uploading, errors, onUpload }) {
   if (!docs.length) return null;
+
+  const header = variant === "required"
+    ? {
+        bg: "bg-brand-50",
+        border: "border-brand-100",
+        icon: "bg-brand-500",
+        title: "text-brand-900",
+        sub: "text-brand-600",
+        iconSvg: <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />,
+        subtitle: "These are required to complete your enrollment.",
+      }
+    : {
+        bg: "bg-amber-50",
+        border: "border-amber-100",
+        icon: "bg-amber-400",
+        title: "text-amber-900",
+        sub: "text-amber-600",
+        iconSvg: <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />,
+        subtitle: "Nice to have — submit if you have them.",
+      };
+
   return (
     <div className="bg-white border border-border rounded-xl overflow-hidden">
-      <div className="px-5 py-4 border-b border-border">
-        <h2 className="text-sm font-semibold text-foreground">{title}</h2>
+      <div className={`px-5 py-4 border-b ${header.border} ${header.bg} flex items-center gap-3`}>
+        <div className={`w-8 h-8 rounded-lg ${header.icon} flex items-center justify-center shrink-0`}>
+          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            {header.iconSvg}
+          </svg>
+        </div>
+        <div>
+          <h2 className={`text-sm font-bold ${header.title}`}>{title}</h2>
+          <p className={`text-xs mt-0.5 ${header.sub}`}>{header.subtitle}</p>
+        </div>
       </div>
       <div className="divide-y divide-border">
         {docs.map(doc => {
