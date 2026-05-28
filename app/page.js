@@ -148,7 +148,7 @@ export default function LandingPage() {
               Every athlete<br />arrives <span className="gradient-text">ready.</span>
             </h1>
             <p className="hero-animate hero-d3 text-lg text-muted mb-8 leading-relaxed max-w-lg">
-              AI-powered relocation guides, coach portals, and document collection — one platform for your entire athletics department.
+              AI-powered relocation guides, coach portals, and document collection — one platform for your entire athletics department
             </p>
             <div className="hero-animate hero-d4 flex items-center gap-3 flex-wrap mb-10">
               <a href="/report/sample-college"
