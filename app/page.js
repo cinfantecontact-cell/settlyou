@@ -89,13 +89,7 @@ const AD_FEATURES = [
   "Review and approve guides before delivery",
   "Usage analytics and guide history",
   "Custom branding — logo and colors in every guide",
-];
-
-const ADMIN_FEATURES = [
-  "See every athlete across every team",
-  "Invite coaches, each scoped to their own sport",
-  "Track seats, plan, and usage",
-  "Spot stuck guides and missing docs",
+  "Grant admissions access to request documents directly from athletes",
 ];
 
 const COACH_FEATURES = [
@@ -467,58 +461,13 @@ export default function LandingPage() {
           <ScrollReveal>
             <div className="text-center mb-16">
               <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-3 block">Built for your whole staff</span>
-              <h2 className="text-3xl font-bold text-foreground">One platform. Three portals.</h2>
+              <h2 className="text-3xl font-bold text-foreground">One platform. Two portals.</h2>
               <p className="text-muted mt-4 max-w-xl mx-auto text-sm leading-relaxed">
-                The admin oversees the program. The AD manages their institution. Each coach runs their own sport. No one gets in each other's way.
+                The AD oversees the institution. Each coach runs their own sport. No one gets in each other's way.
               </p>
             </div>
           </ScrollReveal>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-            {/* Admin portal */}
-            <ScrollReveal delay={0}>
-              <div className="relative">
-                <div className="absolute -inset-2 bg-indigo-500 opacity-5 blur-2xl rounded-3xl pointer-events-none" />
-                <div className="relative border border-indigo-100 rounded-2xl overflow-hidden bg-white shadow-lg h-full flex flex-col">
-                  <div className="bg-indigo-700 px-6 py-5">
-                    <p className="text-xs font-bold uppercase tracking-widest text-indigo-200 mb-1">Admin</p>
-                    <p className="text-white font-bold text-lg">One dashboard for the whole program</p>
-                  </div>
-                  <div className="px-6 pt-5 pb-2 border-b border-border">
-                    <div className="grid grid-cols-3 gap-3 mb-1">
-                      {[{ v: "8", l: "Sports" }, { v: "8", l: "Coaches" }, { v: "5", l: "Alerts" }].map(s => (
-                        <div key={s.l} className="bg-indigo-50 rounded-xl border border-indigo-100 px-3 py-2.5 text-center">
-                          <p className="text-lg font-black text-indigo-700">{s.v}</p>
-                          <p className="text-xs text-indigo-400">{s.l}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="px-6 py-4 flex flex-col gap-2 border-b border-border">
-                    {[
-                      { sport: "Men's Soccer", coach: "Coach Rivera", athletes: 12, color: "bg-brand-500" },
-                      { sport: "Swimming", coach: "Coach Park", athletes: 8, color: "bg-blue-400" },
-                      { sport: "Track & Field", coach: "Coach James", athletes: 15, color: "bg-yellow-400" },
-                    ].map(r => (
-                      <div key={r.sport} className="flex items-center gap-3">
-                        <div className={`w-2 h-2 rounded-full shrink-0 ${r.color}`} />
-                        <span className="text-xs font-semibold text-foreground flex-1">{r.sport}</span>
-                        <span className="text-xs text-muted">{r.coach}</span>
-                        <span className="text-xs font-bold text-foreground ml-2">{r.athletes}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="p-6 flex flex-col gap-2.5">
-                    {ADMIN_FEATURES.map((s) => (
-                      <div key={s} className="flex items-center gap-3">
-                        <CheckIcon color="indigo" />
-                        <span className="text-sm text-foreground">{s}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </ScrollReveal>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
             {/* AD portal */}
             <ScrollReveal delay={60}>
