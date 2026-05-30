@@ -13,11 +13,11 @@ const PLATFORM_FEATURES = [
     ),
   },
   {
-    title: "WhatsApp delivery",
-    desc: "Upload link sent by WhatsApp on delivery. Athletes always have it on hand.",
+    title: "Admissions document requests",
+    desc: "Admissions staff can request specific documents from players directly through the platform — athletes are notified and upload through their personal link.",
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
       </svg>
     ),
   },
@@ -49,8 +49,8 @@ const PLATFORM_FEATURES = [
     ),
   },
   {
-    title: "Coach file templates",
-    desc: "Coaches upload fillable templates. Athletes download, fill them out, and return the completed version — all through their personal link.",
+    title: "Coach file templates & forms",
+    desc: "Coaches upload fillable templates and create custom forms for athletes to complete. Athletes download, fill them out, and return everything — all through their personal link.",
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
@@ -78,7 +78,7 @@ const STEPS = [
   {
     number: "04",
     title: "Guide delivered. Documents collected.",
-    desc: "The guide lands in the athlete's email. Their personal upload link arrives by WhatsApp. Coaches track document submissions in real time from their portal.",
+    desc: "AI builds a full personalized guide and the athlete receives an email invitation to access it. Their guide includes the document upload section — coaches track every submission in real time from their portal.",
   },
 ];
 
@@ -415,13 +415,13 @@ export default function LandingPage() {
                           <p className="text-xs text-brand-600">marcus@gmail.com · just now</p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-3 bg-green-50 border border-green-100 rounded-xl px-4 py-3">
-                        <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center shrink-0">
-                          <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                      <div className="flex items-center gap-3 bg-blue-50 border border-blue-100 rounded-xl px-4 py-3">
+                        <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center shrink-0">
+                          <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
                         </div>
                         <div>
-                          <p className="text-xs font-bold text-green-700">Upload link sent via WhatsApp</p>
-                          <p className="text-xs text-green-600">+57 310 000 0000 · just now</p>
+                          <p className="text-xs font-bold text-blue-700">Guide invitation sent via email</p>
+                          <p className="text-xs text-blue-600">marcus.r@university.edu · just now</p>
                         </div>
                       </div>
                       <div>
@@ -443,7 +443,7 @@ export default function LandingPage() {
                 <div className="lg:order-2 order-1">
                   <span className="text-7xl font-black text-brand-100 leading-none block mb-4">04</span>
                   <h3 className="text-2xl font-bold text-foreground mb-3">Guide delivered. Documents collected.</h3>
-                  <p className="text-muted leading-relaxed">The guide lands in the athlete's email. Their personal upload link arrives by WhatsApp. Coaches track document submissions in real time from their portal.</p>
+                  <p className="text-muted leading-relaxed">AI builds a full personalized guide and the athlete receives an email invitation to access it. Their guide includes the document upload section — coaches track every submission in real time from their portal.</p>
                 </div>
               </div>
             </ScrollReveal>
@@ -465,6 +465,36 @@ export default function LandingPage() {
             </div>
           </ScrollReveal>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            {/* Admin portal highlight */}
+            <ScrollReveal delay={0} className="md:col-span-2">
+              <div className="relative border border-border rounded-2xl overflow-hidden bg-white shadow-sm p-8 flex flex-col md:flex-row md:items-start gap-8">
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-10 h-10 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center shrink-0">
+                      <svg className="w-5 h-5 text-brand-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/>
+                      </svg>
+                    </div>
+                    <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-600">For the Admin</span>
+                  </div>
+                  <h3 className="text-2xl font-bold text-foreground mb-5">One dashboard for the whole program</h3>
+                  <ul className="flex flex-col gap-3">
+                    {[
+                      "See every athlete across every team",
+                      "Invite coaches, each scoped to their own sport",
+                      "Track seats, plan, and usage",
+                      "Spot stuck guides and missing docs",
+                    ].map((item) => (
+                      <li key={item} className="flex items-start gap-3">
+                        <div className="w-2 h-2 rounded-full bg-foreground shrink-0 mt-1.5" />
+                        <span className="text-sm text-foreground">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </ScrollReveal>
 
             {/* AD portal */}
             <ScrollReveal delay={60}>
@@ -585,7 +615,7 @@ export default function LandingPage() {
                 <div className="p-7 pb-4">
                   <span className="text-xs font-bold text-brand-200 uppercase tracking-widest">Personal link</span>
                   <p className="text-lg font-bold text-white mt-2 mb-1">One link per athlete</p>
-                  <p className="text-sm text-brand-100 leading-relaxed">Each athlete gets a unique upload link via WhatsApp — no login, no app. They return anytime, progress auto-saves.</p>
+                  <p className="text-sm text-brand-100 leading-relaxed">Each athlete receives a unique invitation via email — they create an account once and access their guide anytime. Progress auto-saves.</p>
                 </div>
                 <div className="mx-5 mb-5 bg-white/10 border border-white/20 rounded-xl overflow-hidden">
                   <div className="bg-white/10 px-4 py-2.5 flex items-center gap-2 border-b border-white/10">
@@ -683,7 +713,7 @@ export default function LandingPage() {
                 <span className="text-[2rem] font-black text-white/20 leading-none">05</span>
                 <p className="font-bold text-white">No account needed</p>
                 <p className="text-sm text-brand-100 leading-relaxed">Athletes upload through their personal link — no login, no app download. Works on any phone, in any country, on any connection.</p>
-                <p className="text-xs text-white/50 mt-auto pt-2">Mobile-first — link saved in WhatsApp</p>
+                <p className="text-xs text-white/50 mt-auto pt-2">Mobile-first — invitation delivered by email</p>
               </div>
             </ScrollReveal>
           </div>
