@@ -91,6 +91,13 @@ const AD_FEATURES = [
   "Custom branding — logo and colors in every guide",
 ];
 
+const ADMIN_FEATURES = [
+  "See every athlete across every team",
+  "Invite coaches, each scoped to their own sport",
+  "Track seats, plan, and usage",
+  "Spot stuck guides and missing docs",
+];
+
 const COACH_FEATURES = [
   "Write welcome notes that appear in every athlete's guide",
   "Add sport-specific links — eligibility forms, team handbook, campus health",
@@ -103,6 +110,8 @@ const COACH_FEATURES = [
 function CheckIcon({ color = "brand" }) {
   const cls = color === "brand"
     ? "w-5 h-5 rounded-full bg-brand-500 flex items-center justify-center shrink-0"
+    : color === "indigo"
+    ? "w-5 h-5 rounded-full bg-indigo-600 flex items-center justify-center shrink-0"
     : "w-5 h-5 rounded-full bg-white/20 flex items-center justify-center shrink-0";
   return (
     <div className={cls}>
@@ -458,40 +467,55 @@ export default function LandingPage() {
           <ScrollReveal>
             <div className="text-center mb-16">
               <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-600 mb-3 block">Built for your whole staff</span>
-              <h2 className="text-3xl font-bold text-foreground">One platform. Two portals.</h2>
+              <h2 className="text-3xl font-bold text-foreground">One platform. Three portals.</h2>
               <p className="text-muted mt-4 max-w-xl mx-auto text-sm leading-relaxed">
-                The AD oversees the institution. Each coach runs their own sport. No one gets in each other's way.
+                The admin oversees the program. The AD manages their institution. Each coach runs their own sport. No one gets in each other's way.
               </p>
             </div>
           </ScrollReveal>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-            {/* Admin portal highlight */}
-            <ScrollReveal delay={0} className="md:col-span-2">
-              <div className="relative border border-border rounded-2xl overflow-hidden bg-white shadow-sm p-8 flex flex-col md:flex-row md:items-start gap-8">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-5">
-                    <div className="w-10 h-10 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center shrink-0">
-                      <svg className="w-5 h-5 text-brand-600" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/>
-                      </svg>
-                    </div>
-                    <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-600">For the Admin</span>
+            {/* Admin portal */}
+            <ScrollReveal delay={0}>
+              <div className="relative">
+                <div className="absolute -inset-2 bg-indigo-500 opacity-5 blur-2xl rounded-3xl pointer-events-none" />
+                <div className="relative border border-indigo-100 rounded-2xl overflow-hidden bg-white shadow-lg h-full flex flex-col">
+                  <div className="bg-indigo-700 px-6 py-5">
+                    <p className="text-xs font-bold uppercase tracking-widest text-indigo-200 mb-1">Admin</p>
+                    <p className="text-white font-bold text-lg">One dashboard for the whole program</p>
                   </div>
-                  <h3 className="text-2xl font-bold text-foreground mb-5">One dashboard for the whole program</h3>
-                  <ul className="flex flex-col gap-3">
+                  <div className="px-6 pt-5 pb-2 border-b border-border">
+                    <div className="grid grid-cols-3 gap-3 mb-1">
+                      {[{ v: "8", l: "Sports" }, { v: "8", l: "Coaches" }, { v: "5", l: "Alerts" }].map(s => (
+                        <div key={s.l} className="bg-indigo-50 rounded-xl border border-indigo-100 px-3 py-2.5 text-center">
+                          <p className="text-lg font-black text-indigo-700">{s.v}</p>
+                          <p className="text-xs text-indigo-400">{s.l}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="px-6 py-4 flex flex-col gap-2 border-b border-border">
                     {[
-                      "See every athlete across every team",
-                      "Invite coaches, each scoped to their own sport",
-                      "Track seats, plan, and usage",
-                      "Spot stuck guides and missing docs",
-                    ].map((item) => (
-                      <li key={item} className="flex items-start gap-3">
-                        <div className="w-2 h-2 rounded-full bg-foreground shrink-0 mt-1.5" />
-                        <span className="text-sm text-foreground">{item}</span>
-                      </li>
+                      { sport: "Men's Soccer", coach: "Coach Rivera", athletes: 12, color: "bg-brand-500" },
+                      { sport: "Swimming", coach: "Coach Park", athletes: 8, color: "bg-blue-400" },
+                      { sport: "Track & Field", coach: "Coach James", athletes: 15, color: "bg-yellow-400" },
+                    ].map(r => (
+                      <div key={r.sport} className="flex items-center gap-3">
+                        <div className={`w-2 h-2 rounded-full shrink-0 ${r.color}`} />
+                        <span className="text-xs font-semibold text-foreground flex-1">{r.sport}</span>
+                        <span className="text-xs text-muted">{r.coach}</span>
+                        <span className="text-xs font-bold text-foreground ml-2">{r.athletes}</span>
+                      </div>
                     ))}
-                  </ul>
+                  </div>
+                  <div className="p-6 flex flex-col gap-2.5">
+                    {ADMIN_FEATURES.map((s) => (
+                      <div key={s} className="flex items-center gap-3">
+                        <CheckIcon color="indigo" />
+                        <span className="text-sm text-foreground">{s}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </ScrollReveal>
