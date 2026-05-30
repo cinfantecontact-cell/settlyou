@@ -102,7 +102,15 @@ export default function UploadClient({ token, documentTypes, initialSubmitted, c
 
     // Show install prompt after first successful upload
     if (newSubmitted.length === 1) {
-      setTimeout(triggerInstallPrompt, 1200);
+      setTimeout(() => {
+        try {
+          const dismissed = localStorage.getItem("settlyou_pwa_dismissed");
+          if (dismissed) return;
+          const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+          if (deferredInstall.current) setInstallBanner("android");
+          else if (isIos) setInstallBanner("ios");
+        } catch(e) {}
+      }, 1200);
     }
   }
 
